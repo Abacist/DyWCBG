@@ -13,7 +13,7 @@ using namespace std;
 // structure of a y vertex
 struct Y
 {
-	int _id;	// id of x, assuming distinctive
+	int _value;	// id of x, assuming distinctive
 	// Notes: the y vertex with _id=-1 denotes the empty y, which is used in msg transmission.
 	int _w;
 
@@ -21,27 +21,27 @@ struct Y
 	//used for determine the edge
 	bool operator<(const Y& y)
 	{
-		return this->_id < y._id;
+		return this->_value < y._value;
 	}
 	bool operator<=(const Y& y)
 	{
-		return this->_id <= y._id;
+		return this->_value <= y._value;
 	}
 	bool operator>(const Y& y)
 	{
-		return this->_id > y._id;
+		return this->_value > y._value;
 	}
 	bool operator>=(const Y& y)
 	{
-		return this->_id >= y._id;
+		return this->_value >= y._value;
 	}
 	bool operator==(const Y& y)
 	{
-		return this->_id == y._id;
+		return this->_value == y._value;
 	}
 	bool operator!=(const Y& y)
 	{
-		return this->_id != y._id;
+		return this->_value != y._value;
 	}
 
 };
@@ -54,8 +54,8 @@ struct X
 	int _id;	// id of x, assuming distinctive
 	// Notes: the x vertex with _id=-1 denotes the empty x, which is used in msg transmission.
 
-	Y _s;	// the start of the interval of the neighbour of the x
-	Y _e;	// the end of the interval of the neighbour of the x
+	int _s;	// the start of the interval of the neighbour of the x
+	int _e;	// the end of the interval of the neighbour of the x
 	int _w;	// the weight of the x, assuming it is positive
 	bool operator==(const X& x)
 	{

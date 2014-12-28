@@ -49,7 +49,7 @@ Msg::Msg()
 	X x;
 	x._id = -1;
 	Y y;
-	y._id = -1;
+	y._value = -1;
 
 	_aX = _bX = _aMX = _bMX = _aIX = _bIX = _aTX = _bTX = x;
 	_aY = _bY = _aMY = _bMY = _aIY = _bIY = y;
@@ -57,7 +57,7 @@ Msg::Msg()
 
 ostream& operator<<(ostream& os, const Y& rhs)
 {
-	os << rhs._id << rhs._w;
+	os << rhs._value << rhs._w;
 	return os;
 }
 
@@ -67,17 +67,36 @@ ostream& operator<<(ostream& os, const X& rhs)
 	return os;
 }
 
+bool operator<(int s, Y y)
+{
+	return s < y._value;
+}
+
+bool operator<=(int s, Y y)
+{
+	return s <= y._value;
+}
+
+bool operator>(int s, Y y)
+{
+	return s > y._value;
+}
+
+bool operator>=(int s, Y y)
+{
+	return s >= y._value;
+}
 
 
 // order y according to its index
 bool cmpYIDInc(Y y1, Y y2)
 {
-	return y1._id < y2._id;
+	return y1._value < y2._value;
 }
 
 bool cmpYIDDec(Y y1, Y y2)
 {
-	return y1._id > y2._id;
+	return y1._value > y2._value;
 }
 
 bool cmpYWeightInc(Y y1, Y y2)
@@ -86,7 +105,7 @@ bool cmpYWeightInc(Y y1, Y y2)
 	{
 		return true;
 	}
-	if (y1._w == y2._w && y1._id < y2._id)
+	if (y1._w == y2._w && y1._value < y2._value)
 	{
 		return true;
 	}

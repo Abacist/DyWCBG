@@ -38,7 +38,7 @@ int main()
 		for (int i = 0; i < rangeOfY; i++)
 		{
 			Y temp;
-			in >> temp._id;
+			in >> temp._value;
 			tempVecY.push_back(temp);
 		}
 		Tree* pTree = new Tree(tempVecY);
@@ -64,7 +64,7 @@ int main()
 			case '1':
 			{
 				X x;
-				in >> x._id >> x._s._id >> x._e._id >> x._w;
+				in >> x._id >> x._s >> x._e >> x._w;
 
 
 			}break;
@@ -77,7 +77,7 @@ int main()
 			case '3':
 			{
 				Y y;
-				in >> y._id >> y._w;
+				in >> y._value >> y._w;
 
 
 			}break;
@@ -92,7 +92,7 @@ int main()
 			case '6':
 			{
 				X x;
-				in >> x._id >> x._s._id >> x._e._id;
+				in >> x._id >> x._s >> x._e;
 			}break;
 			case '7':
 			{
@@ -101,7 +101,7 @@ int main()
 			case '8':
 			{
 				Y y;
-				in >> y._id >> y._w;
+				in >> y._value>> y._w;
 
 			}break;
 			}
