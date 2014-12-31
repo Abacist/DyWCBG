@@ -5,6 +5,9 @@
 
 void generator(char* fileName, int MaxY, int UpdateRange, int WeightRange)
 {
+	vector<X> curExistsX;
+	vector<Y> curExistsY;
+
 	ofstream out(fileName);
 	/*out << MaxY+1 << endl;
 	for (int i = 0; i <= MaxY; i++)
@@ -12,29 +15,70 @@ void generator(char* fileName, int MaxY, int UpdateRange, int WeightRange)
 	out << i << " ";
 	}
 	out << endl;*/
-	out << 1 << endl << 0 << endl;
+	
 	SYSTEMTIME lpsystime;
 	GetLocalTime(&lpsystime);
 	srand(lpsystime.wMinute * 1000 + lpsystime.wMilliseconds);
+
+	Y y0;
+	y0._value = 0;
+	y0._w = rand() % WeightRange;
+	curExistsY.push_back(y0);
+	out << 1 << endl << y0._value << " " << y0._w << endl;
+
 	int i = 0;
-	for (; i < UpdateRange; i++)
+	for (; i < UpdateRange;)
 	{
 		if ((rand() % 2) == 0)		// insert x or insert y
 		{
-			int s = rand() % MaxY + 1;
-			int e = rand() % (MaxY * 2) + 1;
+			int s = 0;//rand() % MaxY + 1;
+			int e = rand() % MaxY + 1;
 			if (s > e)
 			{
 				int temp = e;
 				e = s;
 				s = temp;
 			}
+			int w = rand() % WeightRange;
+			X x;
+			x._id = ++i;
+			x._s._value = s;
+			x._e._value = e;
+			x._w = w;
 
-			out << 1 << " " << i + 1 << " " << 0 << " " << e << " " << rand() % WeightRange << endl;
+			if (find(curExistsY.begin(), curExistsY.end(), x._s) == curExistsY.end())
+			{
+				int weight = rand() % WeightRange;
+				Y ys = x._s;
+				ys._w = weight;
+				curExistsY.push_back(ys);
+				out << 3 << " " << ys._value << " " << weight << endl;
+				
+			}
+			if (find(curExistsY.begin(), curExistsY.end(), x._e) == curExistsY.end())
+			{
+				int weight = rand() % WeightRange;
+				Y ye = x._e;
+				ye._w = weight;
+				curExistsY.push_back(ye);
+				out << 3 << " " << ye._value << " " << weight << endl;
+			}
+			//detect whether s and e are already exists
+			//if not ,insert them
+
+			out << 1 << " " << x._id << " " << x._s._value << " " << x._e._value << " " << x._w << endl;
+			curExistsX.push_back(x);
 		}
 		else
 		{
-			out << 3 << " " << rand() % MaxY + 1 << " " << rand() % WeightRange << endl;
+			Y y;
+			y._value = rand() % MaxY + 1;
+			y._w = rand() % WeightRange;
+			if (find(curExistsY.begin(), curExistsY.end(), y) == curExistsY.end())
+			{
+				out << 3 << " " << y._value << " " << y._w << endl;
+				curExistsY.push_back(y);
+			}
 		}
 
 	}
@@ -44,12 +88,102 @@ void generator(char* fileName, int MaxY, int UpdateRange, int WeightRange)
 	out.close();
 }
 
+Y::Y()
+{
+	_value = INT_MIN;
+	_w = INT_MIN;
+}
+
+bool Y::empty()
+{
+	Y y1;
+	y1._value = INT_MIN;
+	Y y2;
+	y2._value = INT_MAX;
+	return *this == y1 || *this == y2;
+}
+bool Y::operator<(const Y& y)
+{
+	return this->_value < y._value;
+}
+bool Y::operator<=(const Y& y)
+{
+	return this->_value <= y._value;
+}
+bool Y::operator>(const Y& y)
+{
+	return this->_value > y._value;
+}
+bool Y::operator>=(const Y& y)
+{
+	return this->_value >= y._value;
+}
+bool Y::operator==(const Y& y)
+{
+	return this->_value == y._value;
+}
+bool Y::operator!=(const Y& y)
+{
+	return this->_value != y._value;
+}
+
+bool Y::operator<(const int& y)
+{
+	return this->_value < y;
+}
+bool Y::operator<=(const int& y)
+{
+	return this->_value <= y;
+}
+bool Y::operator>(const int& y)
+{
+	return this->_value > y;
+}
+bool Y::operator>=(const int& y)
+{
+	return this->_value >= y;
+}
+bool Y::operator==(const int& y)
+{
+	return this->_value == y;
+}
+bool Y::operator!=(const int& y)
+{
+	return this->_value != y;
+}
+
+
+bool X::empty()
+{
+	X x1;
+	x1._id = INT_MIN;
+	X x2;
+	x2._id = INT_MAX;
+	return *this == x1 || *this == x2;
+}
+bool X::operator==(const X& x)
+{
+	return this->_id == x._id;
+}
+bool X::operator!=(const X& x)
+{
+	return !(*this == x);
+}
+
+X::X()
+{
+	_id = INT_MIN;
+	_s._value = INT_MIN;
+	_s._w = INT_MIN;
+	_e._value = INT_MIN;
+	_e._w = INT_MIN;
+	_w = INT_MIN;
+}
+
 Msg::Msg()
 {
 	X x;
-	x._id = -1;
 	Y y;
-	y._value = -1;
 
 	_aX = _bX = _aMX = _bMX = _aIX = _bIX = _aTX = _bTX = x;
 	_aY = _bY = _aMY = _bMY = _aIY = _bIY = y;
@@ -65,6 +199,18 @@ ostream& operator<<(ostream& os, const X& rhs)
 {
 	os << "X: " << rhs._id << " " << rhs._s << " " << rhs._e << " " << rhs._w;
 	return os;
+}
+
+istream& operator>>(istream& input, X& x)
+{
+	input >> x._id >> x._s._value >> x._e._value >> x._w;
+	return input;
+}
+
+istream& operator>>(istream& input, Y& y)
+{
+	input >> y._value >> y._w;
+	return input;
 }
 
 bool operator<(int s, Y y)
@@ -87,14 +233,23 @@ bool operator>=(int s, Y y)
 	return s >= y._value;
 }
 
+bool operator==(int s, Y y)
+{
+	return s == y._value;
+}
 
-// order y according to its index
-bool cmpYIDInc(Y y1, Y y2)
+bool operator!=(int s, Y y)
+{
+	return s != y._value;
+}
+
+
+bool cmpYValueInc(Y y1, Y y2)
 {
 	return y1._value < y2._value;
 }
 
-bool cmpYIDDec(Y y1, Y y2)
+bool cmpYValueDec(Y y1, Y y2)
 {
 	return y1._value > y2._value;
 }
@@ -112,14 +267,13 @@ bool cmpYWeightInc(Y y1, Y y2)
 	return false;
 }
 
-// priority: increasing end
 bool cmpXEndInc(X x1, X x2)
 {
 	if (x1._e < x2._e)
 	{
 		return true;
 	}
-	if (x1._e == x2._e && x1._s <x2._s)
+	if (x1._e == x2._e && x1._s < x2._s)
 	{
 		return true;
 	}
@@ -127,7 +281,7 @@ bool cmpXEndInc(X x1, X x2)
 	{
 		return true;
 	}
-	return false;//x1._e < x2._e;
+	return false;
 }
 
 bool cmpXBeginDec(X x1, X x2)
@@ -140,8 +294,7 @@ bool cmpXBeginDec(X x1, X x2)
 	{
 		return true;
 	}
-	return false;//x1._e < x2._e;
-	//return x1._s > x2._s;
+	return false;
 
 }
 
@@ -165,7 +318,6 @@ bool cmpXID(X x1, X x2)
 
 
 
-// return the OIS in the glover mathcing of a CBG
 void formGloverMatching(const vector<X> vX, const vector<Y> vY, vector<X>& vZ)
 {
 	vector<X> XX = vX;
@@ -193,8 +345,6 @@ void formGloverMatching(const vector<X> vX, const vector<Y> vY, vector<X>& vZ)
 			for (int j = 0; j < selectedX.size(); j++)
 			{
 				if (cmpXEndInc(selectedX[j], x))
-					//(selectedX[j]._e == x._e && selectedX[j]._s < x._s)
-					//|| (selectedX[j]._e == x._e && selectedX[j]._s == x._s && selectedX[j]._id < x._id))
 				{
 					x = selectedX[j];
 				}
@@ -212,14 +362,13 @@ void formGloverMatching(const vector<X> vX, const vector<Y> vY, vector<X>& vZ)
 	return;
 }
 
-// return the OIS in the plaxton MWM of a LWCBG
 void formPlaxtonMWM(const vector<X> vX, const vector<Y> vY, vector<X>& vZ, vector<Y>& vMY)
 {
 	vector<X> XX = vX;
 	vector<Y> YY = vY;
 
 	sort(XX.begin(), XX.end(), cmpXWeightInc);
-	sort(YY.begin(), YY.end(), cmpYIDInc);
+	sort(YY.begin(), YY.end(), cmpYValueInc);
 
 	vZ.clear();
 	for (int i = XX.size() - 1; i >= 0; i--)

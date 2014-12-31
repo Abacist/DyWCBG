@@ -1,5 +1,5 @@
-//include the definition of X, Y and basic function like cmp
 #pragma once
+#pragma warning (disable:4018)
 
 #include<iostream>
 #include<set>
@@ -10,71 +10,52 @@
 
 using namespace std;
 
-// structure of a y vertex
-struct Y
+
+class Y
 {
-	int _value;	// id of x, assuming distinctive
-	// Notes: the y vertex with _id=-1 denotes the empty y, which is used in msg transmission.
+public:
+	int _value;	
 	int _w;
+	Y();
 
 
-	//used for determine the edge
-	bool operator<(const Y& y)
-	{
-		return this->_value < y._value;
-	}
-	bool operator<=(const Y& y)
-	{
-		return this->_value <= y._value;
-	}
-	bool operator>(const Y& y)
-	{
-		return this->_value > y._value;
-	}
-	bool operator>=(const Y& y)
-	{
-		return this->_value >= y._value;
-	}
-	bool operator==(const Y& y)
-	{
-		return this->_value == y._value;
-	}
-	bool operator!=(const Y& y)
-	{
-		return this->_value != y._value;
-	}
-
+	bool empty();
+	bool operator<(const Y& y);
+	bool operator<=(const Y& y);
+	bool operator>(const Y& y);
+	bool operator>=(const Y& y);
+	bool operator==(const Y& y);
+	bool operator!=(const Y& y);
+	bool operator<(const int& y);
+	bool operator<=(const int& y);
+	bool operator>(const int& y);
+	bool operator>=(const int& y);
+	bool operator==(const int& y);
+	bool operator!=(const int& y);
 };
 
 ostream& operator<<(ostream& os, const Y& rhs);
 
-// structure of an x vertex
-struct X
+class X
 {
-	int _id;	// id of x, assuming distinctive
-	// Notes: the x vertex with _id=-1 denotes the empty x, which is used in msg transmission.
+public:
+	int _id;	
 
-	int _s;	// the start of the interval of the neighbour of the x
-	int _e;	// the end of the interval of the neighbour of the x
-	int _w;	// the weight of the x, assuming it is positive
-	bool operator==(const X& x)
-	{
-		return this->_id == x._id;
-	}
-	bool operator!=(const X& x)
-	{
-		return !(*this == x);
-	}
+	Y _s;
+	Y _e;
+	int _w;	
+	X();
+	bool empty();
+	bool operator==(const X& x);
+	bool operator!=(const X& x);
 };
 
 ostream& operator<<(ostream& os, const X& rhs);
 
-// change Msg from structure to class to include various methods for Msg
 class Msg
 {
 public:
-	// (a_Z,b_Z;a_T,b_T;a_I,b_I;a_X,b_X;a_Y,b_Y ); 
-	// if in a itme x.id=-1 or y.id=-1, that means the itme is empty.
+	
 	X _aX;
 	X _bX;
 	Y _aY;
@@ -97,8 +78,8 @@ public:
 
 };
 
-bool cmpYIDInc(Y y1, Y y2);
-bool cmpYIDDec(Y, Y);
+bool cmpYValueInc(Y y1, Y y2);
+bool cmpYValueDec(Y, Y);
 bool cmpYWeightInc(Y y1, Y y2);
 bool cmpXEndInc(X x1, X x2);
 bool cmpXBeginDec(X, X);
@@ -107,3 +88,19 @@ bool cmpXID(X x1, X x2);
 
 void formGloverMatching(const vector<X> vX, const vector<Y> vY, vector<X>& vZ);
 void formPlaxtonMWM(const vector<X> vX, const vector<Y> vY, vector<X>& vZ, vector<Y>& vMY);
+
+bool operator<(int s, Y y);
+
+bool operator<=(int s, Y y);
+
+bool operator>(int s, Y y);
+
+bool operator>=(int s, Y y);
+
+bool operator==(int s, Y y);
+
+bool operator!=(int s, Y y);
+
+istream& operator>>(istream& input, X& x);
+
+istream& operator>>(istream& input, Y& y);

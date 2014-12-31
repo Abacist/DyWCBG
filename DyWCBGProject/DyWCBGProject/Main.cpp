@@ -8,10 +8,10 @@
 
 using namespace std;
 
-const int mY = 100;
-const int ur = 500;
-int verifyEachUpdate = 0;		//0 not verify, !0 verify
-int gen = 1;
+const int mY =				5;
+const int ur =				10;
+int verifyEachUpdate =		1;		//0 not verify, !0 verify
+int gen =					1;
 
 void generator(char* fileName = "input.txt", int MaxY = mY, int UpdateRange = ur, int WeightRange = 1000);
 
@@ -23,7 +23,7 @@ int main()
 	{
 		if (gen)
 		{
-			generator();
+			generator(); 
 		}
 		ifstream in("input.txt");
 		if (!in)
@@ -38,7 +38,7 @@ int main()
 		for (int i = 0; i < rangeOfY; i++)
 		{
 			Y temp;
-			in >> temp._value;
+			in >> temp;
 			tempVecY.push_back(temp);
 		}
 		Tree* pTree = new Tree(tempVecY);
@@ -49,8 +49,8 @@ int main()
 			in >> command;
 			if (command == '#')
 			{
-				char s[20];
-				in.get(s, 20, '\n');
+				char s[100];
+				in.get(s, 100, '\n');
 				continue;
 			}
 			if (command == '$')
@@ -64,8 +64,28 @@ int main()
 			case '1':
 			{
 				X x;
-				in >> x._id >> x._s >> x._e >> x._w;
-
+				in >> x;
+				if (x._id == 6)
+				{
+					int a = 1;
+				}
+				pTree->insertXinTree(x);
+				if (verifyEachUpdate)
+				{
+					int flag;
+					TreeNode* errorNode;
+					pTree->verifyInvariantsRecur(flag, errorNode);
+					if (flag == 0)
+					{
+						//cout << "Insert Y pass, id " << y._id << endl;
+					}
+					else
+					{
+						cout << endl << endl << endl << endl << "After InsertY, Not satify, please check! Error code: " << flag << endl
+							<< "X id:" << x._id << endl;
+						goto End;
+					}
+				}
 
 			}break;
 
@@ -76,8 +96,30 @@ int main()
 			}break;
 			case '3':
 			{
+				//insert Y
 				Y y;
-				in >> y._value >> y._w;
+				in >> y;
+				if (y._value == 5)
+				{
+					int a = 1;
+				}
+				pTree->insertYinTree(y);
+				if (verifyEachUpdate)
+				{
+					int flag;
+					TreeNode* errorNode;
+					pTree->verifyInvariantsRecur(flag, errorNode);
+					if (flag == 0)
+					{
+						//cout << "Insert Y pass, id " << y._id << endl;
+					}
+					else
+					{
+						cout << endl << endl << endl << endl << "After InsertY, Not satify, please check! Error code: " << flag << endl
+							<< "Y value:" << y._value << endl;
+						goto End;
+					}
+				}
 
 
 			}break;
@@ -92,7 +134,7 @@ int main()
 			case '6':
 			{
 				X x;
-				in >> x._id >> x._s >> x._e;
+				in >> x;
 			}break;
 			case '7':
 			{
@@ -101,7 +143,7 @@ int main()
 			case '8':
 			{
 				Y y;
-				in >> y._value>> y._w;
+				in >> y;
 
 			}break;
 			}
@@ -110,6 +152,18 @@ int main()
 		}
 		in.close();
 		//verify
+		int flag;
+		TreeNode* errorNode;
+		pTree->verifyInvariantsRecur(flag, errorNode);
+		if (flag == 0)
+		{
+			cout << "============================Case " << cases++ << " passed!" << endl;
+		}
+		else
+		{
+			cout << endl << endl << endl << endl << "Not satify, please check! Error code: " << flag << endl;
+			goto End;
+		}
 
 	}
 End:

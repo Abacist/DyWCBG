@@ -29,7 +29,16 @@
     <ClCompile Include="Main.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="TreeNodeAux.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
     <ClCompile Include="TreeAux.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="TreeY.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="TreeX.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

@@ -1,5 +1,4 @@
 #pragma once
-//the definition of the whole Tree
 #include"Basic.h"
 
 class TreeNode
@@ -7,13 +6,21 @@ class TreeNode
 public:
 	vector<X> _X;
 	vector<Y> _Y;
+
 	vector<X> _MX;
-	vector<X> _IX;
-	vector<X> _TX;
 	vector<X> _MXR;
 	vector<X> _MXL;
-	vector<Y> _IY;
+	//in leaf: MX = MXR
+
+	vector<X> _IX;
+	vector<X> _TX;
+
 	vector<Y> _MY;
+	vector<Y> _MYL;
+	vector<Y> _MYR;
+	//in leaf: MY = MYR
+	
+	vector<Y> _IY;
 
 	TreeNode * _leftChild;
 	TreeNode * _rightChild;
@@ -25,9 +32,14 @@ public:
 	Y maxY();
 	Y minY();
 
-	Y leftATforZR(Y y);
-	Y rightATforZR(Y y);
+	Y alphaPostforZR(Y y);
+	Y alphaPreforZR(Y y);
 
+	int verifyNodeInvariants();
+	void splitNode(X insertedX);
+
+	Msg insertYintoLeaf(Y y);
+	Msg insertXintoLeaf(X x);
 
 
 };
@@ -42,4 +54,10 @@ public:
 	void insertXinTree(X x);
 	void insertYinTree(Y y);
 
+	TreeNode* locateLeaf(X x);
+	TreeNode* locateLeaf(Y y);
+
+
+	void verifyInvariantsRecur(int& flag, TreeNode*& errorNode);
+	void verifyInvariantsRecur(int& flag, TreeNode*& errorNode, TreeNode* curRoot);
 };
