@@ -19,7 +19,7 @@ Msg TreeNode::insertYintoLeaf(Y y)
 		Y aPre = alphaPreforZR(y);
 		for (int i = 0; i < _IX.size(); i++)
 		{
-			if (!aPre.empty() && _IX[i]._e > aPre || aPre.empty())
+			if (!aPre.empty() && _IX[i]._e >= aPre || aPre.empty())
 			{
 				CIX.push_back(_IX[i]);
 			}
@@ -29,18 +29,15 @@ Msg TreeNode::insertYintoLeaf(Y y)
 		{
 			//calculate replaceable set RMY
 			vector<Y> RMY;
-			sort(_MXR.begin(), _MXR.end(), cmpXEndInc);
-			X maxEndX = *(_MXR.end() - 1);
-			if (y < maxEndX._e)
+
+			for (int i = 0; i < _MYR.size(); i++) //in leaf, MYR == MY
 			{
-				for (int i = 0; i < _MYR.size(); i++) //in leaf, MYR == MY
+				if (!aPre.empty() && _MYR[i] >= aPre || aPre.empty())
 				{
-					if (!aPre.empty() && _MYR[i] > aPre || aPre.empty())
-					{
-						RMY.push_back(_MYR[i]);
-					}
+					RMY.push_back(_MYR[i]);
 				}
 			}
+
 			RMY.push_back(y);
 			sort(RMY.begin(), RMY.end(), cmpYWeightInc);
 			Y ry = RMY[0];

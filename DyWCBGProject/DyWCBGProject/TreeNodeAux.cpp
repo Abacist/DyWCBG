@@ -41,7 +41,6 @@ Y TreeNode::alphaPostforZR(Y y)
 		tY = tempZ[tempZ.size() - 1]._e;
 
 		int i = 0;
-		//int initIndex;
 		while (i+1 <= tempY.size())
 		{
 			if (tempY[i] <= y)
@@ -54,7 +53,6 @@ Y TreeNode::alphaPostforZR(Y y)
 			}
 		}
 		i--;
-		//initIndex = i;
 		//found the maxmal Y0 such that Y0<=y
 
 
@@ -75,31 +73,6 @@ Y TreeNode::alphaPostforZR(Y y)
 		}
 		return tY;
 
-
-
-		//if (find(tempY.begin(), tempY.end(), y) != tempY.end())
-		//{
-		//	tY = tempZ[tempZ.size() - 1]._e;
-		//	for (int i = tempY.size() - 2; i >= 0; i--)
-		//	{
-		//		if (tempZ[i]._e < tempY[i + 1] && tempY[i]>=y)
-		//		{
-		//			tY = tempZ[i]._e;
-		//		}
-		//	}
-		//	return tY;
-		//}
-		//else
-		//{
-		//	tY = tempZ[tempZ.size() - 1]._e;
-		//	for (int i = tempY.size() - 2; i >= 0; i--)
-		//	{
-		//		if ((tempY[i] > y || tempY[i] < y && tempY[i + 1]>y) && tempZ[i]._e < tempY[i + 1])
-		//		{
-		//			tY = tempZ[i]._e;
-		//		}
-		//	}
-		//	return tY;// < y ? y : tY;
 	}
 }
 
@@ -112,14 +85,48 @@ Y TreeNode::alphaPreforZR(Y y)
 	sort(tempY.begin(), tempY.end(), cmpYValueInc);
 	sort(tempZ.begin(), tempZ.end(), cmpXEndInc);
 	Y tY;
-	for (int i = 0; i < tempZ.size(); i++)
+	if (_MXR.empty())
 	{
-		if (tempY[i] == tempZ[i]._e && tempY[i] < y)
-		{
-			tY = tempY[i];
-		}
+		throw new exception();
 	}
-	return tY;
+	if (y <= tempY[0])
+	{
+		return y;
+	}
+	else
+	{
+		if (find(tempY.begin(), tempY.end(), y) == tempY.end())
+		{
+			tempY.push_back(y);
+			sort(tempY.begin(), tempY.end(), cmpYValueInc);
+		}
+		int i = 0;
+		int tightIndex = -1;
+		while (true)
+		{
+			if (tempY[i] == y)
+			{
+				i--;
+				break;
+			}
+			else
+			{
+				if (tempZ[i]._e < tempY[i + 1])
+				{
+					//tight
+					tightIndex = i;
+					//break;
+				}
+				i++;
+			}
+		}
+		if (tightIndex != -1)
+		{
+			tY = tempY[tightIndex + 1];
+		}
+		return tY;
+
+	}
 }
 
 void TreeNode::splitNode(X insertedX)
