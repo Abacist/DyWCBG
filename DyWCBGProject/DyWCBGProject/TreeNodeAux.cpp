@@ -41,7 +41,7 @@ Y TreeNode::alphaPostforZR(Y y)
 		tY = tempZ[tempZ.size() - 1]._e;
 
 		int i = 0;
-		int initIndex;
+		//int initIndex;
 		while (i+1 <= tempY.size())
 		{
 			if (tempY[i] <= y)
@@ -54,7 +54,7 @@ Y TreeNode::alphaPostforZR(Y y)
 			}
 		}
 		i--;
-		initIndex = i;
+		//initIndex = i;
 		//found the maxmal Y0 such that Y0<=y
 
 
