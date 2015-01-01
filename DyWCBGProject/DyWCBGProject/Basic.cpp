@@ -26,13 +26,26 @@ void generator(char* fileName, int MaxY, int UpdateRange, int WeightRange)
 	curExistsY.push_back(y0);
 	out << 1 << endl << y0._value << " " << y0._w << endl;
 
+	for (int i = 1; i <= MaxY; i++)
+	{
+		Y y;
+		y._value = rand()%MaxY;
+		//y._value = i;
+		y._w = rand()%WeightRange;
+		if (find(curExistsY.begin(), curExistsY.end(), y) == curExistsY.end())
+		{
+			out << 3 << " " << y._value << " " << y._w << endl;
+			curExistsY.push_back(y);
+		}
+	}
+
 	int i = 0;
 	for (; i < UpdateRange;)
 	{
-		if ((rand() % 2) == 0)		// insert x or insert y
-		{
+		//if ((rand() % 2) == 0)		// insert x or insert y
+		//{
 			int s = 0;//rand() % MaxY + 1;
-			int e = rand() % MaxY + 1;
+			int e = rand() % MaxY*2 + 1;
 			if (s > e)
 			{
 				int temp = e;
@@ -46,7 +59,19 @@ void generator(char* fileName, int MaxY, int UpdateRange, int WeightRange)
 			x._e._value = e;
 			x._w = w;
 
-			if (find(curExistsY.begin(), curExistsY.end(), x._s) == curExistsY.end())
+			if (x._e > MaxY)
+			{
+				out << 1 << " " << x._id << " " << x._s._value << " " << x._e._value << " " << x._w << endl;
+			}
+			else
+			{
+				if (find(curExistsY.begin(), curExistsY.end(), x._e) != curExistsY.end())
+				{
+					out << 1 << " " << x._id << " " << x._s._value << " " << x._e._value << " " << x._w << endl;
+				}
+
+			}
+			/*if (find(curExistsY.begin(), curExistsY.end(), x._s) == curExistsY.end())
 			{
 				int weight = rand() % WeightRange;
 				Y ys = x._s;
@@ -54,21 +79,21 @@ void generator(char* fileName, int MaxY, int UpdateRange, int WeightRange)
 				curExistsY.push_back(ys);
 				out << 3 << " " << ys._value << " " << weight << endl;
 				
-			}
-			if (find(curExistsY.begin(), curExistsY.end(), x._e) == curExistsY.end())
+			}*/
+			/*if (find(curExistsY.begin(), curExistsY.end(), x._e) == curExistsY.end())
 			{
 				int weight = rand() % WeightRange;
 				Y ye = x._e;
 				ye._w = weight;
 				curExistsY.push_back(ye);
 				out << 3 << " " << ye._value << " " << weight << endl;
-			}
+			}*/
 			//detect whether s and e are already exists
 			//if not ,insert them
 
-			out << 1 << " " << x._id << " " << x._s._value << " " << x._e._value << " " << x._w << endl;
+			//out << 1 << " " << x._id << " " << x._s._value << " " << x._e._value << " " << x._w << endl;
 			curExistsX.push_back(x);
-		}
+		/*}
 		else
 		{
 			Y y;
@@ -79,7 +104,7 @@ void generator(char* fileName, int MaxY, int UpdateRange, int WeightRange)
 				out << 3 << " " << y._value << " " << y._w << endl;
 				curExistsY.push_back(y);
 			}
-		}
+		}*/
 
 	}
 	out << '$' << endl;

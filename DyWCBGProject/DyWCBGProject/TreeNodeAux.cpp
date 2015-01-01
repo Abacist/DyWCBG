@@ -22,6 +22,7 @@ Y TreeNode::minY()
 	return _Y[0];
 }
 
+//aPost must exists in DW case
 Y TreeNode::alphaPostforZR(Y y)
 {
 	vector<X> tempZ;
@@ -31,20 +32,75 @@ Y TreeNode::alphaPostforZR(Y y)
 	sort(tempY.begin(), tempY.end(), cmpYValueInc);
 	sort(tempZ.begin(), tempZ.end(), cmpXEndInc);
 	Y tY;
-	tY._value = INT_MAX;
-	for (int i = tempZ.size() - 1; i >= 0; i--)
+	if (_MXR.empty() || y < tempY[0])
 	{
-		if (tempY[i] == tempZ[i]._e && tempY[i] >= y)
+		return y;
+	}
+	else
+	{
+		tY = tempZ[tempZ.size() - 1]._e;
+
+		int i = 0;
+		int initIndex;
+		while (i+1 <= tempY.size())
 		{
-			tY = tempY[i];
+			if (tempY[i] <= y)
+			{
+				i++;
+			}
+			else
+			{
+				break;
+			}
 		}
+		i--;
+		initIndex = i;
+		//found the maxmal Y0 such that Y0<=y
+
+
+		for (; i + 2 <= tempY.size(); i++)
+		{
+			if (tempZ[i]._e < tempY[i + 1])
+			{
+				//tight
+				tY = tempZ[i]._e;
+				break;
+			}
+		}
+		//else tY keeps tempZ[tempZ.size() - 1]._e;	
+
+		if (tY < y)
+		{
+			tY = y;
+		}
+		return tY;
+
+
+
+		//if (find(tempY.begin(), tempY.end(), y) != tempY.end())
+		//{
+		//	tY = tempZ[tempZ.size() - 1]._e;
+		//	for (int i = tempY.size() - 2; i >= 0; i--)
+		//	{
+		//		if (tempZ[i]._e < tempY[i + 1] && tempY[i]>=y)
+		//		{
+		//			tY = tempZ[i]._e;
+		//		}
+		//	}
+		//	return tY;
+		//}
+		//else
+		//{
+		//	tY = tempZ[tempZ.size() - 1]._e;
+		//	for (int i = tempY.size() - 2; i >= 0; i--)
+		//	{
+		//		if ((tempY[i] > y || tempY[i] < y && tempY[i + 1]>y) && tempZ[i]._e < tempY[i + 1])
+		//		{
+		//			tY = tempZ[i]._e;
+		//		}
+		//	}
+		//	return tY;// < y ? y : tY;
 	}
-	if (tY.empty() && !tempY.empty() && *(tempY.end() - 1) > y && !tempZ.empty() && tempZ.size() == tempY.size())
-	{
-		//return tempY[tempY.size() - 1];
-		return tempZ[tempZ.size() - 1]._e;
-	}
-	return tY;
 }
 
 Y TreeNode::alphaPreforZR(Y y)

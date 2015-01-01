@@ -16,19 +16,11 @@ Msg TreeNode::insertXintoLeaf(X x)
 	{
 		vector<Y> CIY;
 		Y aPost = alphaPostforZR(x._e);
-		Y maxEnd;
-		vector<X> tempMX = _MXR;
-		tempMX.push_back(x);
-		sort(tempMX.begin(), tempMX.end(), cmpXEndInc);
-		maxEnd = (*(tempMX.end() - 1))._e;
 		for (int i = 0; i < _IY.size(); i++)
 		{
-			if (!aPost.empty()&&_IY[i] <= aPost || aPost.empty())
+			if (_IY[i] <= aPost)
 			{
-				if (_IY[i] <= maxEnd)
-				{
 					CIY.push_back(_IY[i]);
-				}
 			}
 		}
 		if (CIY.empty())
@@ -37,7 +29,7 @@ Msg TreeNode::insertXintoLeaf(X x)
 			vector<X> RMX;
 			for (int i = 0; i < _MXR.size(); i++)
 			{
-				if (!aPost.empty() && _MXR[i]._e <= aPost || aPost.empty())
+				if (!aPost.empty() && _MXR[i]._e <= aPost)
 				{
 					RMX.push_back(_MXR[i]);
 				}
