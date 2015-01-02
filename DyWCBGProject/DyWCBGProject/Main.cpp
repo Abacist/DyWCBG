@@ -8,8 +8,8 @@
 
 using namespace std;
 
-const int mY =				35;
-const int ur =				110;
+const int mY =				50;
+const int ur =				200;
 int verifyEachUpdate =		0;		//0 not verify, !0 verify
 int gen =					1;
 
