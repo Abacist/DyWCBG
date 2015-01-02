@@ -29,7 +29,7 @@ Msg TreeNode::insertXintoLeaf(X x)
 			vector<X> RMX;
 			for (int i = 0; i < _MXR.size(); i++)
 			{
-				if (!aPost.empty() && _MXR[i]._e <= aPost)
+				if (/*!aPost.empty() && */_MXR[i]._e <= aPost)
 				{
 					RMX.push_back(_MXR[i]);
 				}
@@ -94,4 +94,12 @@ Msg TreeNode::insertXintoLeaf(X x)
 
 
 	return msg;
+}
+
+
+
+void Tree::insertXinTree(X x)
+{
+	//TreeNode* curNode = locateLeaf(x);
+	Msg msg = _root->insertXintoLeaf(x);
 }

@@ -6,26 +6,6 @@ Tree::Tree(vector<Y> vY)
 	_root = new TreeNode(vY);
 }
 
-
-void Tree::insertXinTree(X x)
-{
-	TreeNode* curNode = locateLeaf(x);
-	Msg msg = curNode->insertXintoLeaf(x);
-}
-
-void Tree::insertYinTree(Y y)
-{
-	if (find(_root->_Y.begin(), _root->_Y.end(), y) != _root->_Y.end())
-	{
-		//already inserted
-		return;
-	}
-	TreeNode* curNode = locateLeaf(y);
-	Msg msg = curNode->insertYintoLeaf(y);
-
-}
-
-
 TreeNode* Tree::locateLeaf(X x)
 {
 	TreeNode* node = _root;

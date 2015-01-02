@@ -19,7 +19,7 @@ Msg TreeNode::insertYintoLeaf(Y y)
 		Y aPre = alphaPreforZR(y);
 		for (int i = 0; i < _IX.size(); i++)
 		{
-			if (!aPre.empty() && _IX[i]._e >= aPre || aPre.empty())
+			if (/*!aPre.empty() && */_IX[i]._e >= aPre/* || aPre.empty()*/)
 			{
 				CIX.push_back(_IX[i]);
 			}
@@ -32,7 +32,7 @@ Msg TreeNode::insertYintoLeaf(Y y)
 
 			for (int i = 0; i < _MYR.size(); i++) //in leaf, MYR == MY
 			{
-				if (!aPre.empty() && _MYR[i] >= aPre || aPre.empty())
+				if (/*!aPre.empty() && */_MYR[i] >= aPre /*|| aPre.empty()*/)
 				{
 					RMY.push_back(_MYR[i]);
 				}
@@ -94,4 +94,17 @@ Msg TreeNode::insertYintoLeaf(Y y)
 			}
 		}
 	}
+}
+
+
+void Tree::insertYinTree(Y y)
+{
+	if (find(_root->_Y.begin(), _root->_Y.end(), y) != _root->_Y.end())
+	{
+		//already inserted
+		return;
+	}
+	//TreeNode* curNode = locateLeaf(y);
+	Msg msg = _root->insertYintoLeaf(y);
+
 }

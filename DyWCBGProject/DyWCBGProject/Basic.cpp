@@ -15,7 +15,7 @@ void generator(char* fileName, int MaxY, int UpdateRange, int WeightRange)
 	srand(lpsystime.wMinute * 1000 + lpsystime.wMilliseconds);
 
 	Y y0;
-	y0._value = 0;
+	y0._value = MaxY;
 	y0._w = rand() % WeightRange;
 	curExistsY.push_back(y0);
 	out << 1 << endl << y0._value << " " << y0._w << endl;
@@ -39,7 +39,7 @@ void generator(char* fileName, int MaxY, int UpdateRange, int WeightRange)
 		if ((rand() % 2) == 0)		// insert x or insert y
 		{
 			int s = 0;//rand() % MaxY + 1;
-			int e = rand() % MaxY*2 + 1;
+			int e = rand() % MaxY*2;
 			if (s > e)
 			{
 				int temp = e;
@@ -53,11 +53,11 @@ void generator(char* fileName, int MaxY, int UpdateRange, int WeightRange)
 			x._e._value = e;
 			x._w = w;
 
-			if (x._e > MaxY)
-			{
+			/*if (x._e > MaxY)
+			{*/
 				out << 1 << " " << x._id << " " << x._s._value << " " << x._e._value << " " << x._w << endl;
 				curExistsX.push_back(x);
-			}
+			/*}
 			else
 			{
 				if (find(curExistsY.begin(), curExistsY.end(), x._e) != curExistsY.end())
@@ -70,7 +70,7 @@ void generator(char* fileName, int MaxY, int UpdateRange, int WeightRange)
 					out <<"#"<< 1 << " " << x._id << " " << x._s._value << " " << x._e._value << " " << x._w << endl;
 				}
 
-			}
+			}*/
 			/*if (find(curExistsY.begin(), curExistsY.end(), x._s) == curExistsY.end())
 			{
 				int weight = rand() % WeightRange;
@@ -97,7 +97,7 @@ void generator(char* fileName, int MaxY, int UpdateRange, int WeightRange)
 		else
 		{
 			Y y;
-			y._value = rand() % MaxY + 1;
+			y._value = rand() % MaxY;
 			y._w = rand() % WeightRange;
 			if (find(curExistsY.begin(), curExistsY.end(), y) == curExistsY.end())
 			{
