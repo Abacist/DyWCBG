@@ -34,6 +34,7 @@ public:
 
 	Y alphaPostforZR(Y y);
 	Y alphaPreforZR(Y y);
+	Y betaPreforZL(Y y);
 
 	int verifyNodeInvariants();
 	void splitNode(X insertedX);
@@ -41,6 +42,12 @@ public:
 	Msg insertYintoLeaf(Y y);
 	Msg insertXintoLeaf(X x);
 
+	Msg insertXintoNodeL(Msg msg);
+
+	vector<Y> getYL();
+	vector<Y> getYR();
+	vector<Y> getIYL();
+	vector<Y> getIYR();
 
 };
 

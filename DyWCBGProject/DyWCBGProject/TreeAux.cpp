@@ -32,7 +32,6 @@ TreeNode* Tree::locateLeaf(X x)
 			{
 				throw new exception("Split Error");
 			}
-
 			node = node->_rightChild;
 
 		}
@@ -78,6 +77,10 @@ void Tree::verifyInvariantsRecur(int& flag, TreeNode*& errorNode, TreeNode* curR
 		{
 			errorNode = NULL;
 		}
+		else
+		{
+			errorNode = curRoot;
+		}
 	}
 	else
 	{
@@ -91,6 +94,14 @@ void Tree::verifyInvariantsRecur(int& flag, TreeNode*& errorNode, TreeNode* curR
 		{
 			return;
 		}
-		return verifyInvariantsRecur(flag, errorNode, curRoot);
+		flag = curRoot->verifyNodeInvariants();
+		if (flag == 0)
+		{
+			errorNode = NULL;
+		}
+		else
+		{
+			errorNode = curRoot;
+		}
 	}
 }
