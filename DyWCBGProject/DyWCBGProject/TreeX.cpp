@@ -117,6 +117,10 @@ Msg TreeNode::insertXintoNodeL(Msg msg)
 	if (!msg._bIY.empty())
 	{
 		//success in L
+		//really complex TBD
+		//the key point is to calculate the replaceable set/compensable set of inserted X
+		
+
 		if (find(_IY.begin(), _IY.end(), msg._bIY) == _IY.end())
 		{
 			//msg.bIY is not in P
@@ -232,7 +236,7 @@ Msg TreeNode::insertXintoNodeL(Msg msg)
 						CIYL.push_back(newIY[i]);
 					}
 				}
-				sort(CIYL.begin(), CIYL.end(), cmpXWeightInc);
+				sort(CIYL.begin(), CIYL.end(), cmpYWeightInc);
 				Y cYL = CIYL[CIYL.size() - 1];
 
 				//determine replaceable set in left part first
@@ -264,8 +268,12 @@ Msg TreeNode::insertXintoNodeL(Msg msg)
 						CIYR.push_back(IYR[i]);
 					}
 				}
-				sort(CIYR.begin(), CIYR.end(), cmpYWeightInc);
-				Y cYR = CIYR[CIYR.size() - 1];
+				Y cYR;
+				if (!CIYR.empty())
+				{
+					sort(CIYR.begin(), CIYR.end(), cmpYWeightInc);
+					cYR = CIYR[CIYR.size() - 1];
+				}
 				if (cmpYWeightInc(cYR, cYL))
 				{
 					//left is heavier
@@ -469,9 +477,25 @@ Msg TreeNode::insertXintoNodeL(Msg msg)
 		{
 			//transfer
 
+			//determine CIYL
+			Y bPre = betaPreforZL(msg._aX._s);
+			vector<Y> CIYL, IYL = getIYL();
+			for (int i = 0; i < IYL.size(); i++)
+			{
+				if (IYL[i] >= bPre)
+				{
+					CIYL.push_back(IYL[i]);
+				}
+			}
+			Y cYL;
+			if (!CIYL.empty())
+			{
+				sort(CIYL.begin(), CIYL.end(), cmpYWeightInc);
+				cYL = CIYL[CIYL.size() - 1];
+			}
+
 			//determine replaceable set in left part first
 			vector<X> RMXL;
-			Y bPre = betaPreforZL(msg._aX._s);
 			for (int i = 0; i < _MXL.size(); i++)
 			{
 				if (_MXL[i]._s >= bPre)
@@ -487,10 +511,10 @@ Msg TreeNode::insertXintoNodeL(Msg msg)
 			sort(RMXL.begin(), RMXL.end(), cmpXEndInc);
 			maxEnd = RMXL[RMXL.size() - 1];
 
-			if (maxEnd._e < _rightChild->minY())
+			/*if (maxEnd._e < _rightChild->minY())
 			{
 				throw new exception();
-			}
+			}*/
 
 			//determine CIY in right part
 			vector<Y> IYR = getIYR();
@@ -503,25 +527,47 @@ Msg TreeNode::insertXintoNodeL(Msg msg)
 					CIYR.push_back(IYR[i]);
 				}
 			}
-			
+
+			Y cYR;
 			if (!CIYR.empty())
 			{
-				Y cYR;
 				sort(CIYR.begin(), CIYR.end(), cmpYWeightInc);
 				cYR = CIYR[CIYR.size() - 1];
+			}
+
+			if (!cYL.empty() || !cYR.empty())
+			{
 				//conpense
-				rMsg._aMX = msg._aX;
-				_MX.push_back(msg._aX);
-				_MXL.push_back(msg._aX);
-				_MXL.erase(find(_MXL.begin(), _MXL.end(), maxEnd));
-				_MXR.push_back(maxEnd);
+				if (cmpYWeightInc(cYL, cYR))
+				{
+					//right is heavier
+					rMsg._aMX = msg._aX;
+					_MX.push_back(msg._aX);
+					_MXL.push_back(msg._aX);
+					_MXL.erase(find(_MXL.begin(), _MXL.end(), maxEnd));
+					_MXR.push_back(maxEnd);
 
-				rMsg._aMY = cYR;
-				_MY.push_back(cYR);
-				_MYR.push_back(cYR);
+					rMsg._aMY = cYR;
+					_MY.push_back(cYR);
+					_MYR.push_back(cYR);
 
-				rMsg._bIY = cYR;
-				_IY.erase(find(_IY.begin(), _IY.end(), cYR));
+					rMsg._bIY = cYR;
+					_IY.erase(find(_IY.begin(), _IY.end(), cYR));
+				}
+				else
+				{
+					rMsg._aMX = msg._aX;
+					_MX.push_back(msg._aX);
+					_MXL.push_back(msg._aX);
+
+					rMsg._aMY = cYL;
+					_MY.push_back(cYL);
+					_MYL.push_back(cYL);
+
+					rMsg._bIY = cYL;
+					_IY.erase(find(_IY.begin(), _IY.end(), cYL));
+				}
+				
 			}
 			else
 			{
@@ -610,4 +656,225 @@ Msg TreeNode::insertXintoNodeL(Msg msg)
 
 	return rMsg;
 	
+}
+
+
+Msg TreeNode::insertXintoNodeR(Msg msg)
+{
+	Msg rMsg;
+	rMsg._aX = msg._aX;
+	_X.push_back(msg._aX);
+	/*if (!msg._bIY.empty())
+	{*/
+		//success
+		if (!msg._bIY.empty() && find(_IY.begin(), _IY.end(), msg._bIY) != _IY.end())
+		{
+			//success and still in
+			rMsg._aMX = msg._aX;
+			_MX.push_back(msg._aX);
+			_MXR.push_back(msg._aX);
+
+			rMsg._bIY = msg._bIY;
+			_IY.erase(find(_IY.begin(), _IY.end(), msg._bIY));
+
+			rMsg._aMY = msg._aMY;
+			_MY.push_back(msg._aMY);
+			_MYR.push_back(msg._aMY);
+		}
+		else
+		{
+			Y aPost = alphaPostforZR(msg._aX._e);
+			vector<X> RMXR;
+			vector<Y> CIYR, IYR = getIYR();
+			for (int i = 0; i < _MXR.size(); i++)
+			{
+				if (_MXR[i]._e <= aPost)
+				{
+					RMXR.push_back(_MXR[i]);
+				}
+			}
+			RMXR.push_back(msg._aX);
+			for (int i = 0; i < IYR.size(); i++)
+			{
+				if (IYR[i] <= aPost)
+				{
+					CIYR.push_back(IYR[i]);
+				}
+			}
+
+			sort(RMXR.begin(), RMXR.end(), cmpXBeginDec);
+			X minBegin = RMXR[RMXR.size() - 1];
+			Y bPre = betaPreforZL(minBegin._s);
+			vector<X> RMXL;
+			vector<Y> CIYL, IYL = getIYL();
+			for (int i = 0; i < _MXL.size(); i++)
+			{
+				if (_MXL[i]._s >= bPre)
+				{
+					RMXL.push_back(_MXL[i]);
+				}
+			}
+			for (int i = 0; i < IYL.size(); i++)
+			{
+				if (IYL[i] >= bPre)
+				{
+					CIYL.push_back(IYL[i]);
+				}
+			}
+
+			if (CIYL.empty() && CIYR.empty())
+			{
+				//insert fail
+				vector<X> transferTest = RMXR;
+				sort(transferTest.begin(), transferTest.end(), cmpXEndInc);
+				if (transferTest[transferTest.size() - 1]._e > _rightChild->maxY())
+				{
+					//transfer
+					rMsg._aMX = msg._aX;
+					_MX.push_back(msg._aX);
+					_MXR.push_back(msg._aX);
+
+					rMsg._bMX = transferTest[transferTest.size() - 1];
+					_MXR.erase(find(_MXR.begin(), _MXR.end(), transferTest[transferTest.size() - 1]));
+					_MX.erase(find(_MX.begin(), _MX.end(), transferTest[transferTest.size() - 1]));
+
+					rMsg._aTX = transferTest[transferTest.size() - 1];
+					_TX.push_back(transferTest[transferTest.size() - 1]);
+
+				}
+				else
+				{
+					X aIXR, aIXL;
+					sort(RMXR.begin(), RMXR.end(), cmpXWeightInc);
+					aIXR = RMXR[0];
+					if (!RMXL.empty())
+					{
+						sort(RMXL.begin(), RMXL.end(), cmpXWeightInc);
+						aIXL = RMXL[0];
+						if (cmpXWeightInc(aIXL, aIXR))
+						{
+							Y bPost = betaPostforZL(aIXL._s);
+							vector<X> backX;
+							for (int i = 0; i < RMXR.size(); i++)
+							{
+								if (RMXR[i]._s <= bPost)
+								{
+									backX.push_back(RMXR[i]);
+								}
+							}
+							sort(backX.begin(), backX.end(), cmpXEndInc);
+
+							rMsg._aMX = msg._aX;
+							_MX.push_back(msg._aX);
+							_MXR.push_back(msg._aX);
+							_MXR.erase(find(_MXR.begin(), _MXR.end(), backX[0]));
+							_MXL.push_back(backX[0]);
+
+							rMsg._bMX = aIXL;
+							_MXL.push_back(backX[0]);
+							_MXL.erase(find(_MXL.begin(), _MXL.end(), aIXL));
+
+							rMsg._aIX = aIXL;
+							_IX.push_back(aIXL);
+						}
+						else
+						{
+							rMsg._aMX = msg._aX;
+							_MX.push_back(msg._aX);
+							_MXR.push_back(msg._aX);
+
+							rMsg._bMX = aIXR;
+							_MX.erase(find(_MX.begin(), _MX.end(), aIXR));
+							_MXR.erase(find(_MXR.begin(), _MXR.end(), aIXR));
+
+							rMsg._aIX = aIXR;
+							_IX.push_back(aIXR);
+						}
+					}
+					else
+					{
+						rMsg._aMX = msg._aX;
+						_MX.push_back(msg._aX);
+						_MXR.push_back(msg._aX);
+
+						rMsg._bMX = aIXR;
+						_MX.erase(find(_MX.begin(), _MX.end(), aIXR));
+						_MXR.erase(find(_MXR.begin(), _MXR.end(), aIXR));
+
+						rMsg._aIX = aIXR;
+						_IX.push_back(aIXR);
+					}
+
+					
+						
+					
+				}
+			}
+			else
+			{
+				//insert success
+				Y cYL, cYR;
+				if (!CIYL.empty())
+				{
+					sort(CIYL.begin(), CIYL.end(), cmpYWeightInc);
+					cYL = CIYL[CIYL.size()-1];
+				}
+				if (!CIYR.empty())
+				{
+					sort(CIYR.begin(), CIYR.end(), cmpYWeightInc);
+					cYR = CIYR[CIYR.size()-1];
+				}
+				if (cmpYWeightInc(cYL, cYR))
+				{
+					//right is heavier
+					rMsg._aMX = msg._aX;
+					_MX.push_back(msg._aX);
+					_MXR.push_back(msg._aX);
+
+					rMsg._bIY = cYR;
+					_IY.erase(find(_IY.begin(), _IY.end(), cYR));
+
+					rMsg._aMY = cYR;
+					_MY.push_back(cYR);
+					_MYR.push_back(cYR);
+				}
+				else
+				{
+					//need calculate the backX
+					Y bPost = betaPostforZL(cYL);
+					vector<X> backX;
+					for (int i = 0; i < RMXR.size(); i++)
+					{
+						if (RMXR[i]._s <= bPost)
+						{
+							backX.push_back(RMXR[i]);
+						}
+					}
+					sort(backX.begin(), backX.end(), cmpXEndInc);
+					
+					rMsg._aMX = msg._aX;
+					_MX.push_back(msg._aX);
+					_MXR.push_back(msg._aX);
+					_MXR.erase(find(_MXR.begin(), _MXR.end(), backX[0]));
+					_MXL.push_back(backX[0]);
+
+					rMsg._aMY = cYL;
+					_MYR.push_back(cYL);
+					_MY.push_back(cYL);
+
+					rMsg._bIY = cYL;
+					_IY.erase(find(_IY.begin(), _IY.end(), cYL));
+
+					
+				}
+				
+			}
+
+		}
+	//}
+	//else
+	//{
+	//	//fail
+	//}
+	return rMsg;
 }

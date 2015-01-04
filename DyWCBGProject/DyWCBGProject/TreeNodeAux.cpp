@@ -30,7 +30,7 @@ vector<Y> TreeNode::getYL()
 		Y midY = _rightChild->minY();
 		for (int i = 0; i < _Y.size(); i++)
 		{
-			if (_Y[i] >= midY)
+			if (_Y[i] < midY)
 			{
 				YL.push_back(_Y[i]);
 			}
@@ -86,6 +86,70 @@ vector<Y> TreeNode::getIYR()
 	}
 	return IYR;
 }
+
+//aPost must exists in DW case
+Y TreeNode::alphaPostforZL(Y y)
+{
+	vector<X> tempZ;
+	vector<Y> tempY;
+	tempZ = _MXL;
+	tempY = _MYL;
+	if (tempY.empty())
+	{
+		return y;
+	}
+	else
+	{
+		sort(tempY.begin(), tempY.end(), cmpYValueInc);
+		sort(tempZ.begin(), tempZ.end(), cmpXEndInc);
+		Y tY;
+		//will not be empty
+		if (y < tempY[0])
+		{
+			return y;
+		}
+		else
+		{
+			tY = tempZ[tempZ.size() - 1]._e;
+
+			int i = 0;
+			while (i + 1 <= tempY.size())
+			{
+				if (tempY[i] <= y)
+				{
+					i++;
+				}
+				else
+				{
+					break;
+				}
+			}
+			i--;
+			//found the maxmal Y0 such that Y0<=y
+
+
+			for (; i + 2 <= tempY.size(); i++)
+			{
+				if (tempZ[i]._e < tempY[i + 1])
+				{
+					//tight
+					tY = tempZ[i]._e;
+					break;
+				}
+			}
+			//else tY keeps tempZ[tempZ.size() - 1]._e;	
+
+			if (tY < y)
+			{
+				tY = y;
+			}//without this jude, RMX is right, but CIY is not right
+			return tY;
+
+		}
+	}
+
+}
+
 
 //aPost must exists in DW case
 Y TreeNode::alphaPostforZR(Y y)
@@ -272,6 +336,69 @@ Y TreeNode::alphaPreforZR(Y y)
 	}
 	
 }
+
+
+//must exists
+Y TreeNode::betaPostforZL(Y y)
+{
+	vector<X> tempZ;
+	vector<Y> tempY;
+	tempZ = _MXL;
+	tempY = _MYL;
+	if (tempY.empty())
+	{
+		/*throw new exception();*/
+		return y;
+	}
+	else
+	{
+		sort(tempY.begin(), tempY.end(), cmpYValueDec);
+		sort(tempZ.begin(), tempZ.end(), cmpXBeginDec);
+		Y tY;
+		if (y >= tempY[0])
+		{
+			return y;
+		}
+		else
+		{
+			tY = tempY[0];
+			if (find(tempY.begin(), tempY.end(), y) == tempY.end())
+			{
+				tempY.push_back(y);
+				sort(tempY.begin(), tempY.end(), cmpYValueInc);
+			}
+			int i = 0;
+			int tightIndex = -1;
+			while (true)
+			{
+				if (tempY[i] == y)
+				{
+					i--;
+					break;
+				}
+				else
+				{
+					if (tempZ[i]._s > tempY[i + 1])
+					{
+						//tight
+						tightIndex = i;
+						//break;
+					}
+					i++;
+				}
+			}
+			if (tightIndex != -1)
+			{
+				tY = tempY[tightIndex + 1];
+			}
+			return tY;
+
+		}
+	}
+
+}
+
+
 
 void TreeNode::splitNode(X x)
 {
