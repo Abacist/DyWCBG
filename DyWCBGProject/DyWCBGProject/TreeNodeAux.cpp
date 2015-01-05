@@ -464,18 +464,18 @@ void TreeNode::splitNode(X x)
 	for (int i = 0; i < allX.size(); i++)
 	{
 		Msg msg = _leftChild->insertXintoLeaf(allX[i]);
-		int flag1 = _leftChild->verifyNodeInvariants();
+		//int flag1 = _leftChild->verifyNodeInvariants();
 
 		insertXintoNodeL(msg);
-		int flag = verifyNodeInvariants();
-		if (flag == 0)
-		{
-			//cout << i << " pass!" << endl;
-		}
-		else
-		{
-			__debugbreak();
-		}
+		//int flag = verifyNodeInvariants();
+		//if (flag == 0)
+		//{
+		//	//cout << i << " pass!" << endl;
+		//}
+		//else
+		//{
+		//	__debugbreak();
+		//}
 	}
 }
 

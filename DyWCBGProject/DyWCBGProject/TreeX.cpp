@@ -501,6 +501,7 @@ Msg TreeNode::insertXintoNodeL(Msg msg)
 
 									rMsg._bMX = aIXR;
 									_MX.erase(find(_MX.begin(), _MX.end(), aIXR));
+									_MXR.erase(find(_MXR.begin(), _MXR.end(), aIXR));
 									_MXR.push_back(maxEnd);
 
 									rMsg._aIX = aIXR;
@@ -552,6 +553,7 @@ Msg TreeNode::insertXintoNodeL(Msg msg)
 			X maxEnd = RMXL[RMXL.size() - 1];
 			Y t2 = RMXL[RMXL.size() - 1]._e;
 			Y aPost = alphaPostforZR(t2);
+			vector<X> RMXR;
 			vector<Y> CIYL, CIYR, IYL = getIYL(), IYR = getIYR();
 			for (int i = 0; i < IYL.size(); i++)
 			{
@@ -567,15 +569,98 @@ Msg TreeNode::insertXintoNodeL(Msg msg)
 					CIYR.push_back(IYR[i]);
 				}
 			}
+			for (int i = 0; i < _MXR.size(); i++)
+			{
+				if (_MXR[i]._e <= aPost)
+				{
+					RMXR.push_back(_MXR[i]);
+				}
+			}
 			Y cYL, cYR;
 			if (!CIYL.empty())
 			{
 				sort(CIYL.begin(), CIYL.end(), cmpYWeightInc);
 				cYL = CIYL[CIYL.size() - 1];
 			}
+			if (!CIYR.empty())
+			{
+				sort(CIYR.begin(), CIYR.end(), cmpYWeightInc);
+				cYR = CIYR[CIYR.size() - 1];
+			}
 			if (cYL.empty() && cYR.empty())
 			{
+				//insert fail
+				sort(RMXL.begin(), RMXL.end(), cmpXWeightInc);
+				X aIXL = RMXL[0];
+				vector<X> transferTest = RMXR;
+				transferTest.push_back(maxEnd);
+				sort(transferTest.begin(), transferTest.end(), cmpXEndInc);
+				if (transferTest[transferTest.size() - 1]._e > _rightChild->maxY())
+				{
+					//transfer
+					rMsg._aMX = msg._aX;
+					_MX.push_back(msg._aX);
+					_MXL.push_back(msg._aX);
+					_MXL.erase(find(_MXL.begin(), _MXL.end(), maxEnd));
 
+					rMsg._bMX = transferTest[transferTest.size() - 1];
+					_MXR.push_back(maxEnd);
+					_MXR.erase(find(_MXR.begin(), _MXR.end(), transferTest[transferTest.size() - 1]));
+					_MX.erase(find(_MX.begin(), _MX.end(), transferTest[transferTest.size() - 1]));
+
+					rMsg._aTX = transferTest[transferTest.size() - 1];
+					_TX.push_back(transferTest[transferTest.size() - 1]);
+
+				}
+				else
+				{
+					if (!RMXR.empty())
+					{
+						sort(RMXR.begin(), RMXR.end(), cmpXWeightInc);
+						X aIXR = RMXR[0];
+						if (cmpXWeightInc(aIXL, aIXR))
+						{
+							rMsg._aMX = msg._aX;
+							_MX.push_back(msg._aX);
+							_MXL.push_back(msg._aX);
+
+							rMsg._bMX = aIXL;
+							_MX.erase(find(_MX.begin(), _MX.end(), aIXL));
+							_MXL.erase(find(_MXL.begin(), _MXL.end(), aIXL));
+
+							rMsg._aIX = aIXL;
+							_IX.push_back(aIXL);
+						}
+						else
+						{
+							rMsg._aMX = msg._aX;
+							_MX.push_back(msg._aX);
+							_MXL.push_back(msg._aX);
+							_MXL.erase(find(_MXL.begin(), _MXL.end(), maxEnd));
+
+							rMsg._bMX = aIXR;
+							_MX.erase(find(_MX.begin(), _MX.end(), aIXR));
+							_MXR.erase(find(_MXR.begin(), _MXR.end(), aIXR));
+							_MXR.push_back(maxEnd);
+
+							rMsg._aIX = aIXR;
+							_IX.push_back(aIXR);
+						}
+					}
+					else
+					{
+						rMsg._aMX = msg._aX;
+						_MX.push_back(msg._aX);
+						_MXL.push_back(msg._aX);
+
+						rMsg._bMX = aIXL;
+						_MX.erase(find(_MX.begin(), _MX.end(), aIXL));
+						_MXL.erase(find(_MXL.begin(), _MXL.end(), aIXL));
+
+						rMsg._aIX = aIXL;
+						_IX.push_back(aIXL);
+					}
+				}
 			}
 			else
 			{
