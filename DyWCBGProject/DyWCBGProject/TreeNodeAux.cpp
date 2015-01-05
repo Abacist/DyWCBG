@@ -398,7 +398,26 @@ Y TreeNode::betaPostforZL(Y y)
 
 }
 
+vector<X> TreeNode::getReachableSetinLeftPart(X x)
+{
+	vector<X> allX = _MXL;
+	vector<Y> allY = _MYL;
 
+	vector<X> R;
+	for (int i = 0; i < allX.size(); i++)
+	{
+		vector<X> tempX = allX;
+		tempX.erase(find(tempX.begin(), tempX.end(), allX[i]));
+		tempX.push_back(x);
+		vector<X> MX;
+		formGloverMatching(tempX, allY, MX);
+		if (MX.size() == tempX.size())
+		{
+			R.push_back(allX[i]);
+		}
+	}
+	return R;
+}
 
 void TreeNode::splitNode(X x)
 {

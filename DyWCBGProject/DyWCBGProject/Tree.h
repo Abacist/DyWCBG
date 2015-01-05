@@ -52,6 +52,8 @@ public:
 	vector<Y> getIYL();
 	vector<Y> getIYR();
 
+	vector<X> getReachableSetinLeftPart(X x);
+
 };
 
 class Tree
