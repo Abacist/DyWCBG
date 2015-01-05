@@ -229,6 +229,4 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
-DyWCBGProject/DyWCBGProject/input.txt
-DyWCBGProject/DyWCBGProject/input.txt
-DyWCBGProject/DyWCBGProject/input.txt
+*.txt
