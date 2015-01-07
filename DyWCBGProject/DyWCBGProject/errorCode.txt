@@ -4,6 +4,8 @@
 4. T kick T
 5. X OIS
 6. Y OIS
+7. ZL and ZR are nice
+8. swap in ZL and ZR
 
 
 101. MX IX TX is X's partition

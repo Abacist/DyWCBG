@@ -8,10 +8,10 @@
 
 using namespace std;
 
-const int mY =				20;
-const int ur =				100;
-int verifyEachUpdate =		0;		//0 not verify, !0 verify
-int gen =					1;
+const int mY =				5;
+const int ur =				10;
+int verifyEachUpdate =		1;		//0 not verify, !0 verify
+int gen =					0;
 
 void generator(char* fileName = "input.txt", int MaxY = mY, int UpdateRange = ur, int WeightRange = 1000);
 
@@ -65,7 +65,7 @@ int main()
 			{
 				X x;
 				in >> x;
-				if (x._id == 3)
+				if (x._id == 6)
 				{
 					int a = 1;
 				}

@@ -25,8 +25,8 @@ void generator(char* fileName, int maxY, int updateRange, int weightRange)
 
 	for (int i = 1; i <= updateRange; i++)
 	{
-		int s = 1;//rand() % MaxY + 1;
-		int e = rand() % maxY * 2 + 1;
+		int s = rand() % maxY + 1;
+		int e = rand() % maxY + 1;
 		if (s > e)
 		{
 			int temp = e;
@@ -41,7 +41,7 @@ void generator(char* fileName, int maxY, int updateRange, int weightRange)
 		x._w = w;
 		out << 1 << " " << x._id << " " << x._s._value << " " << x._e._value << " " << x._w << endl;
 	}
-	out << 1 << " " << 1000 << " " << rand() % (maxY-1) + 2 << " " << 1000 << " " << 1000 << endl;
+	//out << 1 << " " << 1000 << " " << rand() % (maxY-1) + 2 << " " << 1000 << " " << 1000 << endl;
 	
 
 	
@@ -286,6 +286,7 @@ void formGloverMatching(const vector<X> vX, const vector<Y> vY, vector<X>& vZ)
 	vector<X> XX = vX;
 	vector<Y> YY = vY;
 	vZ.clear();
+	sort(YY.begin(), YY.end(), cmpYValueInc);
 
 	for (int i = 0; i < YY.size(); i++)
 	{
