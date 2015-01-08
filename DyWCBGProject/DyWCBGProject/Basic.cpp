@@ -149,7 +149,8 @@ Msg::Msg()
 	Y y;
 
 	_aX = _bX = _aMX = _bMX = _aIX = _bIX = _aTX = _bTX = x;
-	_aY = _bY = _aMY = _bMY = _aIY = _bIY = y;
+	_t1 = _t2 = _aY = _bY = _aMY = _bMY = _aIY = _bIY = y;
+	_stableYNumBetweent1t2 = -1;
 }
 
 ostream& operator<<(ostream& os, const Y& rhs)

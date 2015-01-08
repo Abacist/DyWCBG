@@ -4,14 +4,19 @@ extern int verifyEachUpdate;
 
 Msg TreeNode::insertXintoLeaf(X x)
 {
+	
 	Msg msg;
 	msg._aX = x;
 	_X.push_back(x);
+
+	updatet1t2inLeafX(msg);
+	
 	if (_Y.empty())
 	{
+		throw new exception();
 		_IX.push_back(x);
 		msg._aIX = x;
-		return msg;
+		//return msg;
 	}
 	else
 	{
@@ -53,7 +58,7 @@ Msg TreeNode::insertXintoLeaf(X x)
 				_TX.push_back(maxEndX);
 				msg._aTX = maxEndX;
 
-				return msg;
+				//return msg;
 			}
 			else
 			{
@@ -72,7 +77,7 @@ Msg TreeNode::insertXintoLeaf(X x)
 				_IX.push_back(rx);
 				msg._aIX = rx;
 
-				return msg;
+				//return msg;
 			}	
 		}
 		else
@@ -92,8 +97,8 @@ Msg TreeNode::insertXintoLeaf(X x)
 			msg._bIY = cy;
 		}
 	}
-
-
+	
+	updateStableSetinLeaf(msg);
 	return msg;
 }
 
@@ -448,33 +453,108 @@ Msg TreeNode::insertXintoNodeL(Msg msg, vector<X> RMXSinChild)
 							{
 								sort(RMXR.begin(), RMXR.end(), cmpXWeightInc);
 								X aIXR = RMXR[0];
-								if (cmpXWeightInc(aIXL, aIXR))
+
+								sort(RMXR.begin(), RMXR.end(), cmpXBeginDec);
+								X minBegin = RMXR[RMXR.size() - 1];
+
+								vector<X> RMXL2;
+								Y bPre = betaPreforZL(minBegin._s);
+
+								for (int i = 0; i < _MXL.size(); i++)
 								{
-									rMsg._aMX = msg._aX;
-									_MX.push_back(msg._aX);
-									_MXL.push_back(msg._aX);
+									if (_MXL[i]._s >= bPre)
+									{
+										if (find(RMXL.begin(), RMXL.end(), _MXL[i]) == RMXL.end())
+										{
+											RMXL2.push_back(_MXL[i]);
+										}
+									}
+								}
+								X aIXL2;
+								if (!RMXL2.empty())
+								{
+									sort(RMXL2.begin(), RMXL2.end(), cmpXWeightInc);
+									aIXL2 = RMXL2[0];
+								}
+								if (aIXL2.empty() || cmpXWeightInc(aIXL, aIXL2) || cmpXWeightInc(aIXR, aIXL2))
+								{
+									if (cmpXWeightInc(aIXL, aIXR))
+									{
+										//may need swap
+										vector<X> backX;
+										Y bPost = betaPostforZL(aIXL._s);
+										for (int i = 0; i < RMXR.size(); i++)
+										{
+											if (RMXR[i]._s <= bPost)
+											{
+												backX.push_back(RMXR[i]);
+											}
+										}
+										sort(backX.begin(), backX.end(), cmpXEndInc);
 
-									rMsg._bMX = aIXL;
-									_MX.erase(find(_MX.begin(), _MX.end(), aIXL));
-									_MXL.erase(find(_MXL.begin(), _MXL.end(), aIXL));
+										rMsg._aMX = msg._aX;
+										_MX.push_back(msg._aX);
+										_MXL.push_back(msg._aX);
 
-									rMsg._aIX = aIXL;
-									_IX.push_back(aIXL);
+										rMsg._bMX = aIXL;
+										_MX.erase(find(_MX.begin(), _MX.end(), aIXL));
+										_MXL.erase(find(_MXL.begin(), _MXL.end(), aIXL));
+
+										rMsg._aIX = aIXL;
+										_IX.push_back(aIXL);
+
+										//swap
+										if (!backX.empty() && cmpXEndInc(backX[0], maxEnd) && aIXL != msg._aX)
+										{
+											_MXL.erase(find(_MXL.begin(), _MXL.end(), maxEnd));
+											_MXR.push_back(maxEnd);
+											_MXR.erase(find(_MXR.begin(), _MXR.end(), backX[0]));
+											_MXL.push_back(backX[0]);
+										}
+									}
+									else
+									{
+										rMsg._aMX = msg._aX;
+										_MX.push_back(msg._aX);
+										_MXL.push_back(msg._aX);
+										_MXL.erase(find(_MXL.begin(), _MXL.end(), maxEnd));
+
+										rMsg._bMX = aIXR;
+										_MX.erase(find(_MX.begin(), _MX.end(), aIXR));
+										_MXR.erase(find(_MXR.begin(), _MXR.end(), aIXR));
+										_MXR.push_back(maxEnd);
+
+										rMsg._aIX = aIXR;
+										_IX.push_back(aIXR);
+									}
 								}
 								else
 								{
+									vector<X> backX;
+									Y bPost = betaPostforZL(aIXL2._s);
+									for (int i = 0; i < RMXR.size(); i++)
+									{
+										if (RMXR[i]._s <= bPost)
+										{
+											backX.push_back(RMXR[i]);
+										}
+									}
+									sort(backX.begin(), backX.end(), cmpXEndInc);
+
 									rMsg._aMX = msg._aX;
 									_MX.push_back(msg._aX);
 									_MXL.push_back(msg._aX);
 									_MXL.erase(find(_MXL.begin(), _MXL.end(), maxEnd));
-
-									rMsg._bMX = aIXR;
-									_MX.erase(find(_MX.begin(), _MX.end(), aIXR));
-									_MXR.erase(find(_MXR.begin(), _MXR.end(), aIXR));
 									_MXR.push_back(maxEnd);
+									_MXR.erase(find(_MXR.begin(), _MXR.end(), backX[0]));
+									_MXL.push_back(backX[0]);
 
-									rMsg._aIX = aIXR;
-									_IX.push_back(aIXR);
+									rMsg._bMX = aIXL2;
+									_MX.erase(find(_MX.begin(), _MX.end(), aIXL2));
+									_MXL.erase(find(_MXL.begin(), _MXL.end(), aIXL2));
+
+									rMsg._aIX = aIXL2;
+									_IX.push_back(aIXL2);
 								}
 							}
 							else

@@ -4,6 +4,7 @@ TreeNode::TreeNode(vector<Y> vY)
 {
 	_Y = vY;
 	_IY = vY;
+	_IYS = vY;
 	_rightChild = NULL;
 	_leftChild = NULL;
 	_parent = NULL;
@@ -462,6 +463,14 @@ void TreeNode::splitNode(X x)
 	_IY.clear();
 	_IY = _Y;
 
+	_MXS.clear();
+	_MXLS.clear();
+	_MXRS.clear();
+	_MYS.clear();
+	_MYLS.clear();
+	_MYRS.clear();
+	_IYS = _Y;
+
 	for (int i = 0; i < allX.size(); i++)
 	{
 		vector<X> RMXSinChild = _leftChild->getStableReachableSet(x);
@@ -860,6 +869,47 @@ int TreeNode::verifyNodeInvariants()
 				if (tempX1[i] != tempX2[i])
 				{
 					return 103;
+				}
+			}
+		}
+	}
+
+	{
+		if (_leftChild == NULL)
+		{
+			vector<X> MXS;
+			vector<Y> MYS;
+			getStableSet(MXS, MYS);
+			sort(MXS.begin(), MXS.end(), cmpXID);
+			sort(_MXS.begin(), _MXS.end(), cmpXID);
+			if (MXS.size() != _MXS.size())
+			{
+				return 201;
+			}
+			else
+			{
+				for (int i = 0; i < MXS.size(); i++)
+				{
+					if (MXS[i] != _MXS[i])
+					{
+						return 201;
+					}
+				}
+			}
+			sort(MYS.begin(), MYS.end(), cmpYValueInc);
+			sort(_MYS.begin(), _MYS.end(), cmpYValueInc);
+			if (MYS.size() != _MYS.size())
+			{
+				return 201;
+			}
+			else
+			{
+				for (int i = 0; i < MYS.size(); i++)
+				{
+					if (MYS[i] != _MYS[i])
+					{
+						return 201;
+					}
 				}
 			}
 		}

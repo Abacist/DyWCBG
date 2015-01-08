@@ -10,11 +10,15 @@ Msg TreeNode::insertYintoLeaf(Y y)
 	if (_X.empty())
 	{
 		_IY.push_back(y);
+		_IYS.push_back(y);
 		msg._aIY = y;
 		return msg;
 	}
 	else
 	{
+		throw new exception();
+
+
 		vector<X> CIX, CTX;
 		Y aPre = alphaPreforZR(y);
 		for (int i = 0; i < _IX.size(); i++)

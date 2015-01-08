@@ -73,6 +73,10 @@ public:
 	Y _aIY;
 	Y _bIY;
 
+	Y _t1;
+	Y _t2;
+	//t1 t2 is the range of the stable reachable y of the inserted X
+	int _stableYNumBetweent1t2;
 
 	Msg();
 
