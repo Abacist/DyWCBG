@@ -140,7 +140,11 @@ void Tree::insertXinTree(X x)
 		child = curNode;
 		curNode = curNode->_parent;
 	}
-	cout << "X id:\t" << x._id << " pass" << endl;
+	if (verifyEachUpdate)
+	{
+		cout << "X id:\t" << x._id << " pass" << endl;
+	}
+	
 }
 
 
@@ -596,10 +600,22 @@ Msg TreeNode::insertXintoNodeL(Msg msg, vector<X> RMXSinChild)
 								sort(RMXL2.begin(), RMXL2.end(), cmpXWeightInc);
 								aIXL2 = RMXL2[0];
 							}
-							if (aIXL2.empty() || cmpXWeightInc(aIXL, aIXL2) || cmpXWeightInc(aIXL, aIXR))
+							if (aIXL2.empty() || cmpXWeightInc(aIXL, aIXL2) || cmpXWeightInc(aIXR, aIXL2))
 							{
 								if (cmpXWeightInc(aIXL, aIXR))
 								{
+									//may need swap
+									vector<X> backX;
+									Y bPost = betaPostforZL(aIXL._s);
+									for (int i = 0; i < RMXR.size(); i++)
+									{
+										if (RMXR[i]._s <= bPost)
+										{
+											backX.push_back(RMXR[i]);
+										}
+									}
+									sort(backX.begin(), backX.end(), cmpXEndInc);
+
 									rMsg._aMX = msg._aX;
 									_MX.push_back(msg._aX);
 									_MXL.push_back(msg._aX);
@@ -610,6 +626,15 @@ Msg TreeNode::insertXintoNodeL(Msg msg, vector<X> RMXSinChild)
 
 									rMsg._aIX = aIXL;
 									_IX.push_back(aIXL);
+
+									//swap
+									if (!backX.empty() && cmpXEndInc(backX[0], maxEnd) && aIXL != msg._aX)
+									{
+										_MXL.erase(find(_MXL.begin(), _MXL.end(), maxEnd));
+										_MXR.push_back(maxEnd);
+										_MXR.erase(find(_MXR.begin(), _MXR.end(), backX[0]));
+										_MXL.push_back(backX[0]);
+									}
 								}
 								else
 								{
@@ -1020,8 +1045,9 @@ Msg TreeNode::insertXintoNodeR(Msg msg, vector<X> RMXSinChild)//RMXS is not used
 							_MXL.push_back(backX[0]);
 
 							rMsg._bMX = aIXL;
-							_MXL.push_back(backX[0]);
+							//_MXL.push_back(backX[0]);
 							_MXL.erase(find(_MXL.begin(), _MXL.end(), aIXL));
+							_MX.erase(find(_MX.begin(), _MX.end(), aIXL));
 
 							rMsg._aIX = aIXL;
 							_IX.push_back(aIXL);

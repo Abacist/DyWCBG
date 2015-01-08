@@ -365,7 +365,7 @@ Y TreeNode::betaPostforZL(Y y)
 			if (find(tempY.begin(), tempY.end(), y) == tempY.end())
 			{
 				tempY.push_back(y);
-				sort(tempY.begin(), tempY.end(), cmpYValueInc);
+				sort(tempY.begin(), tempY.end(), cmpYValueDec);
 			}
 			int i = 0;
 			int tightIndex = -1;
@@ -387,6 +387,7 @@ Y TreeNode::betaPostforZL(Y y)
 					i++;
 				}
 			}
+			
 			if (tightIndex != -1)
 			{
 				tY = tempY[tightIndex + 1];

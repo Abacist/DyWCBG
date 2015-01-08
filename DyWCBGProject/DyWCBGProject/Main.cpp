@@ -8,10 +8,11 @@
 
 using namespace std;
 
-const int mY =				5;
-const int ur =				10;
-int verifyEachUpdate =		1;		//0 not verify, !0 verify
+const int mY =				30;
+const int ur =				100;
+int verifyEachUpdate =		0;		//0 not verify, !0 verify
 int gen =					1;
+int breakID =				4;
 
 void generator(char* fileName = "input.txt", int MaxY = mY, int UpdateRange = ur, int WeightRange = 1000);
 
@@ -65,27 +66,27 @@ int main()
 			{
 				X x;
 				in >> x;
-				if (x._id == 6)
+				if (x._id == breakID)
 				{
 					int a = 1;
 				}
 				pTree->insertXinTree(x);
-				if (verifyEachUpdate)
-				{
-					int flag;
-					TreeNode* errorNode;
-					pTree->verifyInvariantsRecur(flag, errorNode);
-					if (flag == 0)
-					{
-						//cout << "Insert Y pass, id " << y._id << endl;
-					}
-					else
-					{
-						cout << endl << endl << endl << endl << "After Insert X, Not satify, please check! Error code: " << flag << endl
-							<< "X id:" << x._id << endl;
-						goto End;
-					}
-				}
+				//if (verifyEachUpdate)
+				//{
+				//	int flag;
+				//	TreeNode* errorNode;
+				//	pTree->verifyInvariantsRecur(flag, errorNode);
+				//	if (flag == 0)
+				//	{
+				//		//cout << "Insert Y pass, id " << y._id << endl;
+				//	}
+				//	else
+				//	{
+				//		cout << endl << endl << endl << endl << "After Insert X, Not satify, please check! Error code: " << flag << endl
+				//			<< "X id:" << x._id << endl;
+				//		goto End;
+				//	}
+				//}
 
 			}break;
 
@@ -99,27 +100,27 @@ int main()
 				//insert Y
 				Y y;
 				in >> y;
-				if (y._value == 5)
+				if (y._value == breakID)
 				{
 					int a = 1;
 				}
 				pTree->insertYinTree(y);
-				if (verifyEachUpdate)
-				{
-					int flag;
-					TreeNode* errorNode;
-					pTree->verifyInvariantsRecur(flag, errorNode);
-					if (flag == 0)
-					{
-						//cout << "Insert Y pass, id " << y._id << endl;
-					}
-					else
-					{
-						cout << endl << endl << endl << endl << "After Insert Y, Not satify, please check! Error code: " << flag << endl
-							<< "Y value:" << y._value << endl;
-						goto End;
-					}
-				}
+				//if (verifyEachUpdate)
+				//{
+				//	int flag;
+				//	TreeNode* errorNode;
+				//	pTree->verifyInvariantsRecur(flag, errorNode);
+				//	if (flag == 0)
+				//	{
+				//		//cout << "Insert Y pass, id " << y._id << endl;
+				//	}
+				//	else
+				//	{
+				//		cout << endl << endl << endl << endl << "After Insert Y, Not satify, please check! Error code: " << flag << endl
+				//			<< "Y value:" << y._value << endl;
+				//		goto End;
+				//	}
+				//}
 
 
 			}break;
