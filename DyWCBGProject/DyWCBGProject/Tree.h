@@ -44,8 +44,8 @@ public:
 	Msg insertYintoLeaf(Y y);
 	Msg insertXintoLeaf(X x);
 
-	Msg insertXintoNodeL(Msg msg);
-	Msg insertXintoNodeR(Msg msg);
+	Msg insertXintoNodeL(Msg msg, vector<X> RMXSinChild);
+	Msg insertXintoNodeR(Msg msg, vector<X> RMXSinChild);
 
 	vector<Y> getYL();
 	vector<Y> getYR();
@@ -54,8 +54,9 @@ public:
 	
 	void getStableSet(vector<X> & MXS, vector<Y> & MYS);
 
-	//vector<X> getReachableSetinLeftPart(X x);
+	vector<X> getReachableSetinLeftPart(X x);
 	vector<X> getStableReachableSet(X x);
+	void getCompensableYL(X x, vector<Y> & CIYL, vector<Y> & CIYR, vector<Y> & CIYL2);
 
 };
 

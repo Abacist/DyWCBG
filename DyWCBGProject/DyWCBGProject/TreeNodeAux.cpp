@@ -398,26 +398,26 @@ Y TreeNode::betaPostforZL(Y y)
 
 }
 
-//vector<X> TreeNode::getReachableSetinLeftPart(X x)
-//{
-//	vector<X> allX = _MXL;
-//	vector<Y> allY = _MYL;
-//
-//	vector<X> R;
-//	for (int i = 0; i < allX.size(); i++)
-//	{
-//		vector<X> tempX = allX;
-//		tempX.erase(find(tempX.begin(), tempX.end(), allX[i]));
-//		tempX.push_back(x);
-//		vector<X> MX;
-//		formGloverMatching(tempX, allY, MX);
-//		if (MX.size() == tempX.size())
-//		{
-//			R.push_back(allX[i]);
-//		}
-//	}
-//	return R;
-//}
+vector<X> TreeNode::getReachableSetinLeftPart(X x)
+{
+	vector<X> allX = _MXL;
+	vector<Y> allY = _MYL;
+
+	vector<X> R;
+	for (int i = 0; i < allX.size(); i++)
+	{
+		vector<X> tempX = allX;
+		tempX.erase(find(tempX.begin(), tempX.end(), allX[i]));
+		tempX.push_back(x);
+		vector<X> MX;
+		formGloverMatching(tempX, allY, MX);
+		if (MX.size() == tempX.size())
+		{
+			R.push_back(allX[i]);
+		}
+	}
+	return R;
+}
 
 void TreeNode::splitNode(X x)
 {
@@ -463,10 +463,11 @@ void TreeNode::splitNode(X x)
 
 	for (int i = 0; i < allX.size(); i++)
 	{
+		vector<X> RMXSinChild = _leftChild->getStableReachableSet(x);
 		Msg msg = _leftChild->insertXintoLeaf(allX[i]);
 		//int flag1 = _leftChild->verifyNodeInvariants();
 
-		insertXintoNodeL(msg);
+		insertXintoNodeL(msg, RMXSinChild);
 		//int flag = verifyNodeInvariants();
 		//if (flag == 0)
 		//{
@@ -506,7 +507,7 @@ vector<X> TreeNode::getStableReachableSet(X x)
 	{
 		vector<X> tempX = MXS;
 		tempX.push_back(x);
-		tempX.erase(find(MXS.begin(), MXS.end(), MXS[i]));
+		tempX.erase(find(tempX.begin(), tempX.end(), MXS[i]));
 		vector<X> vZ;
 		formGloverMatching(tempX, MYS, vZ);
 		if (tempX.size() == vZ.size())
@@ -515,6 +516,67 @@ vector<X> TreeNode::getStableReachableSet(X x)
 		}
 	}
 	return s;
+}
+
+
+void TreeNode::getCompensableYL(X x, vector<Y> & CIYL, vector<Y> & CIYR, vector<Y> & CIYL2)
+{
+	CIYL.clear();
+	CIYR.clear();
+	CIYL2.clear();
+	vector<X> tempX;
+	vector<Y> tempY;
+	//CIYL directly
+	tempX = _MXL;
+	tempX.push_back(x);
+	tempY = _MYL;
+	vector<Y> IYL = getIYL();
+	for (int i = 0; i < IYL.size(); i++)
+	{
+		vector<Y> tempY1 = tempY;
+		tempY1.push_back(IYL[i]);
+		vector<X> vZ;
+		formGloverMatching(tempX, tempY1, vZ);
+		if (vZ.size() == tempY1.size())
+		{
+			CIYL.push_back(IYL[i]);
+		}
+	}
+	//CIYR
+	tempX = _MX;
+	tempX.push_back(x);
+	tempY = _MY;
+	vector<Y> IYR = getIYR();
+	for (int i = 0; i < IYR.size(); i++)
+	{
+		vector<Y> tempY1 = tempY;
+		tempY1.push_back(IYR[i]);
+		vector<X> vZ;
+		formGloverMatching(tempX, tempY1, vZ);
+		if (vZ.size() == tempY1.size())
+		{
+			CIYR.push_back(IYR[i]);
+		}
+	}
+	//CIYL1
+	tempX = _MX;
+	tempX.push_back(x);
+	tempY = _MY;
+	vector<Y> IYL2 = getIYL();
+	for (int i = 0; i < IYL2.size(); i++)
+	{
+		vector<Y> tempY1 = tempY;
+		tempY1.push_back(IYL2[i]);
+		vector<X> vZ;
+		formGloverMatching(tempX, tempY1, vZ);
+		if (vZ.size() == tempY1.size())
+		{
+			if (find(CIYL.begin(), CIYL.end(), IYL2[i]) == CIYL.end())
+			{
+				CIYL2.push_back(IYL2[i]);
+			}
+		}
+	}
 }
 
 int TreeNode::verifyNodeInvariants()
@@ -644,18 +706,17 @@ int TreeNode::verifyNodeInvariants()
 	}
 
 	{
-		vector<X> tempZLR;
 		vector<Y> tempY;
 		vector<X> vZ;
 		if (_leftChild != NULL)
 		{
 			tempY = _MYL;
 			formGloverMatching(_MXL, tempY, vZ);
-			if (tempZLR.size() != _MXL.size())
+			if (vZ.size() != _MXL.size())
 				return 7;
 			tempY = _MYR;
 			formGloverMatching(_MXR, tempY, vZ);
-			if (tempZLR.size() != _MXR.size())
+			if (vZ.size() != _MXR.size())
 				return 7;
 		}
 	}
