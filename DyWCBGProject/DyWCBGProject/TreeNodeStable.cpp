@@ -90,7 +90,7 @@ void TreeNode::updatet1t2inInternalNodeX(Msg & msg)
 		}
 		else
 		{
-			Y aPost = alphaPostforZLS(msg._aX._e);
+			Y aPost = alphaPostforZRS(msg._aX._e);
 			vector<X> RMXRS;
 			for (int i = 0; i < _MXRS.size(); i++)
 			{
@@ -99,6 +99,7 @@ void TreeNode::updatet1t2inInternalNodeX(Msg & msg)
 					RMXRS.push_back(_MXRS[i]);
 				}
 			}
+			RMXRS.push_back(msg._aX);
 			X minBegin;
 			sort(RMXRS.begin(), RMXRS.end(), cmpXBeginDec);
 			minBegin = RMXRS[RMXRS.size() - 1];
@@ -209,7 +210,7 @@ void TreeNode::updateStableSetinInternalNode(Msg msg, Y t1inChild, Y t2inChild)
 						
 
 						vector<X> RMXLS;
-						Y bPre = betaPreforZLS(msg._aX._s);//equal to t1?
+						Y bPre = betaPreforZLS(msg._aX._s);//equal to t1? NO!
 						for (int i = 0; i < _MXLS.size(); i++)
 						{
 							if (_MXLS[i]._s >= bPre)
@@ -288,11 +289,12 @@ void TreeNode::updateStableSetinInternalNode(Msg msg, Y t1inChild, Y t2inChild)
 					_MXLS.push_back(msg._aX);
 					_MXLS.erase(find(_MXLS.begin(), _MXLS.end(), RMXLS[RMXLS.size() - 1]));
 					_MXRS.push_back(RMXLS[RMXLS.size() - 1]);
+					_MXRS.erase(find(_MXRS.begin(), _MXRS.end(), msg._aIX));
 				}
 				else
 				{
 					//in left or kick itself
-					if (msg._aIX._s >= t1inChild)
+					if (msg._t2 <= _leftChild->maxY())
 					{
 						//direct
 						_MXLS.push_back(msg._aX);
@@ -300,38 +302,51 @@ void TreeNode::updateStableSetinInternalNode(Msg msg, Y t1inChild, Y t2inChild)
 					}
 					else
 					{
-						vector<X> RMXLS;
-						Y bPre = betaPreforZLS(msg._aX._s);//equal to t1?
-						for (int i = 0; i < _MXLS.size(); i++)
+						Y bPre = betaPreforZLS(msg._aIX._s);
+						if (msg._aIX._s >= bPre)
 						{
-							if (_MXLS[i]._s >= bPre)
-							{
-								RMXLS.push_back(_MXLS[i]);
-							}
+							//direct
+							_MXLS.push_back(msg._aX);
+							_MXLS.erase(find(_MXLS.begin(), _MXLS.end(), msg._aIX));
 						}
-						RMXLS.push_back(msg._aX);
-						sort(RMXLS.begin(), RMXLS.end(), cmpXEndInc);
-						X maxEnd = RMXLS[RMXLS.size() - 1];
-
-						Y bPost = betaPostforZLS(msg._aIX._s);
-						Y aPost = alphaPostforZRS(maxEnd._e);
-						vector<X> backX;
-						for (int i = 0; i < _MXRS.size(); i++)
+						else
 						{
-							if (_MXRS[i]._e <= aPost && _MXRS[i]._s <= bPost)
+							vector<X> RMXLS;
+							Y bPre = betaPreforZLS(msg._aX._s);//equal to t1?
+							for (int i = 0; i < _MXLS.size(); i++)
 							{
-								backX.push_back(_MXRS[i]);
+								if (_MXLS[i]._s >= bPre)
+								{
+									RMXLS.push_back(_MXLS[i]);
+								}
 							}
-						}
-						sort(backX.begin(), backX.end(), cmpXEndInc);
+							RMXLS.push_back(msg._aX);
+							sort(RMXLS.begin(), RMXLS.end(), cmpXEndInc);
+							X maxEnd = RMXLS[RMXLS.size() - 1];
 
-						_MXLS.push_back(msg._aX);
-						_MXLS.erase(find(_MXLS.begin(), _MXLS.end(), maxEnd));
-						_MXRS.push_back(maxEnd);
-						_MXRS.erase(find(_MXRS.begin(), _MXRS.end(), backX[0]));
-						_MXLS.push_back(backX[0]);
-						_MXLS.erase(find(_MXLS.begin(), _MXLS.end(), msg._aIX));
+							Y bPost = betaPostforZLS(msg._aIX._s);
+							Y aPost = alphaPostforZRS(maxEnd._e);
+							vector<X> backX;
+							for (int i = 0; i < _MXRS.size(); i++)
+							{
+								if (_MXRS[i]._e <= aPost && _MXRS[i]._s <= bPost)
+								{
+									backX.push_back(_MXRS[i]);
+								}
+							}
+							sort(backX.begin(), backX.end(), cmpXEndInc);
+
+							_MXLS.push_back(msg._aX);
+							_MXLS.erase(find(_MXLS.begin(), _MXLS.end(), maxEnd));
+							_MXRS.push_back(maxEnd);
+							_MXRS.erase(find(_MXRS.begin(), _MXRS.end(), backX[0]));
+							_MXLS.push_back(backX[0]);
+							_MXLS.erase(find(_MXLS.begin(), _MXLS.end(), msg._aIX));
+						}
 					}
+
+
+					
 				}
 			}
 
@@ -373,7 +388,7 @@ void TreeNode::updateStableSetinInternalNode(Msg msg, Y t1inChild, Y t2inChild)
 				else
 				{
 					Y aPost = alphaPostforZRS(msg._aX._e);
-					Y bPost = alphaPostforZLS(cY);
+					Y bPost = betaPostforZLS(cY);
 					vector<X> backX;
 					for (int i = 0; i < _MXRS.size(); i++)
 					{
@@ -400,7 +415,7 @@ void TreeNode::updateStableSetinInternalNode(Msg msg, Y t1inChild, Y t2inChild)
 				if (find(_MXLS.begin(), _MXLS.end(), msg._aIX) != _MXLS.end())
 				{
 					Y aPost = alphaPostforZRS(msg._aX._e);
-					Y bPost = alphaPostforZLS(msg._aIX._s);
+					Y bPost = betaPostforZLS(msg._aIX._s);
 					vector<X> backX;
 					for (int i = 0; i < _MXRS.size(); i++)
 					{

@@ -477,15 +477,16 @@ void TreeNode::splitNode(X x)
 		//int flag1 = _leftChild->verifyNodeInvariants();
 
 		insertXintoNodeL(msg);
-		//int flag = verifyNodeInvariants();
-		//if (flag == 0)
-		//{
-		//	//cout << i << " pass!" << endl;
-		//}
-		//else
-		//{
-		//	__debugbreak();
-		//}
+		int flag1 = verifyNodeInvariants();
+		int flag2 = _leftChild->verifyNodeInvariants();
+		if (flag2 == 0 && flag1 == 0)
+		{
+			//cout << i << " pass!" << endl;
+		}
+		else
+		{
+			throw new exception();
+		}
 	}
 }
 
@@ -717,17 +718,16 @@ int TreeNode::verifyNodeInvariants()
 	{
 		vector<Y> tempY;
 		vector<X> vZ;
-		if (_leftChild != NULL)
-		{
-			tempY = _MYL;
-			formGloverMatching(_MXL, tempY, vZ);
-			if (vZ.size() != _MXL.size())
-				return 7;
-			tempY = _MYR;
-			formGloverMatching(_MXR, tempY, vZ);
-			if (vZ.size() != _MXR.size())
-				return 7;
-		}
+		if (_MXL.size() != _MYL.size() || _MXR.size() != _MYR.size())
+			return 7;
+		tempY = _MYL;
+		formGloverMatching(_MXL, tempY, vZ);
+		if (vZ.size() != _MXL.size())
+			return 7;
+		tempY = _MYR;
+		formGloverMatching(_MXR, tempY, vZ);
+		if (vZ.size() != _MXR.size())
+			return 7;
 	}
 
 	{
@@ -911,6 +911,74 @@ int TreeNode::verifyNodeInvariants()
 					}
 				}
 			}
+		}
+	}
+
+	{
+		vector<Y> tempY;
+		vector<X> vZ;
+		if (_MXRS.size() != _MYRS.size() || _MXLS.size() != _MYLS.size())
+			return 202;
+		tempY = _MYRS;
+		formGloverMatching(_MXRS, tempY, vZ);
+		if (vZ.size() != _MXRS.size())
+			return 202;
+		tempY = _MYLS;
+		formGloverMatching(_MXLS, tempY, vZ);
+		if (vZ.size() != _MXLS.size())
+			return 202;
+	}
+
+	{
+		if (_rightChild != NULL)
+		{
+			vector<X> TML;
+			vector<X> TMR;
+			vector<Y> YL;
+			vector<Y> YR;
+			for (int i = 0; i < _MXLS.size(); i++)
+			{
+				if (_MXLS[i]._e >= _rightChild->minY())
+				{
+					TML.push_back(_MXLS[i]);
+				}
+			}
+			for (int i = 0; i < _MXRS.size(); i++)
+			{
+				if (_MXRS[i]._s < _rightChild->minY())
+				{
+					TMR.push_back(_MXRS[i]);
+				}
+			}
+			YL = _MYLS;
+			YR = _MYRS;
+			if (!TML.empty() && !TMR.empty())
+			{
+				for (int i = 0; i < TML.size(); i++)
+				{
+					for (int j = 0; j < TMR.size(); j++)
+					{
+						if (cmpXEndInc(TMR[j], TML[i]))
+						{
+							vector<X> vZL, vZR;
+							vector<X> tempZL = _MXLS;
+							vector<X> tempZR = _MXRS;
+							tempZL.push_back(TMR[j]);
+							tempZR.push_back(TML[i]);
+							tempZR.erase(find(tempZR.begin(), tempZR.end(), TMR[j]));
+							tempZL.erase(find(tempZL.begin(), tempZL.end(), TML[i]));
+							vector<X> ZLNew, ZRNew;
+							formGloverMatching(tempZL, YL, vZL);
+							formGloverMatching(tempZR, YR, vZR);
+							if (vZL.size() == _MXLS.size() && vZR.size() == _MXRS.size())
+							{
+								return 203;
+							}
+						}
+					}
+				}
+			}
+
 		}
 	}
 
