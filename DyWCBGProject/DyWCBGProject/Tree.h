@@ -82,7 +82,7 @@ public:
 	
 	void getStableSet(vector<X> & MXS, vector<Y> & MYS);
 
-	vector<X> getReachableSetinLeftPart(X x);
+	//vector<X> getReachableSetinLeftPart(X x);
 
 	//vector<X> getStableReachableSet(X x);
 
