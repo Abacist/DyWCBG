@@ -473,11 +473,10 @@ void TreeNode::splitNode(X x)
 
 	for (int i = 0; i < allX.size(); i++)
 	{
-		vector<X> RMXSinChild = _leftChild->getStableReachableSet(x);
 		Msg msg = _leftChild->insertXintoLeaf(allX[i]);
 		//int flag1 = _leftChild->verifyNodeInvariants();
 
-		insertXintoNodeL(msg, RMXSinChild);
+		insertXintoNodeL(msg);
 		//int flag = verifyNodeInvariants();
 		//if (flag == 0)
 		//{
@@ -875,7 +874,7 @@ int TreeNode::verifyNodeInvariants()
 	}
 
 	{
-		if (_leftChild == NULL)
+		//if (_leftChild == NULL)
 		{
 			vector<X> MXS;
 			vector<Y> MYS;

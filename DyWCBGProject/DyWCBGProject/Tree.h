@@ -59,7 +59,7 @@ public:
 	void updatet1t2inInternalNodeX(Msg & msg);
 	
 	void updateStableSetinLeaf(Msg msg);
-	void updateStableSetinInternalNode(Msg msg);
+	void updateStableSetinInternalNode(Msg msg, Y t1inChild, Y t2inChild);
 
 	int verifyNodeInvariants();
 	void splitNode(X insertedX);
@@ -67,8 +67,8 @@ public:
 	Msg insertYintoLeaf(Y y);
 	Msg insertXintoLeaf(X x);
 
-	Msg insertXintoNodeL(Msg msg, vector<X> RMXSinChild);
-	Msg insertXintoNodeR(Msg msg, vector<X> RMXSinChild);
+	Msg insertXintoNodeL(Msg msg);
+	Msg insertXintoNodeR(Msg msg);
 
 	
 	

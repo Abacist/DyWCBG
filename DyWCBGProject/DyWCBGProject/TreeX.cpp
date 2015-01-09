@@ -106,9 +106,7 @@ Msg TreeNode::insertXintoLeaf(X x)
 
 void Tree::insertXinTree(X x)
 {
-	vector<X> RMXSinChild;
 	TreeNode* curNode = locateLeaf(x);
-	RMXSinChild = curNode->getStableReachableSet(x);
 	Msg msg = curNode->insertXintoLeaf(x);
 	int flag = 0;
 	if (verifyEachUpdate)
@@ -123,15 +121,13 @@ void Tree::insertXinTree(X x)
 	curNode = curNode->_parent;
 	while (curNode != NULL)
 	{
-		vector<X> curNodeRMXSOrigion = curNode->getStableReachableSet(x);//before insert x
-
 		if (child == curNode->_leftChild)
 		{
-			msg = curNode->insertXintoNodeL(msg, RMXSinChild);
+			msg = curNode->insertXintoNodeL(msg);
 		}
 		else
 		{
-			msg = curNode->insertXintoNodeR(msg, RMXSinChild);
+			msg = curNode->insertXintoNodeR(msg);
 		}
 		if (verifyEachUpdate)
 		{
@@ -141,7 +137,6 @@ void Tree::insertXinTree(X x)
 				throw new exception();
 			}
 		}
-		RMXSinChild = curNodeRMXSOrigion;
 		child = curNode;
 		curNode = curNode->_parent;
 	}
@@ -153,11 +148,19 @@ void Tree::insertXinTree(X x)
 }
 
 
-Msg TreeNode::insertXintoNodeL(Msg msg, vector<X> RMXSinChild)
+Msg TreeNode::insertXintoNodeL(Msg msg)
 {
+	Y t1inChild = msg._t1, t2inChild = msg._t2;
+	int countInChild = msg._stableYNumBetweent1t2;
+
 	Msg rMsg;
+	rMsg._t1 = msg._t1;
+	rMsg._t2 = msg._t2;
+	rMsg._stableYNumBetweent1t2 = msg._stableYNumBetweent1t2;
 	rMsg._aX = msg._aX;
 	_X.push_back(msg._aX);
+	updatet1t2inInternalNodeX(rMsg);
+
 	if (!msg._bIY.empty())
 	{
 		//success in child
@@ -978,16 +981,24 @@ Msg TreeNode::insertXintoNodeL(Msg msg, vector<X> RMXSinChild)
 		}
 	}
 
+	updateStableSetinInternalNode(rMsg, t1inChild, t2inChild);
 	return rMsg;
 	
 }
 
 
-Msg TreeNode::insertXintoNodeR(Msg msg, vector<X> RMXSinChild)//RMXS is not used in right
+Msg TreeNode::insertXintoNodeR(Msg msg)
 {
+	Y t1inChild = msg._t1, t2inChild = msg._t2;
+	int countInChild = msg._stableYNumBetweent1t2;
+
 	Msg rMsg;
+	rMsg._t1 = msg._t1;
+	rMsg._t2 = msg._t2;
+	rMsg._stableYNumBetweent1t2 = msg._stableYNumBetweent1t2;
 	rMsg._aX = msg._aX;
 	_X.push_back(msg._aX);
+	updatet1t2inInternalNodeX(rMsg);
 	
 	if (!msg._bIY.empty() && find(_IY.begin(), _IY.end(), msg._bIY) != _IY.end())
 	{
@@ -1228,6 +1239,6 @@ Msg TreeNode::insertXintoNodeR(Msg msg, vector<X> RMXSinChild)//RMXS is not used
 
 
 	}
-
+	updateStableSetinInternalNode(rMsg, t1inChild, t2inChild);
 	return rMsg;
 }
