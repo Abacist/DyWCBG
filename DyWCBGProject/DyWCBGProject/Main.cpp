@@ -12,7 +12,7 @@ const int mY =				5;
 const int ur =				10;
 int verifyEachUpdate =		1;		//0 not verify, !0 verify
 int gen =					0;
-int breakID =				5;
+int breakID =				4;
 
 void generator(char* fileName = "input.txt", int MaxY = mY, int UpdateRange = ur, int WeightRange = 1000);
 
