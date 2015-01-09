@@ -63,6 +63,7 @@ public:
 
 	int verifyNodeInvariants();
 	void splitNode(X insertedX);
+	int verifyCIY(vector<Y> CIYLCorrect, vector<Y> CIYRCorrect, vector<Y> CIYL2Correct, vector<Y> CIYL, vector<Y> CIYR, vector<Y> CIYL2);
 
 	Msg insertYintoLeaf(Y y);
 	Msg insertXintoLeaf(X x);
@@ -70,7 +71,7 @@ public:
 	Msg insertXintoNodeL(Msg msg);
 	Msg insertXintoNodeR(Msg msg);
 
-	
+	void getCompensableYL(X x, Y t1, Y t2, int stableCountinChild, vector<Y> & CIYL, vector<Y> & CIYR, vector<Y> & CIYL2);
 	
 	//lazy
 	vector<Y> getYL();
@@ -83,9 +84,9 @@ public:
 
 	vector<X> getReachableSetinLeftPart(X x);
 
-	vector<X> getStableReachableSet(X x);
+	//vector<X> getStableReachableSet(X x);
 
-	void getCompensableYL(X x, vector<Y> & CIYL, vector<Y> & CIYR, vector<Y> & CIYL2);
+	void getCompensableYLForce(X x, vector<Y> & CIYL, vector<Y> & CIYR, vector<Y> & CIYL2);
 
 };
 

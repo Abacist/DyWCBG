@@ -167,11 +167,19 @@ Msg TreeNode::insertXintoNodeL(Msg msg)
 		//success in child
 		//must success in P
 
+		vector<Y> CIYLCorrect, CIYRCorrect, CIYL2Correct, CIYL, CIYR, CIYL2;
 
-		//tbd
-		vector<Y> CIYL, CIYR, CIYL2;
-		getCompensableYL(msg._aX, CIYL, CIYR, CIYL2);
-
+		getCompensableYL(msg._aX, t1inChild, t2inChild, countInChild, CIYL, CIYR, CIYL2);
+		if (verifyEachUpdate)
+		{
+			getCompensableYLForce(msg._aX, CIYLCorrect, CIYRCorrect, CIYL2Correct);
+			int flag = verifyCIY(CIYLCorrect, CIYRCorrect, CIYL2Correct, CIYL, CIYR, CIYL2);
+			if (flag)
+			{
+				throw new exception();
+				int a = 1;
+			}
+		}
 
 
 		if (CIYL.empty() && CIYR.empty() && CIYL2.empty())
@@ -600,9 +608,22 @@ Msg TreeNode::insertXintoNodeL(Msg msg)
 		{
 			//transfer
 			//tbd
-			vector<Y> CIYL, CIYR, CIYL2;
-			getCompensableYL(msg._aX, CIYL, CIYR, CIYL2);
-
+			/*vector<Y> CIYL, CIYR, CIYL2;
+			getCompensableYLForce(msg._aX, CIYL, CIYR, CIYL2);*/
+			vector<Y> CIYLCorrect, CIYRCorrect, CIYL2Correct, CIYL, CIYR, CIYL2;
+			
+			getCompensableYL(msg._aX, t1inChild, t2inChild, countInChild, CIYL, CIYR, CIYL2);
+			if (verifyEachUpdate)
+			{
+				getCompensableYLForce(msg._aX, CIYLCorrect, CIYRCorrect, CIYL2Correct);
+				int flag = verifyCIY(CIYLCorrect, CIYRCorrect, CIYL2Correct, CIYL, CIYR, CIYL2);
+				if (flag)
+				{
+					throw new exception();
+					int a = 1;
+				}
+			}
+			
 
 
 			if (CIYL.empty() && CIYR.empty() && CIYL2.empty())

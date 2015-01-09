@@ -507,29 +507,122 @@ void TreeNode::getStableSet(vector<X> & MXS, vector<Y> & MYS)
 	formPlaxtonMWM(XS, _Y, MXS, MYS);
 }
 
-vector<X> TreeNode::getStableReachableSet(X x)
+//vector<X> TreeNode::getStableReachableSet(X x)
+//{
+//	vector<X> MXS;
+//	vector<Y> MYS;
+//	getStableSet(MXS, MYS);
+//	vector<X> s;
+//	for (int i = 0; i < MXS.size(); i++)
+//	{
+//		vector<X> tempX = MXS;
+//		tempX.push_back(x);
+//		tempX.erase(find(tempX.begin(), tempX.end(), MXS[i]));
+//		vector<X> vZ;
+//		formGloverMatching(tempX, MYS, vZ);
+//		if (tempX.size() == vZ.size())
+//		{
+//			s.push_back(MXS[i]);
+//		}
+//	}
+//	return s;
+//}
+
+
+void TreeNode::getCompensableYL(X x, Y t1, Y t2, int stableCountinChild, vector<Y> & CIYL, vector<Y> & CIYR, vector<Y> & CIYL2)
 {
-	vector<X> MXS;
-	vector<Y> MYS;
-	getStableSet(MXS, MYS);
-	vector<X> s;
-	for (int i = 0; i < MXS.size(); i++)
+	CIYL.clear();
+	CIYR.clear();
+	CIYL2.clear();
+
+	int allCount = 0;
+	for (int i = 0; i < _MY.size(); i++)
 	{
-		vector<X> tempX = MXS;
-		tempX.push_back(x);
-		tempX.erase(find(tempX.begin(), tempX.end(), MXS[i]));
-		vector<X> vZ;
-		formGloverMatching(tempX, MYS, vZ);
-		if (tempX.size() == vZ.size())
+		if (_MY[i] >= t1 && _MY[i] <= t2)
 		{
-			s.push_back(MXS[i]);
+			allCount++;
 		}
 	}
-	return s;
+
+	if (t2 < _rightChild->minY() && stableCountinChild == allCount)
+	{
+		//directly calculate
+		for (int i = 0; i < _IY.size(); i++)
+		{
+			if (_IY[i] >= t1 && _IY[i] <= t2)
+			{
+				CIYL.push_back(_IY[i]);
+			}
+		}
+	}
+	else
+	{
+		//EE and ES
+		Y bPre = betaPreforZL(x._s);
+		vector<Y> IYL = getIYL();
+		for (int i = 0; i < IYL.size(); i++)
+		{
+			if (IYL[i] >= bPre)
+			{
+				CIYL.push_back(IYL[i]);
+			}
+		}
+		vector<X> RMXL;
+		for (int i = 0; i < _MXL.size(); i++)
+		{
+			if (_MXL[i]._s >= bPre)
+			{
+				RMXL.push_back(_MXL[i]);
+			}
+		}
+		RMXL.push_back(x);
+
+		sort(RMXL.begin(), RMXL.end(), cmpXEndInc);
+		X maxEnd = RMXL[RMXL.size() - 1];
+
+		Y aPost = alphaPostforZR(maxEnd._e);
+		vector<Y> IYR = getIYR();
+		for (int i = 0; i < IYR.size(); i++)
+		{
+			if (IYR[i] <= aPost)
+			{
+				CIYR.push_back(IYR[i]);
+			}
+		}
+
+		vector<X> RMXR;
+		for (int i = 0; i < _MXR.size(); i++)
+		{
+			if (_MXR[i]._e <= aPost)
+			{
+				RMXR.push_back(_MXR[i]);
+			}
+		}
+
+		if (!RMXR.empty())
+		{
+			sort(RMXR.begin(), RMXR.end(), cmpXBeginDec);
+			X minBegin = RMXR[RMXR.size() - 1];
+
+			vector<X> RMXL2;
+			Y bPre1 = betaPreforZL(minBegin._s);
+
+			for (int i = 0; i < IYL.size(); i++)
+			{
+				if (IYL[i] >= bPre1)
+				{
+					if (find(CIYL.begin(), CIYL.end(), IYL[i]) == CIYL.end())
+					{
+						CIYL2.push_back(IYL[i]);
+					}
+				}
+			}
+		}
+		
+	}
 }
 
-
-void TreeNode::getCompensableYL(X x, vector<Y> & CIYL, vector<Y> & CIYR, vector<Y> & CIYL2)
+void TreeNode::getCompensableYLForce(X x, vector<Y> & CIYL, vector<Y> & CIYR, vector<Y> & CIYL2)
 {
 	CIYL.clear();
 	CIYR.clear();
@@ -588,6 +681,60 @@ void TreeNode::getCompensableYL(X x, vector<Y> & CIYL, vector<Y> & CIYR, vector<
 		}
 	}
 }
+
+int TreeNode::verifyCIY(vector<Y> CIYLCorrect, vector<Y> CIYRCorrect, vector<Y> CIYL2Correct, vector<Y> CIYL, vector<Y> CIYR, vector<Y> CIYL2)
+{
+	if (CIYLCorrect.size() != CIYL.size())
+	{
+		return 1;
+	}
+	else
+	{
+		sort(CIYLCorrect.begin(), CIYLCorrect.end(), cmpYValueInc);
+		sort(CIYL.begin(), CIYL.end(), cmpYValueInc);
+		for (int i = 0; i < CIYL.size(); i++)
+		{
+			if (CIYL[i] != CIYLCorrect[i])
+			{
+				return 1;
+			}
+		}
+	}
+	if (CIYRCorrect.size() != CIYR.size())
+	{
+		return 2;
+	}
+	else
+	{
+		sort(CIYRCorrect.begin(), CIYRCorrect.end(), cmpYValueInc);
+		sort(CIYR.begin(), CIYR.end(), cmpYValueInc);
+		for (int i = 0; i < CIYR.size(); i++)
+		{
+			if (CIYR[i] != CIYRCorrect[i])
+			{
+				return 2;
+			}
+		}
+	}
+	if (CIYL2Correct.size() != CIYL2.size())
+	{
+		return 3;
+	}
+	else
+	{
+		sort(CIYL2Correct.begin(), CIYL2Correct.end(), cmpYValueInc);
+		sort(CIYL2.begin(), CIYL2.end(), cmpYValueInc);
+		for (int i = 0; i < CIYL2.size(); i++)
+		{
+			if (CIYL2[i] != CIYL2Correct[i])
+			{
+				return 3;
+			}
+		}
+	}
+	return 0;
+}
+
 
 int TreeNode::verifyNodeInvariants()
 {
