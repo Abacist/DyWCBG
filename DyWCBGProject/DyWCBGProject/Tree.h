@@ -59,7 +59,7 @@ public:
 	void updatet1t2inInternalNodeX(Msg & msg);
 	
 	void updateStableSetinLeaf(Msg msg);
-	void updateStableSetinInternalNode(Msg msg, Y t1inChild, Y t2inChild);
+	void updateStableSetinInternalNode(Msg msg, Y t1inChild, Y t2inChild, bool forceSwap = false);
 
 	int verifyNodeInvariants();
 	void splitNode(X insertedX);

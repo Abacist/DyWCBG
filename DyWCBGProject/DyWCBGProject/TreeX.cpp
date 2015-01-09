@@ -152,6 +152,7 @@ Msg TreeNode::insertXintoNodeL(Msg msg)
 {
 	Y t1inChild = msg._t1, t2inChild = msg._t2;
 	int countInChild = msg._stableYNumBetweent1t2;
+	bool forceSwap = false;
 
 	Msg rMsg;
 	rMsg._t1 = msg._t1;
@@ -513,6 +514,7 @@ Msg TreeNode::insertXintoNodeL(Msg msg)
 											_MXR.push_back(maxEnd);
 											_MXR.erase(find(_MXR.begin(), _MXR.end(), backX[0]));
 											_MXL.push_back(backX[0]);
+											forceSwap = true;
 										}
 									}
 									else
@@ -558,6 +560,8 @@ Msg TreeNode::insertXintoNodeL(Msg msg)
 
 									rMsg._aIX = aIXL2;
 									_IX.push_back(aIXL2);
+
+									forceSwap = true;
 								}
 							}
 							else
@@ -717,6 +721,7 @@ Msg TreeNode::insertXintoNodeL(Msg msg)
 										_MXR.push_back(maxEnd);
 										_MXR.erase(find(_MXR.begin(), _MXR.end(), backX[0]));
 										_MXL.push_back(backX[0]);
+										forceSwap = true;
 									}
 								}
 								else
@@ -762,6 +767,8 @@ Msg TreeNode::insertXintoNodeL(Msg msg)
 
 								rMsg._aIX = aIXL2;
 								_IX.push_back(aIXL2);
+
+								forceSwap = true;
 							}
 							
 						}
@@ -981,7 +988,7 @@ Msg TreeNode::insertXintoNodeL(Msg msg)
 		}
 	}
 
-	updateStableSetinInternalNode(rMsg, t1inChild, t2inChild);
+	updateStableSetinInternalNode(rMsg, t1inChild, t2inChild, forceSwap);
 	return rMsg;
 	
 }

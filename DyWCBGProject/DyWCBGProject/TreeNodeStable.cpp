@@ -114,7 +114,7 @@ void TreeNode::updatet1t2inInternalNodeX(Msg & msg)
 	msg._stableYNumBetweent1t2 = 0;
 	for (int i = 0; i < _MYS.size(); i++)
 	{
-		if (_MYS[i] <= msg._t2 && _MYS[i]>=t1)
+		if (_MYS[i] <= msg._t2 && _MYS[i]>=msg._t1)
 		{
 			msg._stableYNumBetweent1t2++;
 		}
@@ -149,7 +149,7 @@ void TreeNode::updateStableSetinLeaf(Msg msg)
 	}
 }
 
-void TreeNode::updateStableSetinInternalNode(Msg msg, Y t1inChild, Y t2inChild)
+void TreeNode::updateStableSetinInternalNode(Msg msg, Y t1inChild, Y t2inChild, bool forceSwap)
 {
 	if (msg._aX._e > maxY())
 	{
@@ -302,9 +302,46 @@ void TreeNode::updateStableSetinInternalNode(Msg msg, Y t1inChild, Y t2inChild)
 					}
 					else if (msg._t2 <= _leftChild->maxY())
 					{
-						//direct
-						_MXLS.push_back(msg._aX);
-						_MXLS.erase(find(_MXLS.begin(), _MXLS.end(), msg._aIX));
+						//direct or swap
+						if (forceSwap == false)
+						{
+							_MXLS.push_back(msg._aX);
+							_MXLS.erase(find(_MXLS.begin(), _MXLS.end(), msg._aIX));
+						}
+						else
+						{
+							Y bPre = betaPreforZLS(msg._aX._s);
+							vector<X> RMXLS;
+							for (int i = 0; i < _MXLS.size(); i++)
+							{
+								if (_MXLS[i]._s >= bPre)
+								{
+									RMXLS.push_back(_MXLS[i]);
+								}
+							}
+							RMXLS.push_back(msg._aX);
+							sort(RMXLS.begin(), RMXLS.end(), cmpXEndInc);
+							X maxEnd = RMXLS[RMXLS.size() - 1];
+
+							Y bPost = betaPostforZLS(msg._aIX._s);
+							Y aPost = alphaPostforZRS(maxEnd._e);
+							vector<X> backX;
+							for (int i = 0; i < _MXRS.size(); i++)
+							{
+								if (_MXRS[i]._e <= aPost && _MXRS[i]._s <= bPost)
+								{
+									backX.push_back(_MXRS[i]);
+								}
+							}
+							sort(backX.begin(), backX.end(), cmpXEndInc);
+
+							_MXLS.push_back(msg._aX);
+							_MXLS.erase(find(_MXLS.begin(), _MXLS.end(), maxEnd));
+							_MXRS.push_back(maxEnd);
+							_MXRS.erase(find(_MXRS.begin(), _MXRS.end(), backX[0]));
+							_MXLS.push_back(backX[0]);
+							_MXLS.erase(find(_MXLS.begin(), _MXLS.end(), msg._aIX));
+						}
 					}
 					else
 					{
@@ -336,7 +373,7 @@ void TreeNode::updateStableSetinInternalNode(Msg msg, Y t1inChild, Y t2inChild)
 						if (msg._aIX._s >= bPre)
 						{
 							//may need swap
-							if (!backX.empty() && cmpXEndInc(backX[0], msg._aX))
+							if (!backX.empty() && cmpXEndInc(backX[0], maxEnd))
 							{
 								_MXLS.push_back(msg._aX);
 								_MXLS.erase(find(_MXLS.begin(), _MXLS.end(), maxEnd));

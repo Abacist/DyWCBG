@@ -9,10 +9,10 @@
 using namespace std;
 
 const int mY =				5;
-const int ur =				10;
+const int ur =				20;
 int verifyEachUpdate =		1;		//0 not verify, !0 verify
-int gen =					0;
-int breakID =				4;
+int gen =					1;
+int breakID =				7;
 
 void generator(char* fileName = "input.txt", int MaxY = mY, int UpdateRange = ur, int WeightRange = 1000);
 
