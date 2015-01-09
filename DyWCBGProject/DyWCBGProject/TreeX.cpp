@@ -196,13 +196,19 @@ Msg TreeNode::insertXintoNodeL(Msg msg)
 			Y cY = CIY[CIY.size() - 1];
 			if (find(CIYL.begin(), CIYL.end(), cY) != CIYL.end())
 			{
-				vector<X> RMXL = getReachableSetinLeftPart(msg._aX);//tbd
-				RMXL.push_back(msg._aX);
-				sort(RMXL.begin(), RMXL.end(), cmpXEndInc);
-				X maxEnd = RMXL[RMXL.size() - 1];
-				//for phi 8
-				if (maxEnd._e <= _leftChild->maxY())
+				//success
+				int allCount = 0;
+				for (int i = 0; i < _MY.size(); i++)
 				{
+					if (_MY[i] >= t1inChild && _MY[i] <= t2inChild)
+					{
+						allCount++;
+					}
+				}
+				
+				if (t2inChild < _rightChild->minY() && countInChild == allCount)
+				{
+					//only to left
 					rMsg._aMX = msg._aX;
 					_MX.push_back(msg._aX);
 					_MXL.push_back(msg._aX);
@@ -216,6 +222,18 @@ Msg TreeNode::insertXintoNodeL(Msg msg)
 				}
 				else
 				{
+					vector<X> RMXL;
+					Y bPre = betaPreforZL(msg._aX._s);
+					for (int i = 0; i < _MXL.size(); i++)
+					{
+						if (_MXL[i]._s >= bPre)
+						{
+							RMXL.push_back(_MXL[i]);
+						}
+					}
+					RMXL.push_back(msg._aX);
+					sort(RMXL.begin(), RMXL.end(), cmpXEndInc);
+					X maxEnd = RMXL[RMXL.size() - 1];
 					Y aPost = alphaPostforZR(maxEnd._e);
 					vector<X> RMXR;
 					for (int i = 0; i < _MXR.size(); i++)
@@ -282,7 +300,6 @@ Msg TreeNode::insertXintoNodeL(Msg msg)
 							_IY.erase(find(_IY.begin(), _IY.end(), cY));
 						}
 					}
-					
 				}
 				
 			}
@@ -832,13 +849,19 @@ Msg TreeNode::insertXintoNodeL(Msg msg)
 				Y cY = CIY[CIY.size() - 1];
 				if (find(CIYL.begin(), CIYL.end(), cY) != CIYL.end())
 				{
-					vector<X> RMXL = getReachableSetinLeftPart(msg._aX);//tbd
-					RMXL.push_back(msg._aX);
-					sort(RMXL.begin(), RMXL.end(), cmpXEndInc);
-					X maxEnd = RMXL[RMXL.size() - 1];
-					//for phi 8
-					if (maxEnd._e <= _leftChild->maxY())
+					//success
+					int allCount = 0;
+					for (int i = 0; i < _MY.size(); i++)
 					{
+						if (_MY[i] >= t1inChild && _MY[i] <= t2inChild)
+						{
+							allCount++;
+						}
+					}
+
+					if (t2inChild < _rightChild->minY() && countInChild == allCount)
+					{
+						//only to left
 						rMsg._aMX = msg._aX;
 						_MX.push_back(msg._aX);
 						_MXL.push_back(msg._aX);
@@ -852,6 +875,18 @@ Msg TreeNode::insertXintoNodeL(Msg msg)
 					}
 					else
 					{
+						vector<X> RMXL;
+						Y bPre = betaPreforZL(msg._aX._s);
+						for (int i = 0; i < _MXL.size(); i++)
+						{
+							if (_MXL[i]._s >= bPre)
+							{
+								RMXL.push_back(_MXL[i]);
+							}
+						}
+						RMXL.push_back(msg._aX);
+						sort(RMXL.begin(), RMXL.end(), cmpXEndInc);
+						X maxEnd = RMXL[RMXL.size() - 1];
 						Y aPost = alphaPostforZR(maxEnd._e);
 						vector<X> RMXR;
 						for (int i = 0; i < _MXR.size(); i++)
@@ -918,8 +953,95 @@ Msg TreeNode::insertXintoNodeL(Msg msg)
 								_IY.erase(find(_IY.begin(), _IY.end(), cY));
 							}
 						}
-
 					}
+					//vector<X> RMXL = getReachableSetinLeftPart(msg._aX);//tbd
+					//RMXL.push_back(msg._aX);
+					//sort(RMXL.begin(), RMXL.end(), cmpXEndInc);
+					//X maxEnd = RMXL[RMXL.size() - 1];
+					////for phi 8
+					//if (maxEnd._e <= _leftChild->maxY())
+					//{
+					//	rMsg._aMX = msg._aX;
+					//	_MX.push_back(msg._aX);
+					//	_MXL.push_back(msg._aX);
+
+					//	rMsg._aMY = cY;
+					//	_MY.push_back(cY);
+					//	_MYL.push_back(cY);
+
+					//	rMsg._bIY = cY;
+					//	_IY.erase(find(_IY.begin(), _IY.end(), cY));
+					//}
+					//else
+					//{
+					//	Y aPost = alphaPostforZR(maxEnd._e);
+					//	vector<X> RMXR;
+					//	for (int i = 0; i < _MXR.size(); i++)
+					//	{
+					//		if (_MXR[i]._e <= aPost)
+					//		{
+					//			RMXR.push_back(_MXR[i]);
+					//		}
+					//	}
+					//	Y bPost = betaPostforZL(cY);
+					//	vector<X> backX;
+					//	for (int i = 0; i < RMXR.size(); i++)
+					//	{
+					//		if (RMXR[i]._s <= bPost)
+					//		{
+					//			backX.push_back(RMXR[i]);
+					//		}
+					//	}
+					//	if (backX.empty())
+					//	{
+					//		rMsg._aMX = msg._aX;
+					//		_MX.push_back(msg._aX);
+					//		_MXL.push_back(msg._aX);
+
+					//		rMsg._aMY = cY;
+					//		_MY.push_back(cY);
+					//		_MYL.push_back(cY);
+
+					//		rMsg._bIY = cY;
+					//		_IY.erase(find(_IY.begin(), _IY.end(), cY));
+					//	}
+					//	else
+					//	{
+					//		sort(backX.begin(), backX.end(), cmpXEndInc);
+					//		if (cmpXEndInc(backX[0], maxEnd))
+					//		{
+					//			//swap
+					//			rMsg._aMX = msg._aX;
+					//			_MX.push_back(msg._aX);
+					//			_MXL.push_back(msg._aX);
+					//			_MXL.erase(find(_MXL.begin(), _MXL.end(), maxEnd));
+					//			_MXR.push_back(maxEnd);
+					//			_MXR.erase(find(_MXR.begin(), _MXR.end(), backX[0]));
+					//			_MXL.push_back(backX[0]);
+
+					//			rMsg._aMY = cY;
+					//			_MY.push_back(cY);
+					//			_MYL.push_back(cY);
+
+					//			rMsg._bIY = cY;
+					//			_IY.erase(find(_IY.begin(), _IY.end(), cY));
+					//		}
+					//		else
+					//		{
+					//			rMsg._aMX = msg._aX;
+					//			_MX.push_back(msg._aX);
+					//			_MXL.push_back(msg._aX);
+
+					//			rMsg._aMY = cY;
+					//			_MY.push_back(cY);
+					//			_MYL.push_back(cY);
+
+					//			rMsg._bIY = cY;
+					//			_IY.erase(find(_IY.begin(), _IY.end(), cY));
+					//		}
+					//	}
+
+					//}
 
 				}
 				else

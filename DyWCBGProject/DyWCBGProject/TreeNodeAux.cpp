@@ -738,6 +738,7 @@ int TreeNode::verifyCIY(vector<Y> CIYLCorrect, vector<Y> CIYRCorrect, vector<Y> 
 
 int TreeNode::verifyNodeInvariants()
 {
+	//return 0;
 	{
 		vector<X> vZ;
 		formGloverMatching(_X, _Y, vZ);

@@ -8,9 +8,9 @@
 
 using namespace std;
 
-const int mY =				30;
-const int ur =				100;
-int verifyEachUpdate =		0;		//0 not verify, !0 verify
+const int mY =				10;
+const int ur =				30;
+int verifyEachUpdate =		1;		//0 not verify, !0 verify
 int gen =					1;
 int breakID =				5;
 
