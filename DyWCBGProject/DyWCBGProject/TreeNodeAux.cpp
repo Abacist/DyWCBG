@@ -88,68 +88,67 @@ vector<Y> TreeNode::getIYR()
 	return IYR;
 }
 
-//aPost must exists in DW case
-Y TreeNode::alphaPostforZL(Y y)
-{
-	vector<X> tempZ;
-	vector<Y> tempY;
-	tempZ = _MXL;
-	tempY = _MYL;
-	if (tempY.empty())
-	{
-		return y;
-	}
-	else
-	{
-		sort(tempY.begin(), tempY.end(), cmpYValueInc);
-		sort(tempZ.begin(), tempZ.end(), cmpXEndInc);
-		Y tY;
-		//will not be empty
-		if (y < tempY[0])
-		{
-			return y;
-		}
-		else
-		{
-			tY = tempZ[tempZ.size() - 1]._e;
-
-			int i = 0;
-			while (i + 1 <= tempY.size())
-			{
-				if (tempY[i] <= y)
-				{
-					i++;
-				}
-				else
-				{
-					break;
-				}
-			}
-			i--;
-			//found the maxmal Y0 such that Y0<=y
-
-
-			for (; i + 2 <= tempY.size(); i++)
-			{
-				if (tempZ[i]._e < tempY[i + 1])
-				{
-					//tight
-					tY = tempZ[i]._e;
-					break;
-				}
-			}
-			//else tY keeps tempZ[tempZ.size() - 1]._e;	
-
-			if (tY < y)
-			{
-				tY = y;
-			}//without this jude, RMX is right, but CIY is not right
-			return tY;
-
-		}
-	}
-
-}
+//Y TreeNode::alphaPostforZL(Y y)
+//{
+//	vector<X> tempZ;
+//	vector<Y> tempY;
+//	tempZ = _MXL;
+//	tempY = _MYL;
+//	if (tempY.empty())
+//	{
+//		return y;
+//	}
+//	else
+//	{
+//		sort(tempY.begin(), tempY.end(), cmpYValueInc);
+//		sort(tempZ.begin(), tempZ.end(), cmpXEndInc);
+//		Y tY;
+//		//will not be empty
+//		if (y < tempY[0])
+//		{
+//			return y;
+//		}
+//		else
+//		{
+//			tY = tempZ[tempZ.size() - 1]._e;
+//
+//			int i = 0;
+//			while (i + 1 <= tempY.size())
+//			{
+//				if (tempY[i] <= y)
+//				{
+//					i++;
+//				}
+//				else
+//				{
+//					break;
+//				}
+//			}
+//			i--;
+//			//found the maxmal Y0 such that Y0<=y
+//
+//
+//			for (; i + 2 <= tempY.size(); i++)
+//			{
+//				if (tempZ[i]._e < tempY[i + 1])
+//				{
+//					//tight
+//					tY = tempZ[i]._e;
+//					break;
+//				}
+//			}
+//			//else tY keeps tempZ[tempZ.size() - 1]._e;	
+//
+//			if (tY < y)
+//			{
+//				tY = y;
+//			}//without this jude, RMX is right, but CIY is not right
+//			return tY;
+//
+//		}
+//	}
+//
+//}
 
 
 //aPost must exists in DW case
@@ -604,7 +603,6 @@ void TreeNode::getCompensableYL(X x, Y t1, Y t2, int stableCountinChild, vector<
 			sort(RMXR.begin(), RMXR.end(), cmpXBeginDec);
 			X minBegin = RMXR[RMXR.size() - 1];
 
-			vector<X> RMXL2;
 			Y bPre1 = betaPreforZL(minBegin._s);
 
 			for (int i = 0; i < IYL.size(); i++)

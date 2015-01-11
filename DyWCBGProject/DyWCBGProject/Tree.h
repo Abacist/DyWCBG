@@ -42,14 +42,14 @@ public:
 	Y maxY();
 	Y minY();
 
-	Y alphaPostforZL(Y y);
+	//Y alphaPostforZL(Y y);
 	Y alphaPostforZR(Y y);
 	Y alphaPreforZR(Y y);
 	Y betaPreforZL(Y y);
 	Y betaPostforZL(Y y);
 
 
-	Y alphaPostforZLS(Y y);
+	//Y alphaPostforZLS(Y y);
 	Y alphaPostforZRS(Y y);
 	Y alphaPreforZRS(Y y);
 	Y betaPreforZLS(Y y);
@@ -59,7 +59,7 @@ public:
 	void updatet1t2inInternalNodeX(Msg & msg);
 	
 	void updateStableSetinLeaf(Msg msg);
-	void updateStableSetinInternalNode(Msg msg, Y t1inChild, Y t2inChild, bool forceSwap = false);
+	void updateStableSetinInternalNode(Msg msg, bool forceSwap = false);
 
 	int verifyNodeInvariants();
 	void splitNode(X insertedX);

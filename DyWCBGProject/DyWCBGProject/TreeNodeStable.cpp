@@ -149,7 +149,7 @@ void TreeNode::updateStableSetinLeaf(Msg msg)
 	}
 }
 
-void TreeNode::updateStableSetinInternalNode(Msg msg, Y t1inChild, Y t2inChild, bool forceSwap)
+void TreeNode::updateStableSetinInternalNode(Msg msg, bool forceSwap)
 {
 	if (msg._aX._e > maxY())
 	{
@@ -498,67 +498,67 @@ void TreeNode::updateStableSetinInternalNode(Msg msg, Y t1inChild, Y t2inChild, 
 	}
 }
 
-Y TreeNode::alphaPostforZLS(Y y)
-{
-	vector<X> tempZ;
-	vector<Y> tempY;
-	tempZ = _MXLS;
-	tempY = _MYLS;
-	if (tempY.empty())
-	{
-		return y;
-	}
-	else
-	{
-		sort(tempY.begin(), tempY.end(), cmpYValueInc);
-		sort(tempZ.begin(), tempZ.end(), cmpXEndInc);
-		Y tY;
-		//will not be empty
-		if (y < tempY[0])
-		{
-			return y;
-		}
-		else
-		{
-			tY = tempZ[tempZ.size() - 1]._e;
-
-			int i = 0;
-			while (i + 1 <= tempY.size())
-			{
-				if (tempY[i] <= y)
-				{
-					i++;
-				}
-				else
-				{
-					break;
-				}
-			}
-			i--;
-			//found the maxmal Y0 such that Y0<=y
-
-
-			for (; i + 2 <= tempY.size(); i++)
-			{
-				if (tempZ[i]._e < tempY[i + 1])
-				{
-					//tight
-					tY = tempZ[i]._e;
-					break;
-				}
-			}
-			//else tY keeps tempZ[tempZ.size() - 1]._e;	
-
-			if (tY < y)
-			{
-				tY = y;
-			}//without this jude, RMX is right, but CIY is not right
-			return tY;
-
-		}
-	}
-
-}
+//Y TreeNode::alphaPostforZLS(Y y)
+//{
+//	vector<X> tempZ;
+//	vector<Y> tempY;
+//	tempZ = _MXLS;
+//	tempY = _MYLS;
+//	if (tempY.empty())
+//	{
+//		return y;
+//	}
+//	else
+//	{
+//		sort(tempY.begin(), tempY.end(), cmpYValueInc);
+//		sort(tempZ.begin(), tempZ.end(), cmpXEndInc);
+//		Y tY;
+//		//will not be empty
+//		if (y < tempY[0])
+//		{
+//			return y;
+//		}
+//		else
+//		{
+//			tY = tempZ[tempZ.size() - 1]._e;
+//
+//			int i = 0;
+//			while (i + 1 <= tempY.size())
+//			{
+//				if (tempY[i] <= y)
+//				{
+//					i++;
+//				}
+//				else
+//				{
+//					break;
+//				}
+//			}
+//			i--;
+//			//found the maxmal Y0 such that Y0<=y
+//
+//
+//			for (; i + 2 <= tempY.size(); i++)
+//			{
+//				if (tempZ[i]._e < tempY[i + 1])
+//				{
+//					//tight
+//					tY = tempZ[i]._e;
+//					break;
+//				}
+//			}
+//			//else tY keeps tempZ[tempZ.size() - 1]._e;	
+//
+//			if (tY < y)
+//			{
+//				tY = y;
+//			}//without this jude, RMX is right, but CIY is not right
+//			return tY;
+//
+//		}
+//	}
+//
+//}
 
 
 Y TreeNode::alphaPostforZRS(Y y)

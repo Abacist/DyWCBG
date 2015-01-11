@@ -461,6 +461,7 @@ Msg TreeNode::insertXintoNodeL(Msg msg)
 						sort(transferTest.begin(), transferTest.end(), cmpXEndInc);
 						if (transferTest[transferTest.size() - 1]._e > _rightChild->maxY())
 						{
+							throw new exception();
 							//transfer
 							rMsg._aMX = msg._aX;
 							_MX.push_back(msg._aX);
@@ -591,6 +592,7 @@ Msg TreeNode::insertXintoNodeL(Msg msg)
 							}
 							else
 							{
+								throw new exception();
 								rMsg._aMX = msg._aX;
 								_MX.push_back(msg._aX);
 								_MXL.push_back(msg._aX);
@@ -606,6 +608,7 @@ Msg TreeNode::insertXintoNodeL(Msg msg)
 					}
 					else
 					{
+						throw new exception();
 						rMsg._aMX = msg._aX;
 						_MX.push_back(msg._aX);
 						_MXL.push_back(msg._aX);
@@ -1131,7 +1134,7 @@ Msg TreeNode::insertXintoNodeL(Msg msg)
 		}
 	}
 
-	updateStableSetinInternalNode(rMsg, t1inChild, t2inChild, forceSwap);
+	updateStableSetinInternalNode(rMsg, forceSwap);
 	return rMsg;
 	
 }
@@ -1389,6 +1392,6 @@ Msg TreeNode::insertXintoNodeR(Msg msg)
 
 
 	}
-	updateStableSetinInternalNode(rMsg, t1inChild, t2inChild);
+	updateStableSetinInternalNode(rMsg);
 	return rMsg;
 }
