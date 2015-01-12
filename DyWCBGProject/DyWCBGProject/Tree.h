@@ -106,4 +106,7 @@ public:
 
 	void verifyInvariantsRecur(int& flag, TreeNode*& errorNode);
 	void verifyInvariantsRecur(int& flag, TreeNode*& errorNode, TreeNode* curRoot);
+
+	void printMY();
+	void printMY(TreeNode* curRoot, ofstream & my);
 };

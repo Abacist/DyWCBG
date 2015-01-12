@@ -8,8 +8,8 @@
 
 using namespace std;
 
-const int mY =				100;
-const int ur =				300;
+const int mY =				50;
+const int ur =				50;
 int verifyEachUpdate =		0;		//0 not verify, !0 verify
 int gen =					1;
 int breakID =				5;
@@ -165,7 +165,7 @@ int main()
 			cout << endl << endl << endl << endl << "Not satify, please check! Error code: " << flag << endl;
 			goto End;
 		}
-
+		//pTree->printMY();
 	}
 End:
 	return 0;

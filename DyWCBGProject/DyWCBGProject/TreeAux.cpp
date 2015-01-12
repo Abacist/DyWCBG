@@ -1,3 +1,4 @@
+#include<fstream>
 #include"Tree.h"
 
 
@@ -103,5 +104,59 @@ void Tree::verifyInvariantsRecur(int& flag, TreeNode*& errorNode, TreeNode* curR
 		{
 			errorNode = curRoot;
 		}
+	}
+}
+
+
+void Tree::printMY()
+{
+	ofstream my("MY.txt");
+	printMY(_root, my);
+	my.close();
+	getchar();
+}
+
+void Tree::printMY(TreeNode* curRoot, ofstream & my)
+{
+	if (curRoot->_leftChild ==  NULL)
+	{
+		return;
+	}
+	else
+	{
+		sort(curRoot->_MYL.begin(), curRoot->_MYL.end(), cmpYValueInc);
+		my << "MYL.:";
+		for (int i = 0; i < curRoot->_MYL.size(); i++)
+		{
+			my << curRoot->_MYL[i]._value << " ";
+		}
+
+		sort(curRoot->_MYR.begin(), curRoot->_MYR.end(), cmpYValueInc);
+		my << "MYR.:";
+		for (int i = 0; i < curRoot->_MYR.size(); i++)
+		{
+			my << curRoot->_MYR[i]._value << " ";
+		}
+
+		my << endl;
+
+		sort(curRoot->_leftChild->_MY.begin(), curRoot->_leftChild->_MY.end(), cmpYValueInc);
+		my << "L.MY:";
+		for (int i = 0; i < curRoot->_leftChild->_MY.size(); i++)
+		{
+			my << curRoot->_leftChild->_MY[i]._value << " ";
+		}
+
+		sort(curRoot->_rightChild->_MY.begin(), curRoot->_rightChild->_MY.end(), cmpYValueInc);
+		my << "R.MY:";
+		for (int i = 0; i < curRoot->_rightChild->_MY.size(); i++)
+		{
+			my << curRoot->_rightChild->_MY[i]._value << " ";
+		}
+
+		my << endl << endl;
+
+		printMY(curRoot->_leftChild, my);
+		printMY(curRoot->_rightChild, my);
 	}
 }
