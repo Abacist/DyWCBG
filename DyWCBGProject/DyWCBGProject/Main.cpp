@@ -8,8 +8,8 @@
 
 using namespace std;
 
-const int mY =				50;
-const int ur =				50;
+const int mY =				30;
+const int ur =				20;
 int verifyEachUpdate =		0;		//0 not verify, !0 verify
 int gen =					1;
 int breakID =				5;
@@ -166,6 +166,7 @@ int main()
 			goto End;
 		}
 		//pTree->printMY();
+		//pTree->printRMY();
 	}
 End:
 	return 0;

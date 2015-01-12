@@ -1,3 +1,4 @@
+#include<Windows.h>
 #include<fstream>
 #include"Tree.h"
 
@@ -159,4 +160,50 @@ void Tree::printMY(TreeNode* curRoot, ofstream & my)
 		printMY(curRoot->_leftChild, my);
 		printMY(curRoot->_rightChild, my);
 	}
+}
+
+void Tree::printRMY()
+{
+	int range = _root->_IY.size();
+
+	SYSTEMTIME lpsystime;
+	GetLocalTime(&lpsystime);
+	srand(lpsystime.wMinute * 1000 + lpsystime.wMilliseconds);
+
+	int index = rand() % (range);
+	Y aY = _root->_IY[index];
+	
+	vector<Y> RMY;
+
+	for (int i = 0; i < _root->_MY.size(); i++)
+	{
+		vector<X> tempX = _root->_MX;
+		vector<Y> tempY = _root->_MY;
+		tempY.erase(find(tempY.begin(), tempY.end(), _root->_MY[i]));
+		tempY.push_back(aY);
+		vector<X> tempMX;
+		formGloverMatching(tempX, tempY, tempMX);
+		if (tempMX.size() == tempX.size())
+		{
+			RMY.push_back(_root->_MY[i]);
+		}
+	}
+
+	ofstream out("RMY.txt");
+	sort(RMY.begin(), RMY.end(), cmpYValueInc);
+	sort(_root->_MY.begin(), _root->_MY.end(), cmpYValueInc);
+
+	out << "RMY: ";
+	for (int i = 0; i < RMY.size(); i++)
+	{
+		out << RMY[i]._value << " ";
+	}
+	out << endl << "_MY: ";
+	for (int i = 0; i < _root->_MY.size(); i++)
+	{
+		out << _root->_MY[i]._value << " ";
+	}
+	out << endl;
+	out.close();
+	getchar();
 }

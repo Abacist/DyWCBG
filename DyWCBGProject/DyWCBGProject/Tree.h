@@ -109,4 +109,5 @@ public:
 
 	void printMY();
 	void printMY(TreeNode* curRoot, ofstream & my);
+	void printRMY();
 };
