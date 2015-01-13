@@ -336,6 +336,181 @@ Y TreeNode::betaPostforZL(Y y)
 
 }
 
+Y TreeNode::betaPreforZ(Y y)
+{
+	vector<X> tempZ;
+	vector<Y> tempY;
+	tempZ = _MX;
+	tempY = _MY;
+	if (tempY.empty())
+	{
+		return y;
+	}
+	else
+	{
+		sort(tempY.begin(), tempY.end(), cmpYValueDec);
+		sort(tempZ.begin(), tempZ.end(), cmpXBeginDec);
+		Y tY;
+		//will not be empty
+		if (y > tempY[0])
+		{
+			return y;
+		}
+		else
+		{
+			tY = tempZ[tempZ.size() - 1]._s;
+
+			int i = 0;
+			while (i + 1 <= tempY.size())
+			{
+				if (tempY[i] >= y)
+				{
+					i++;
+				}
+				else
+				{
+					break;
+				}
+			}
+			i--;
+			//found the maxmal Y0 such that Y0>=y
+
+
+			for (; i + 2 <= tempY.size(); i++)
+			{
+				if (tempZ[i]._s > tempY[i + 1])
+				{
+					//tight
+					tY = tempZ[i]._s;
+					break;
+				}
+			}
+			//else tY keeps tempZ[tempZ.size() - 1]._s;	
+
+			if (tY > y)
+			{
+				tY = y;
+			}
+			return tY;
+
+		}
+	}
+}
+
+void TreeNode::getReachableSetinR(Y apost, vector<X> & RMXR, vector<Y> & CIYR)
+{
+	CIYR.clear(); RMXR.clear();
+	vector<Y> IYR = getIYR();
+	for (int i = 0; i < IYR.size(); i++)
+	{
+		if (IYR[i] <= apost)
+		{
+			CIYR.push_back(IYR[i]);
+		}
+	}
+	for (int i = 0; i < _MXR.size(); i++)
+	{
+		if (_MXR[i]._e <= apost)
+		{
+			RMXR.push_back(_MXR[i]);
+		}
+	}
+}
+
+void TreeNode::getReachableSetinL(Y bpre, vector<X> & RMXL, vector<Y> & CIYL)
+{
+	CIYL.clear(); RMXL.clear();
+	vector<Y> IYL = getIYL();
+	for (int i = 0; i < IYL.size(); i++)
+	{
+		if (IYL[i] >= bpre)
+		{
+			CIYL.push_back(IYL[i]);
+		}
+	}
+	for (int i = 0; i < _MXL.size(); i++)
+	{
+		if (_MXL[i]._s >= bpre)
+		{
+			RMXL.push_back(_MXL[i]);
+		}
+	}
+}
+
+void TreeNode::getReachableSet2inL(Y bpre1, Y bpre, vector<X> & RMXL2, vector<Y> & CIYL2)
+{
+	CIYL2.clear(); RMXL2.clear();
+	vector<Y> IYL = getIYL();
+	for (int i = 0; i < IYL.size(); i++)
+	{
+		if (IYL[i] >= bpre1 && IYL[i] < bpre)
+		{
+			CIYL2.push_back(IYL[i]);
+		}
+	}
+	for (int i = 0; i < _MXL.size(); i++)
+	{
+		if (_MXL[i]._s >= bpre && _MXL[i]._s < bpre)
+		{
+			RMXL2.push_back(_MXL[i]);
+		}
+	}
+}
+
+void TreeNode::updateStableCount(Msg & msg)
+{
+	msg._stableYCount = 0;
+	for (int i = 0; i < _MY.size(); i++)
+	{
+		if (_MY[i] >= msg._t1 && _MY[i] <= msg._t2)
+		{
+			msg._stableYCount++;
+		}
+	}
+}
+
+
+Y TreeNode::getMaxWeightCY(vector<Y> CIYL, vector<Y> CIYR, vector<Y> CIYL2)
+{
+	vector<Y> allCIY = CIYL;
+	for (int i = 0; i < CIYR.size(); i++) allCIY.push_back(CIYR[i]);
+	for (int i = 0; i < CIYL2.size(); i++) allCIY.push_back(CIYL2[i]);
+	sort(allCIY.begin(), allCIY.end(), cmpYWeightInc);
+	return allCIY[allCIY.size() - 1];
+}
+
+X TreeNode::getMinWeightRX(vector<X> RMXL, vector<X> RMXR, vector<X> RMXL2)
+{
+	vector<X> allRMX = RMXL;
+	for (int i = 0; i < RMXR.size(); i++) allRMX.push_back(RMXR[i]);
+	for (int i = 0; i < RMXL2.size(); i++) allRMX.push_back(RMXL2[i]);
+	sort(allRMX.begin(), allRMX.end(), cmpXWeightInc);
+	return allRMX[0];
+}
+
+X TreeNode::getBackXfromMXR(Y bpost, Y apost)
+{
+	vector<X> BackX;
+	for (int i = 0; i < _MXR.size(); i++)
+	{
+		if (_MXR[i]._s <= bpost && _MXR[i]._e <= apost)
+		{
+			BackX.push_back(_MXR[i]);
+		}
+	}
+	sort(BackX.begin(), BackX.end(), cmpXEndInc);
+	if (BackX.empty())
+	{
+		X x;
+		return x;
+	}
+	else
+	{
+		return BackX[0];
+	}
+	
+}
+
 //vector<X> TreeNode::getReachableSetinLeftPart(X x)
 //{
 //	vector<X> allX = _MXL;
@@ -402,6 +577,10 @@ void TreeNode::splitNode(X x)
 
 	for (int i = 0; i < allX.size(); i++)
 	{
+		if (i == 8)
+		{
+			int a = 1;
+		}
 		Msg msg = _leftChild->insertXintoLeaf(allX[i]);
 		//int flag1 = _leftChild->verifyNodeInvariants();
 
@@ -416,6 +595,7 @@ void TreeNode::splitNode(X x)
 		{
 			throw new exception();
 		}
+		int a = 1;
 	}
 }
 
@@ -458,97 +638,97 @@ void TreeNode::getMXMY(vector<X> & MXS, vector<Y> & MYS)
 //}
 
 
-void TreeNode::getCompensableYL(X x, Y t1, Y t2, int stableCountinChild, vector<Y> & CIYL, vector<Y> & CIYR, vector<Y> & CIYL2)
-{
-	CIYL.clear();
-	CIYR.clear();
-	CIYL2.clear();
-
-	int allCount = 0;
-	for (int i = 0; i < _MY.size(); i++)
-	{
-		if (_MY[i] >= t1 && _MY[i] <= t2)
-		{
-			allCount++;
-		}
-	}
-
-	if (t2 < _rightChild->minY() && stableCountinChild == allCount)
-	{
-		//directly calculate
-		for (int i = 0; i < _IY.size(); i++)
-		{
-			if (_IY[i] >= t1 && _IY[i] <= t2)
-			{
-				CIYL.push_back(_IY[i]);
-			}
-		}
-	}
-	else
-	{
-		//EE and ES
-		Y bPre = betaPreforZL(x._s);
-		vector<Y> IYL = getIYL();
-		for (int i = 0; i < IYL.size(); i++)
-		{
-			if (IYL[i] >= bPre)
-			{
-				CIYL.push_back(IYL[i]);
-			}
-		}
-		vector<X> RMXL;
-		for (int i = 0; i < _MXL.size(); i++)
-		{
-			if (_MXL[i]._s >= bPre)
-			{
-				RMXL.push_back(_MXL[i]);
-			}
-		}
-		RMXL.push_back(x);
-
-		sort(RMXL.begin(), RMXL.end(), cmpXEndInc);
-		X maxEnd = RMXL[RMXL.size() - 1];
-
-		Y aPost = alphaPostforZR(maxEnd._e);
-		vector<Y> IYR = getIYR();
-		for (int i = 0; i < IYR.size(); i++)
-		{
-			if (IYR[i] <= aPost)
-			{
-				CIYR.push_back(IYR[i]);
-			}
-		}
-
-		vector<X> RMXR;
-		for (int i = 0; i < _MXR.size(); i++)
-		{
-			if (_MXR[i]._e <= aPost)
-			{
-				RMXR.push_back(_MXR[i]);
-			}
-		}
-
-		if (!RMXR.empty())
-		{
-			sort(RMXR.begin(), RMXR.end(), cmpXBeginDec);
-			X minBegin = RMXR[RMXR.size() - 1];
-
-			Y bPre1 = betaPreforZL(minBegin._s);
-
-			for (int i = 0; i < IYL.size(); i++)
-			{
-				if (IYL[i] >= bPre1)
-				{
-					if (find(CIYL.begin(), CIYL.end(), IYL[i]) == CIYL.end())
-					{
-						CIYL2.push_back(IYL[i]);
-					}
-				}
-			}
-		}
-		
-	}
-}
+//void TreeNode::getCompensableYL(X x, Y t1, Y t2, int stableCountinChild, vector<Y> & CIYL, vector<Y> & CIYR, vector<Y> & CIYL2)
+//{
+//	CIYL.clear();
+//	CIYR.clear();
+//	CIYL2.clear();
+//
+//	int allCount = 0;
+//	for (int i = 0; i < _MY.size(); i++)
+//	{
+//		if (_MY[i] >= t1 && _MY[i] <= t2)
+//		{
+//			allCount++;
+//		}
+//	}
+//
+//	if (t2 < _rightChild->minY() && stableCountinChild == allCount)
+//	{
+//		//directly calculate
+//		for (int i = 0; i < _IY.size(); i++)
+//		{
+//			if (_IY[i] >= t1 && _IY[i] <= t2)
+//			{
+//				CIYL.push_back(_IY[i]);
+//			}
+//		}
+//	}
+//	else
+//	{
+//		//EE and ES
+//		Y bPre = betaPreforZL(x._s);
+//		vector<Y> IYL = getIYL();
+//		for (int i = 0; i < IYL.size(); i++)
+//		{
+//			if (IYL[i] >= bPre)
+//			{
+//				CIYL.push_back(IYL[i]);
+//			}
+//		}
+//		vector<X> RMXL;
+//		for (int i = 0; i < _MXL.size(); i++)
+//		{
+//			if (_MXL[i]._s >= bPre)
+//			{
+//				RMXL.push_back(_MXL[i]);
+//			}
+//		}
+//		RMXL.push_back(x);
+//
+//		sort(RMXL.begin(), RMXL.end(), cmpXEndInc);
+//		X maxEnd = RMXL[RMXL.size() - 1];
+//
+//		Y aPost = alphaPostforZR(maxEnd._e);
+//		vector<Y> IYR = getIYR();
+//		for (int i = 0; i < IYR.size(); i++)
+//		{
+//			if (IYR[i] <= aPost)
+//			{
+//				CIYR.push_back(IYR[i]);
+//			}
+//		}
+//
+//		vector<X> RMXR;
+//		for (int i = 0; i < _MXR.size(); i++)
+//		{
+//			if (_MXR[i]._e <= aPost)
+//			{
+//				RMXR.push_back(_MXR[i]);
+//			}
+//		}
+//
+//		if (!RMXR.empty())
+//		{
+//			sort(RMXR.begin(), RMXR.end(), cmpXBeginDec);
+//			X minBegin = RMXR[RMXR.size() - 1];
+//
+//			Y bPre1 = betaPreforZL(minBegin._s);
+//
+//			for (int i = 0; i < IYL.size(); i++)
+//			{
+//				if (IYL[i] >= bPre1)
+//				{
+//					if (find(CIYL.begin(), CIYL.end(), IYL[i]) == CIYL.end())
+//					{
+//						CIYL2.push_back(IYL[i]);
+//					}
+//				}
+//			}
+//		}
+//		
+//	}
+//}
 
 void TreeNode::getCompensableYLForce(X x, vector<Y> & CIYL, vector<Y> & CIYR, vector<Y> & CIYL2)
 {
@@ -610,8 +790,10 @@ void TreeNode::getCompensableYLForce(X x, vector<Y> & CIYL, vector<Y> & CIYR, ve
 	}
 }
 
-int TreeNode::verifyCIY(vector<Y> CIYLCorrect, vector<Y> CIYRCorrect, vector<Y> CIYL2Correct, vector<Y> CIYL, vector<Y> CIYR, vector<Y> CIYL2)
+int TreeNode::verifyCIY(X ix, vector<Y> CIYL, vector<Y> CIYR, vector<Y> CIYL2)
 {
+	vector<Y> CIYLCorrect, CIYRCorrect, CIYL2Correct;
+	getCompensableYLForce(ix, CIYLCorrect, CIYRCorrect, CIYL2Correct);
 	if (CIYLCorrect.size() != CIYL.size())
 	{
 		return 1;

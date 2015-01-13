@@ -25,8 +25,8 @@ void generator(char* fileName, int maxY, int updateRange, int weightRange)
 
 	for (int i = 1; i <= updateRange; i++)
 	{
-		int s = rand() % maxY + 1;
-		int e = rand() % maxY + 1;
+		int s = 1;// rand() % maxY + 1;
+		int e = rand() % (maxY) + 1;
 		if (s > e)
 		{
 			int temp = e;
@@ -41,10 +41,8 @@ void generator(char* fileName, int maxY, int updateRange, int weightRange)
 		x._w = w;
 		out << 1 << " " << x._id << " " << x._s._value << " " << x._e._value << " " << x._w << endl;
 	}
-	//out << 1 << " " << 1000 << " " << rand() % (maxY-1) + 2 << " " << 1000 << " " << 1000 << endl;
-	
-
-	
+	out << 1 << " " << 1000 << " " << rand() % (maxY-1) + 2 << " " << 1000 << " " << 1000 << endl;
+		
 	out << '$' << endl;
 
 
@@ -150,8 +148,8 @@ Msg::Msg()
 
 	_aX = _bX = _aMX = _bMX = _aIX = _bIX = _aTX = _bTX = x;
 	_t1 = _t2 = _aY = _bY = _aMY = _bMY = _aIY = _bIY = y;
-	_stableYCount = -1;
-	tight = false;
+	_stableYCount = 0;
+	//_replace = false;
 }
 
 ostream& operator<<(ostream& os, const Y& rhs)

@@ -40,7 +40,20 @@ public:
 	Y betaPreforZL(Y y);
 	Y betaPostforZL(Y y);
 
+	Y betaPreforZ(Y y);
 
+
+	//for insertX
+	void performEEESEE(Msg msgInChild, Msg & rMsg);
+	void getReachableSetinR(Y apost, vector<X> & RMXR, vector<Y> & CIYR);
+	void getReachableSetinL(Y bpre, vector<X> & RMXL, vector<Y> & CIYL);
+	void getReachableSet2inL(Y bpre1, Y bpre, vector<X> & RMXL2, vector<Y> & CIYL2);
+	void updateStableCount(Msg & msg);
+	//void updatet1t2(Msg & msg);
+	//void getCompensableYL(X x, Y t1, Y t2, int stableCountinChild, vector<Y> & CIYL, vector<Y> & CIYR, vector<Y> & CIYL2);
+	Y getMaxWeightCY(vector<Y> CIYL, vector<Y> CIYR, vector<Y> CIYL2);
+	X getMinWeightRX(vector<X> RMXL, vector<X> RMXR, vector<X> RMXL2);
+	X getBackXfromMXR(Y bpost, Y apost);
 	
 
 	int verifyNodeInvariants();
@@ -52,24 +65,27 @@ public:
 	Msg insertXintoNodeL(Msg msg);
 	Msg insertXintoNodeR(Msg msg);
 
-	void getCompensableYL(X x, Y t1, Y t2, int stableCountinChild, vector<Y> & CIYL, vector<Y> & CIYR, vector<Y> & CIYL2);
 	
 	//lazy
 	vector<Y> getYL();
 	vector<Y> getYR();
 	vector<Y> getIYL();
 	vector<Y> getIYR();
+
 	
 
-	int verifyCIY(vector<Y> CIYLCorrect, vector<Y> CIYRCorrect, vector<Y> CIYL2Correct, vector<Y> CIYL, vector<Y> CIYR, vector<Y> CIYL2);
+	//no need
+	int verifyCIY(X ix, vector<Y> CIYL, vector<Y> CIYR, vector<Y> CIYL2);
 
 	void getMXMY(vector<X> & MXS, vector<Y> & MYS);
+
+	void getCompensableYLForce(X x, vector<Y> & CIYL, vector<Y> & CIYR, vector<Y> & CIYL2);
 
 	//vector<X> getReachableSetinLeftPart(X x);
 
 	//vector<X> getStableReachableSet(X x);
 
-	void getCompensableYLForce(X x, vector<Y> & CIYL, vector<Y> & CIYR, vector<Y> & CIYL2);
+	
 
 };
 
