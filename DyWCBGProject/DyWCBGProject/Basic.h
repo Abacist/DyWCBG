@@ -76,7 +76,8 @@ public:
 	Y _t1;
 	Y _t2;
 	//t1 t2 is the stable reachable Y range of the inserted X before the X is inserted
-	int _stableYNumBetweent1t2;
+	int _stableYCount;
+	bool tight;
 
 	Msg();
 
