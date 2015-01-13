@@ -420,7 +420,7 @@ void TreeNode::splitNode(X x)
 }
 
 
-void TreeNode::getStableSet(vector<X> & MXS, vector<Y> & MYS)
+void TreeNode::getMXMY(vector<X> & MXS, vector<Y> & MYS)
 {
 	MXS.clear();
 	MYS.clear();

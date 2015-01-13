@@ -41,8 +41,6 @@ public:
 	Y betaPostforZL(Y y);
 
 
-	void updatet1t2inLeafX(Msg & msg);
-	void updatet1t2inInternalNodeX(Msg & msg);
 	
 
 	int verifyNodeInvariants();
@@ -61,12 +59,11 @@ public:
 	vector<Y> getYR();
 	vector<Y> getIYL();
 	vector<Y> getIYR();
-	//vector<Y> getIYS();
 	
 
 	int verifyCIY(vector<Y> CIYLCorrect, vector<Y> CIYRCorrect, vector<Y> CIYL2Correct, vector<Y> CIYL, vector<Y> CIYR, vector<Y> CIYL2);
 
-	void getStableSet(vector<X> & MXS, vector<Y> & MYS);
+	void getMXMY(vector<X> & MXS, vector<Y> & MYS);
 
 	//vector<X> getReachableSetinLeftPart(X x);
 
