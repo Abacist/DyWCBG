@@ -25,7 +25,7 @@ void generator(char* fileName, int maxY, int updateRange, int weightRange)
 
 	for (int i = 1; i <= updateRange; i++)
 	{
-		int s = 1;// rand() % maxY + 1;
+		int s = rand() % maxY + 1;
 		int e = rand() % (maxY) + 1;
 		if (s > e)
 		{
@@ -41,7 +41,7 @@ void generator(char* fileName, int maxY, int updateRange, int weightRange)
 		x._w = w;
 		out << 1 << " " << x._id << " " << x._s._value << " " << x._e._value << " " << x._w << endl;
 	}
-	out << 1 << " " << 1000 << " " << rand() % (maxY-1) + 2 << " " << 1000 << " " << 1000 << endl;
+	//out << 1 << " " << 1000 << " " << rand() % (maxY-1) + 2 << " " << 1000 << " " << 1000 << endl;
 		
 	out << '$' << endl;
 

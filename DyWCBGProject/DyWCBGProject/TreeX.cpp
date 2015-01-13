@@ -8,13 +8,6 @@ extern int verifyEachUpdate;
 void Tree::insertXinTree(X x)
 {
 	TreeNode* curNode = locateLeaf(x);
-
-	if (_root->_rightChild != NULL && curNode == _root->_rightChild)
-	{
-		return;
-	}
-
-
 	Msg msg = curNode->insertXintoLeaf(x);
 	int flag = 0;
 	if (verifyEachUpdate)
@@ -220,11 +213,12 @@ void TreeNode::performEEESEE(Msg msgInChild, Msg & rMsg)
 	{
 		sort(RMXR.begin(), RMXR.end(), cmpXBeginDec);
 		Y bPreNew = betaPreforZL(RMXR[RMXR.size() - 1]._s);
-		getReachableSet2inL(bPre1, bPre, RMXL2, CIYL2);
 		if (bPreNew < bPre1)
 		{
 			bPre1 = bPreNew;
 		}
+		getReachableSet2inL(bPre1, bPre, RMXL2, CIYL2);
+		
 	}
 	
 
@@ -233,10 +227,10 @@ void TreeNode::performEEESEE(Msg msgInChild, Msg & rMsg)
 	updateStableCount(rMsg);
 
 	//test code
-	if (verifyCIY(ix, CIYL, CIYR, CIYL2) != 0)
+	/*if (verifyCIY(ix, CIYL, CIYR, CIYL2) != 0)
 	{
 		throw new exception();
-	}
+	}*/
 
 	if (CIYL.empty() && CIYR.empty() && CIYL2.empty())
 	{
@@ -381,10 +375,6 @@ void TreeNode::performEEESEE(Msg msgInChild, Msg & rMsg)
 
 Msg TreeNode::insertXintoNodeR(Msg msg)
 {
-	Y t1inChild = msg._t1, t2inChild = msg._t2;
-	int countInChild = msg._stableYCount;
-	bool forceSwap = false;
-
 	Msg rMsg;
 	rMsg._t1 = msg._t1;
 	rMsg._t2 = msg._t2;
@@ -392,5 +382,153 @@ Msg TreeNode::insertXintoNodeR(Msg msg)
 	rMsg._aX = msg._aX;
 	_X.push_back(msg._aX);
 
+	if (msg._aX._e > maxY())//equal to t2>maxY()
+	{
+		rMsg._t1 = betaPreforZ(msg._aX._s);
+		rMsg._aTX = msg._aX;
+		_TX.push_back(msg._aX);
+	}
+	else
+	{
+		//deal with the aX
+		updateStableCount(rMsg);
+		if (rMsg._stableYCount > msg._stableYCount)
+		{
+			//EE and ES available
+			performESEE(msg, rMsg);
+		}
+		else
+		{
+			//rMsg._stableYCount == msg._stableYCount, no new matched X, but may be replace
+			if (!msg._bIY.empty())
+			{
+				//success in R
+				//t1 t2 stablecount keeps	
+				rMsg._aMX = msg._aX;
+				_MX.push_back(msg._aX);
+				_MXR.push_back(msg._aX);
+
+				rMsg._aMY = msg._aMY;
+				_MY.push_back(msg._aMY);
+				_MYR.push_back(msg._aMY);
+
+				rMsg._bIY = msg._bIY;
+				_IY.erase(find(_IY.begin(), _IY.end(), msg._bIY));
+			}
+			else
+			{
+				if (find(_MXR.begin(), _MXR.end(), msg._bMX) != _MXR.end() || msg._aX == msg._aIX)
+				{
+					rMsg._aMX = msg._aX;
+					_MX.push_back(msg._aX);
+					_MXR.push_back(msg._aX);
+
+					rMsg._bMX = msg._bMX;
+					_MX.erase(find(_MX.begin(), _MX.end(), msg._bMX));
+					_MXR.erase(find(_MXR.begin(), _MXR.end(), msg._bMX));
+
+					rMsg._aIX = msg._aIX;
+					_IX.push_back(msg._aIX);
+				}
+				else
+				{
+					performESEE(msg, rMsg);
+				}
+			}
+		}
+	}
+
 	return rMsg;
+}
+
+
+void TreeNode::performESEE(Msg msgInChild, Msg & rMsg)
+{
+	X ix = rMsg._aX;
+	vector<X> RMXL, RMXR;
+	vector<Y> CIYL, CIYR;
+	Y aPost = alphaPostforZR(ix._e);
+	getReachableSetinR(aPost, RMXR, CIYR);
+	RMXR.push_back(ix);
+
+	sort(RMXR.begin(), RMXR.end(), cmpXBeginDec);
+	Y bPre = betaPreforZL(RMXR[RMXR.size() - 1]._s);
+	getReachableSetinL(bPre, RMXL, CIYL);
+
+	rMsg._t1 = bPre;
+	rMsg._t2 = aPost;
+	updateStableCount(rMsg);
+
+	if (CIYL.empty() && CIYR.empty())
+	{
+		//replace
+		X rX = getMinWeightRX(RMXL, RMXR);
+		if (find(_MXL.begin(), _MXL.end(), rX) != _MXL.end())
+		{
+			Y bPost = betaPostforZL(rX._s);
+			X bX = getBackXfromMXR(bPost, aPost);
+
+			rMsg._aMX = ix;
+			_MX.push_back(ix);
+			_MXR.push_back(ix);
+			_MXR.erase(find(_MXR.begin(), _MXR.end(), bX));
+			_MXL.push_back(bX);
+
+			rMsg._bMX = rX;
+			_MX.erase(find(_MX.begin(), _MX.end(), rX));
+			_MXL.erase(find(_MXL.begin(), _MXL.end(), rX));
+
+			rMsg._aIX = rX;
+			_IX.push_back(rX);
+		}
+		else
+		{
+			rMsg._aMX = ix;
+			_MX.push_back(ix);
+			_MXR.push_back(ix);
+
+			rMsg._bMX = rX;
+			_MX.erase(find(_MX.begin(), _MX.end(), rX));
+			_MXR.erase(find(_MXR.begin(), _MXR.end(), rX));
+
+			rMsg._aIX = rX;
+			_IX.push_back(rX);
+		}
+
+	}
+	else
+	{
+		Y cY = getMaxWeightCY(CIYL, CIYR);
+		if (find(CIYR.begin(), CIYR.end(), cY) != CIYR.end())
+		{
+			rMsg._aMX = ix;
+			_MX.push_back(ix);
+			_MXR.push_back(ix);
+
+			rMsg._aMY = cY;
+			_MY.push_back(cY);
+			_MYR.push_back(cY);
+
+			rMsg._bIY = cY;
+			_IY.erase(find(_IY.begin(), _IY.end(), cY));
+		}
+		else
+		{
+			Y bPost = betaPostforZL(cY);
+			X bX = getBackXfromMXR(bPost, aPost);
+
+			rMsg._aMX = ix;
+			_MX.push_back(ix);
+			_MXR.push_back(ix);
+			_MXR.erase(find(_MXR.begin(), _MXR.end(), bX));
+			_MXL.push_back(bX);
+
+			rMsg._aMY = cY;
+			_MY.push_back(cY);
+			_MYL.push_back(cY);
+
+			rMsg._bIY = cY;
+			_IY.erase(find(_IY.begin(), _IY.end(), cY));
+		}
+	}
 }

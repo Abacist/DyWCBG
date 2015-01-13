@@ -450,7 +450,7 @@ void TreeNode::getReachableSet2inL(Y bpre1, Y bpre, vector<X> & RMXL2, vector<Y>
 	}
 	for (int i = 0; i < _MXL.size(); i++)
 	{
-		if (_MXL[i]._s >= bpre && _MXL[i]._s < bpre)
+		if (_MXL[i]._s >= bpre1 && _MXL[i]._s < bpre)
 		{
 			RMXL2.push_back(_MXL[i]);
 		}
@@ -484,6 +484,22 @@ X TreeNode::getMinWeightRX(vector<X> RMXL, vector<X> RMXR, vector<X> RMXL2)
 	vector<X> allRMX = RMXL;
 	for (int i = 0; i < RMXR.size(); i++) allRMX.push_back(RMXR[i]);
 	for (int i = 0; i < RMXL2.size(); i++) allRMX.push_back(RMXL2[i]);
+	sort(allRMX.begin(), allRMX.end(), cmpXWeightInc);
+	return allRMX[0];
+}
+
+Y TreeNode::getMaxWeightCY(vector<Y> CIYL, vector<Y> CIYR)
+{
+	vector<Y> allCIY = CIYL;
+	for (int i = 0; i < CIYR.size(); i++) allCIY.push_back(CIYR[i]);
+	sort(allCIY.begin(), allCIY.end(), cmpYWeightInc);
+	return allCIY[allCIY.size() - 1];
+}
+
+X TreeNode::getMinWeightRX(vector<X> RMXL, vector<X> RMXR)
+{
+	vector<X> allRMX = RMXL;
+	for (int i = 0; i < RMXR.size(); i++) allRMX.push_back(RMXR[i]);
 	sort(allRMX.begin(), allRMX.end(), cmpXWeightInc);
 	return allRMX[0];
 }
@@ -577,10 +593,7 @@ void TreeNode::splitNode(X x)
 
 	for (int i = 0; i < allX.size(); i++)
 	{
-		if (i == 8)
-		{
-			int a = 1;
-		}
+		
 		Msg msg = _leftChild->insertXintoLeaf(allX[i]);
 		//int flag1 = _leftChild->verifyNodeInvariants();
 
@@ -594,8 +607,9 @@ void TreeNode::splitNode(X x)
 		else
 		{
 			throw new exception();
+			int a = 1;
 		}
-		int a = 1;
+		
 	}
 }
 

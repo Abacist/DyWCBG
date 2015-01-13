@@ -8,11 +8,11 @@
 
 using namespace std;
 
-const int mY =				20;
-const int ur =				50;
+const int mY =				30;
+const int ur =				100;
 int verifyEachUpdate =		1;		//0 not verify, !0 verify
 int gen =					1;
-int breakID =				100;
+int breakID =				10;
 
 void generator(char* fileName = "input.txt", int MaxY = mY, int UpdateRange = ur, int WeightRange = 1000);
 
