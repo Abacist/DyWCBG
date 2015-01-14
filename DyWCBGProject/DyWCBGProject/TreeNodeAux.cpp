@@ -510,12 +510,12 @@ X TreeNode::getMineBackXfromMXR(Y bpost, Y apost)
 	
 }
 
-X TreeNode::getMaxsForwardXFromMXL(Y bpost, Y apre)
+X TreeNode::getMaxsForwardXFromMXL(Y bt, Y apre)
 {
 	vector<X> ForwardX;
 	for (int i = 0; i < _MXL.size(); i++)
 	{
-		if (_MXL[i]._s >= bpost && _MXL[i]._e >= apre)
+		if (_MXL[i]._s >= bt && _MXL[i]._e >= apre)
 		{
 			ForwardX.push_back(_MXL[i]);
 		}

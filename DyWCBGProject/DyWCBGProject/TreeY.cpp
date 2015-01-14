@@ -45,7 +45,7 @@ void Tree::insertYinTree(Y y)
 	}
 	if (verifyEachUpdate)
 	{
-		cout << "Y id:\t" << y._value << " pass" << endl;
+		cout << "Y id:\t" << y._value << "\tpass" << endl;
 	}
 }
 
@@ -119,8 +119,32 @@ Msg TreeNode::insertYintoNodeL(Msg msg)
 	{
 		//replace
 		Y rY = getMinWeightRY(RMY);
-		if (rY <= bPost || rY == iy)
+		if (rY == iy)
 		{
+			rMsg._aMY = iy;
+			rMsg._bMY = iy;
+			rMsg._aIY = iy;
+			_IY.push_back(rY);
+		}
+		else if (rY <= bPost)
+		{
+			vector<X> RMXLForward;
+			Y bPre = betaPreforZL(rY);
+			for (int i = 0; i < _MXL.size(); i++)
+			{
+				if (_MXL[i]._s >= bPre && _MXL[i]._e >= aPre)
+				{
+					RMXLForward.push_back(_MXL[i]);
+				}
+			}
+			sort(RMXLForward.begin(), RMXLForward.end(), cmpXEndInc);
+			X maxEnd;
+			if (!RMXLForward.empty())
+			{
+				maxEnd = RMXLForward[RMXLForward.size() - 1];
+			}
+			X bX = getMineBackXfromMXR(bPost, alphaPostforZR(maxY()));
+
 			rMsg._aMY = iy;
 			_MY.push_back(iy);
 			_MYL.push_back(iy);
@@ -129,8 +153,19 @@ Msg TreeNode::insertYintoNodeL(Msg msg)
 			_MY.erase(find(_MY.begin(), _MY.end(), rY));
 			_MYL.erase(find(_MYL.begin(), _MYL.end(), rY));
 
+			if (!bX.empty() && cmpXEndInc(bX, maxEnd))
+			{
+				_MXL.erase(find(_MXL.begin(), _MXL.end(), maxEnd));
+				_MXR.erase(find(_MXR.begin(), _MXR.end(), bX));
+				_MXL.push_back(bX);
+				_MXR.push_back(maxEnd);
+			}
+
 			rMsg._aIY = rY;
 			_IY.push_back(rY);
+
+
+
 		}
 		else if (rY > bPost && rY <= bPost1)
 		{

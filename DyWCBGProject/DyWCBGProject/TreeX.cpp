@@ -43,7 +43,7 @@ void Tree::insertXinTree(X x)
 	}
 	if (verifyEachUpdate)
 	{
-		cout << "X id:\t" << x._id << " pass" << endl;
+		cout << "X id:\t" << x._id << "\tpass" << endl;
 	}
 
 }
