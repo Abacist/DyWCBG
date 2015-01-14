@@ -92,7 +92,9 @@ void TreeNode::getYReachableSetinInternalNode(Msg msg, vector<X> & CIX, vector<Y
 	}
 	else
 	{
-
+		t2 = alphaPreforZR(msg._aY);
+		X fX = getMaxsForwardXFromMXL(betaPostforZL(minY()), t1);
+		t1 = betaPostforZL(fX._s);
 	}
 	
 	for (int i = 0; i < _IX.size(); i++)
@@ -106,9 +108,9 @@ void TreeNode::getYReachableSetinInternalNode(Msg msg, vector<X> & CIX, vector<Y
 	for (int i = 0; i < _MY.size(); i++)
 	{
 		if (find(_leftChild->_MY.begin(), _leftChild->_MY.end(), _MY[i]) == _leftChild->_MY.end() ||
-			find(_rightChild->_MY.begin(), _rightChild->_MY.end(), _IX[i]) == _rightChild->_MY.end())
+			find(_rightChild->_MY.begin(), _rightChild->_MY.end(), _MY[i]) == _rightChild->_MY.end())
 		{
-			CIXBase.push_back(_IX[i]);
+			RMYBase.push_back(_MY[i]);
 		}
 	}
 

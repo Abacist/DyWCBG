@@ -118,45 +118,251 @@ Msg TreeNode::insertYintoNodeL(Msg msg)
 	if (CIX.empty())
 	{
 		//replace
+		Y rY = getMinWeightRY(RMY);
+		if (rY <= bPost || rY == iy)
+		{
+			rMsg._aMY = iy;
+			_MY.push_back(iy);
+			_MYL.push_back(iy);
+
+			rMsg._bMY = rY;
+			_MY.erase(find(_MY.begin(), _MY.end(), rY));
+			_MYL.erase(find(_MYL.begin(), _MYL.end(), rY));
+
+			rMsg._aIY = rY;
+			_IY.push_back(rY);
+		}
+		else if (rY > bPost && rY <= bPost1)
+		{
+			vector<X> RMXLForward;
+			Y bPre = betaPreforZL(rY);
+			for (int i = 0; i < _MXL.size(); i++)
+			{
+				if (_MXL[i]._s >= bPre && _MXL[i]._e >= aPre)
+				{
+					RMXLForward.push_back(_MXL[i]);
+				}
+			}
+			sort(RMXLForward.begin(), RMXLForward.end(), cmpXEndInc);
+			X maxEnd = RMXLForward[RMXLForward.size() - 1];
+			X bX = getMineBackXfromMXR(bPost, alphaPostforZR(maxY()));
+
+			rMsg._aMY = iy;
+			_MY.push_back(iy);
+			_MYL.push_back(iy);
+			_MXL.erase(find(_MXL.begin(), _MXL.end(), maxEnd));
+			_MXR.push_back(maxEnd);
+			_MXR.erase(find(_MXR.begin(), _MXR.end(), bX));
+			_MXL.push_back(bX);
+
+			rMsg._bMY = rY;
+			_MY.erase(find(_MY.begin(), _MY.end(), rY));
+			_MYL.erase(find(_MYL.begin(), _MYL.end(), rY));
+
+			rMsg._aIY = rY;
+			_IY.push_back(rY);
+		}
+		else
+		{
+			X bX = getMineBackXfromMXR(bPost, alphaPostforZR(maxY()));
+
+			rMsg._aMY = iy;
+			_MY.push_back(iy);
+			_MYL.push_back(iy);
+			_MXR.erase(find(_MXR.begin(), _MXR.end(), bX));
+			_MXL.push_back(bX);
+
+			rMsg._bMY = rY;
+			_MY.erase(find(_MY.begin(), _MY.end(), rY));
+			_MYR.erase(find(_MYR.begin(), _MYR.end(), rY));
+
+			rMsg._aIY = rY;
+			_IY.push_back(rY);
+		}
+	}
+	else
+	{
+		//compense
+		X cX = getMaxWeightCX(CIX);
+		X bX = getMineBackXfromMXR(bPost, alphaPostforZR(maxY()));//may be empty
+
+		vector<X> RMXLForward;
+		Y bPre = betaPreforZL(cX._s);
+		for (int i = 0; i < _MXL.size(); i++)
+		{
+			if (_MXL[i]._s >= bPre && _MXL[i]._e >= aPre)
+			{
+				RMXLForward.push_back(_MXL[i]);
+			}
+		}
+		if (cX._e >= aPre)
+		{
+			RMXLForward.push_back(cX);
+		}
+		sort(RMXLForward.begin(), RMXLForward.end(), cmpXEndInc);
+		X maxEnd;
+		if (!RMXLForward.empty())
+		{
+			maxEnd = RMXLForward[RMXLForward.size() - 1];
+		}
+
+		if (cX._s > bPost || !bX.empty() && !maxEnd.empty() && cmpXEndInc(bX, maxEnd))
+		{
+			//bX back
+			rMsg._aMX = cX;
+			_MX.push_back(cX);
+			_MXL.push_back(cX);
+			_MXL.erase(find(_MXL.begin(), _MXL.end(), maxEnd));
+			_MXR.push_back(maxEnd);
+			_MXR.erase(find(_MXR.begin(), _MXR.end(), bX));
+			_MXL.push_back(bX);
+
+			rMsg._aMY = iy;
+			_MY.push_back(iy);
+			_MYL.push_back(iy);
+
+			rMsg._bIX = cX;
+			_IX.erase(find(_IX.begin(), _IX.end(), cX));
+
+		}
+		else
+		{
+			//directly add to left
+			rMsg._aMX = cX;
+			_MX.push_back(cX);
+			_MXL.push_back(cX);
+
+			rMsg._aMY = iy;
+			_MY.push_back(iy);
+			_MYL.push_back(iy);
+
+			rMsg._bIX = cX;
+			_IX.erase(find(_IX.begin(), _IX.end(), cX));
+		}
+	}
+	return rMsg;
+}
+
+Msg TreeNode::insertYintoNodeR(Msg msg)
+{
+	Msg rMsg;
+	rMsg._aY = msg._aY;
+	_Y.push_back(msg._aY);
+	Y iy = msg._aY;
+
+	Y aPre = alphaPreforZR(msg._aY);
+	X fX = getMaxsForwardXFromMXL(betaPostforZL(minY()), aPre);
+	Y bPost = betaPostforZL(fX._s);
+
+	vector<X> CIX;
+	vector<Y> RMY;
+	getYReachableSetinInternalNode(msg, CIX, RMY);
+	RMY.push_back(iy);
+
+	if (CIX.empty())
+	{
+		//replace
+		Y rY = getMinWeightRY(RMY);
+		if (rY >= aPre || rY == iy)
+		{
+			rMsg._aMY = iy;
+			_MY.push_back(iy);
+			_MYR.push_back(iy);
+
+			rMsg._bMY = rY;
+			_MY.erase(find(_MY.begin(), _MY.end(), rY));
+			_MYR.erase(find(_MYR.begin(), _MYR.end(), rY));
+
+			rMsg._aIY = rY;
+			_IY.push_back(rY);
+		}
+		else
+		{
+			vector<X> RMXLForward;
+			Y bPre = betaPreforZL(rY);
+			for (int i = 0; i < _MXL.size(); i++)
+			{
+				if (_MXL[i]._s >= bPre && _MXL[i]._e >= aPre)
+				{
+					RMXLForward.push_back(_MXL[i]);
+				}
+			}
+			
+			sort(RMXLForward.begin(), RMXLForward.end(), cmpXEndInc);
+			X maxEnd = RMXLForward[RMXLForward.size() - 1];
+			
+			rMsg._aMY = iy;
+			_MY.push_back(iy);
+			_MYR.push_back(iy);
+			_MXL.erase(find(_MXL.begin(), _MXL.end(), maxEnd));
+			_MXR.push_back(maxEnd);
+
+			rMsg._bMY = rY;
+			_MY.erase(find(_MY.begin(), _MY.end(), rY));
+			_MYL.erase(find(_MYL.begin(), _MYL.end(), rY));
+
+			rMsg._aIY = rY;
+			_IY.push_back(rY);
+			
+		}
 
 	}
 	else
 	{
 		//compense
 		X cX = getMaxWeightCX(CIX);
-		X bX = getMineBackXfromMXR(bPost, alphaPostforZR(maxY()));
-
-
-		if (cX._s <= bPost && cX._e >= aPre)
+		vector<X> RMXLForward;
+		Y bPre = betaPreforZL(cX._s);
+		for (int i = 0; i < _MXL.size(); i++)
 		{
-
+			if (_MXL[i]._s >= bPre && _MXL[i]._e >= aPre)
+			{
+				RMXLForward.push_back(_MXL[i]);
+			}
 		}
-		else if (cX._s <= bPost && cX._e < aPre)
+		if (cX._e >= aPre)
 		{
-
+			RMXLForward.push_back(cX);
 		}
-		else if (cX._s <= bPost1 && cX._e >= aPre)
+		sort(RMXLForward.begin(), RMXLForward.end(), cmpXEndInc);
+		X maxEnd;
+		if (!RMXLForward.empty())
 		{
-
+			maxEnd = RMXLForward[RMXLForward.size() - 1];
 		}
-		else if (cX._s <= bPost1 && cX._e < aPre)
-		{
 
+		if (cX._e < aPre || !maxEnd.empty() && cmpXEndInc(cX, maxEnd))
+		{
+			//forward maxEnd
+			rMsg._aMX = cX;
+			_MX.push_back(cX);
+			_MXL.push_back(cX);
+			_MXL.erase(find(_MXL.begin(), _MXL.end(), maxEnd));
+			_MXR.push_back(maxEnd);
+
+			rMsg._aMY = iy;
+			_MY.push_back(iy);
+			_MYR.push_back(iy);
+
+			rMsg._bIX = cX;
+			_IX.erase(find(_IX.begin(), _IX.end(), cX));
 		}
 		else
 		{
-			//cX._s > bPost1 && cX._e >= aPre
+			//directly add to right
+			rMsg._aMX = cX;
+			_MX.push_back(cX);
+			_MXR.push_back(cX);
 
+			rMsg._aMY = iy;
+			_MY.push_back(iy);
+			_MYR.push_back(iy);
+
+			rMsg._bIX = cX;
+			_IX.erase(find(_IX.begin(), _IX.end(), cX));
 		}
+
 	}
-
-	
-	return rMsg;
-}
-
-Msg TreeNode::insertYintoNodeR(Msg msg)
-{
-	Msg rMsg; 
 
 
 	return rMsg;
