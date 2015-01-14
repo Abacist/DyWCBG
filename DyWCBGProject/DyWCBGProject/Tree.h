@@ -56,12 +56,24 @@ public:
 	X getMinWeightRX(vector<X> RMXL, vector<X> RMXR, vector<X> RMXL2);
 	Y getMaxWeightCY(vector<Y> CIYL, vector<Y> CIYR);
 	X getMinWeightRX(vector<X> RMXL, vector<X> RMXR);
-	X getBackXfromMXR(Y bpost, Y apost);
 	//=======================================================
 
+	X getMineBackXfromMXR(Y bpost, Y apost);
+
 	//===================for insertY=========================
-	void getYReachableSetinR(Y apre, vector<X> & CIXR, vector<Y> & RMYR);
-	
+	void getThreeTightPoints(Y iy, Y & bPost, Y & bPost1, Y & aPre);
+	void getYReachableSetinInternalNode(Msg msg, vector<X> & CIX, vector<Y> & RMY);
+	void getYReachableSetinLeaf(Y aPre, vector<X> & CIX, vector<Y> & RMY);
+	X getMaxsForwardXFromMXL(Y bpost, Y apre);
+	X getMaxWeightCX(vector<X> CIX);
+	Y getMinWeightRY(vector<Y> RMY);
+
+	/*void getYReachableSetinR(Y apre, vector<X> & CIXR, vector<Y> & RMYR);
+	void getYReachableSetinL(Y bPost, vector<X> & CIXL, vector<Y> & RMYL);
+	void getYReachableSetinL2(Y bPost, Y bPost1, vector<X> & CIXL2, vector<Y> RMYL2);*/
+	/*X getMaxWeightCX(vector<X> CIXL, vector<X> CIXR, vector<X> CIXL2);
+	Y getMinWeightRY(vector<Y> RMYL, vector<Y> RMYR, vector<Y> RMYL2);*/
+	//==============================================================
 
 	int verifyNodeInvariants();
 	void splitNode(X insertedX);
@@ -72,7 +84,10 @@ public:
 	Msg insertXintoNodeL(Msg msg);
 	Msg insertXintoNodeR(Msg msg);
 
-	
+	Msg insertYintoNodeL(Msg msg);
+	Msg insertYintoNodeR(Msg msg);
+
+		
 	//lazy
 	vector<Y> getYL();
 	vector<Y> getYR();

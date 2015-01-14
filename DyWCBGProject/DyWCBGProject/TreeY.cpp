@@ -1,5 +1,6 @@
 #include"Tree.h"
 
+extern int verifyEachUpdate;
 
 void Tree::insertYinTree(Y y)
 {
@@ -8,9 +9,44 @@ void Tree::insertYinTree(Y y)
 		//already inserted
 		return;
 	}
-	//TreeNode* curNode = locateLeaf(y);
+	TreeNode* curNode = locateLeaf(y);
 	Msg msg = _root->insertYintoLeaf(y);
-
+	int flag = 0;
+	if (verifyEachUpdate)
+	{
+		flag = curNode->verifyNodeInvariants();
+		if (flag)
+		{
+			throw new exception();
+		}
+	}
+	TreeNode* child = curNode;
+	curNode = curNode->_parent;
+	while (curNode != NULL)
+	{
+		if (child == curNode->_leftChild)
+		{
+			msg = curNode->insertYintoNodeL(msg);
+		}
+		else
+		{
+			msg = curNode->insertYintoNodeR(msg);
+		}
+		if (verifyEachUpdate)
+		{
+			flag = curNode->verifyNodeInvariants();
+			if (flag)
+			{
+				throw new exception();
+			}
+		}
+		child = curNode;
+		curNode = curNode->_parent;
+	}
+	if (verifyEachUpdate)
+	{
+		cout << "Y id:\t" << y._value << " pass" << endl;
+	}
 }
 
 
@@ -24,7 +60,7 @@ Msg TreeNode::insertYintoLeaf(Y y)
 	vector<X> CIXR;
 	vector<Y> RMYR;
 	Y aPre = alphaPreforZR(y);
-	getYReachableSetinR(aPre, CIXR, RMYR);
+	getYReachableSetinLeaf(aPre, CIXR, RMYR);
 	RMYR.push_back(y);
 
 	if (CIXR.empty())
@@ -65,3 +101,63 @@ Msg TreeNode::insertYintoLeaf(Y y)
 
 
 
+Msg TreeNode::insertYintoNodeL(Msg msg)
+{
+	Msg rMsg;
+	rMsg._aY = msg._aY;
+	_Y.push_back(msg._aY);
+	Y iy = msg._aY;
+
+	Y bPost, bPost1, aPre;
+	getThreeTightPoints(iy, bPost, bPost1, aPre);
+	vector<X> CIX;
+	vector<Y> RMY;
+	getYReachableSetinInternalNode(msg, CIX, RMY);
+	RMY.push_back(iy);
+
+	if (CIX.empty())
+	{
+		//replace
+
+	}
+	else
+	{
+		//compense
+		X cX = getMaxWeightCX(CIX);
+		X bX = getMineBackXfromMXR(bPost, alphaPostforZR(maxY()));
+
+
+		if (cX._s <= bPost && cX._e >= aPre)
+		{
+
+		}
+		else if (cX._s <= bPost && cX._e < aPre)
+		{
+
+		}
+		else if (cX._s <= bPost1 && cX._e >= aPre)
+		{
+
+		}
+		else if (cX._s <= bPost1 && cX._e < aPre)
+		{
+
+		}
+		else
+		{
+			//cX._s > bPost1 && cX._e >= aPre
+
+		}
+	}
+
+	
+	return rMsg;
+}
+
+Msg TreeNode::insertYintoNodeR(Msg msg)
+{
+	Msg rMsg; 
+
+
+	return rMsg;
+}

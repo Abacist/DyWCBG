@@ -470,23 +470,6 @@ void TreeNode::updateStableCount(Msg & msg)
 }
 
 
-Y TreeNode::getMaxWeightCY(vector<Y> CIYL, vector<Y> CIYR, vector<Y> CIYL2)
-{
-	vector<Y> allCIY = CIYL;
-	for (int i = 0; i < CIYR.size(); i++) allCIY.push_back(CIYR[i]);
-	for (int i = 0; i < CIYL2.size(); i++) allCIY.push_back(CIYL2[i]);
-	sort(allCIY.begin(), allCIY.end(), cmpYWeightInc);
-	return allCIY[allCIY.size() - 1];
-}
-
-X TreeNode::getMinWeightRX(vector<X> RMXL, vector<X> RMXR, vector<X> RMXL2)
-{
-	vector<X> allRMX = RMXL;
-	for (int i = 0; i < RMXR.size(); i++) allRMX.push_back(RMXR[i]);
-	for (int i = 0; i < RMXL2.size(); i++) allRMX.push_back(RMXL2[i]);
-	sort(allRMX.begin(), allRMX.end(), cmpXWeightInc);
-	return allRMX[0];
-}
 
 Y TreeNode::getMaxWeightCY(vector<Y> CIYL, vector<Y> CIYR)
 {
@@ -504,7 +487,7 @@ X TreeNode::getMinWeightRX(vector<X> RMXL, vector<X> RMXR)
 	return allRMX[0];
 }
 
-X TreeNode::getBackXfromMXR(Y bpost, Y apost)
+X TreeNode::getMineBackXfromMXR(Y bpost, Y apost)
 {
 	vector<X> BackX;
 	for (int i = 0; i < _MXR.size(); i++)
@@ -527,37 +510,178 @@ X TreeNode::getBackXfromMXR(Y bpost, Y apost)
 	
 }
 
-
-void TreeNode::getYReachableSetinR(Y apre, vector<X> & CIXR, vector<Y> & RMYR)
+X TreeNode::getMaxsForwardXFromMXL(Y bpost, Y apre)
 {
-	CIXR.clear(); 
-	RMYR.clear();
-	vector<X> CIXRBase;
-	vector<Y> RMYRBase;
-	if (_rightChild == NULL)
+	vector<X> ForwardX;
+	for (int i = 0; i < _MXL.size(); i++)
 	{
-		CIXRBase = _IX;
-		RMYRBase = _MYR;
+		if (_MXL[i]._s >= bpost && _MXL[i]._e >= apre)
+		{
+			ForwardX.push_back(_MXL[i]);
+		}
+	}
+	sort(ForwardX.begin(), ForwardX.end(), cmpXBeginDec);
+	if (ForwardX.empty())
+	{
+		X x;
+		return x;
 	}
 	else
 	{
-
-	}
-	for (int i = 0; i < CIXRBase.size(); i++)
-	{
-		if (CIXRBase[i]._e >= apre)
-		{
-			CIXR.push_back(CIXRBase[i]);
-		}
-	}
-	for (int i = 0; i < RMYRBase.size(); i++)
-	{
-		if (RMYRBase[i] >= apre)
-		{
-			RMYR.push_back(RMYRBase[i]);
-		}
+		return ForwardX[0];
 	}
 }
+
+X TreeNode::getMaxWeightCX(vector<X> CIX)
+{
+	vector<X> allX = CIX;
+	sort(allX.begin(), allX.end(), cmpXWeightInc);
+	return allX[allX.size() - 1];
+}
+
+Y TreeNode::getMinWeightRY(vector<Y> RMY)
+{
+	vector<Y> allY = RMY;
+	sort(allY.begin(), allY.end(), cmpYWeightInc);
+	return allY[0];
+}
+
+//X TreeNode::getMaxWeightCX(vector<X> CIXL, vector<X> CIXR)
+//{
+//	vector<X> allX = CIXL;
+//	for (int i = 0; i < CIXR.size(); i++) allX.push_back(CIXR[i]);
+//	sort(allX.begin(), allX.end(), cmpXWeightInc);
+//	return allX[allX.size() - 1];
+//}
+//Y TreeNode::getMinWeightRY(vector<Y> RMYL, vector<Y> RMYR)
+//{
+//	vector<Y> allY = RMYL;
+//	for (int i = 0; i < RMYR.size(); i++) allY.push_back(RMYR[i]);
+//	sort(allY.begin(), allY.end(), cmpYWeightInc);
+//	return allY[0];
+//}
+//
+//void TreeNode::getYReachableSetinR(Y apre, vector<X> & CIXR, vector<Y> & RMYR)
+//{
+//	CIXR.clear(); 
+//	RMYR.clear();
+//	vector<X> CIXRBase;
+//	vector<Y> RMYRBase;
+//	if (_rightChild == NULL)
+//	{
+//		CIXRBase = _IX;
+//		RMYRBase = _MYR;
+//	}
+//	else
+//	{
+//		for (int i = 0; i < _IX.size(); i++)
+//		{
+//			if (find(_leftChild->_IX.begin(), _leftChild->_IX.end(), _IX[i]) == _leftChild->_IX.end())
+//			{
+//				CIXRBase.push_back(_IX[i]);
+//			}
+//		}
+//
+//		for (int i = 0; i < _MYL.size(); i++)
+//		{
+//			if (find(_leftChild->_MY.begin(), _leftChild->_MY.end(), _MYL[i]) == _leftChild->_MY.end())
+//			{
+//				RMYRBase.push_back(_MYL[i]);
+//			}
+//		}
+//	}
+//	for (int i = 0; i < CIXRBase.size(); i++)
+//	{
+//		if (CIXRBase[i]._e >= apre)
+//		{
+//			CIXR.push_back(CIXRBase[i]);
+//		}
+//	}
+//	for (int i = 0; i < RMYRBase.size(); i++)
+//	{
+//		if (RMYRBase[i] >= apre)
+//		{
+//			RMYR.push_back(RMYRBase[i]);
+//		}
+//	}
+//}
+//
+//
+//void TreeNode::getYReachableSetinL(Y bpost, vector<X> & CIXL, vector<Y> & RMYL)
+//{
+//	vector<X> CIXLBase;
+//	vector<Y> RMYLBase;
+//
+//	for (int i = 0; i < _IX.size(); i++)
+//	{
+//		if (find(_leftChild->_IX.begin(), _leftChild->_IX.end(), _IX[i]) == _leftChild->_IX.end())
+//		{
+//			CIXLBase.push_back(_IX[i]);
+//		}
+//	}
+//
+//	for (int i = 0; i < _MYL.size(); i++)
+//	{
+//		if (find(_leftChild->_MY.begin(), _leftChild->_MY.end(), _MYL[i]) == _leftChild->_MY.end())
+//		{
+//			RMYLBase.push_back(_MYL[i]);
+//		}
+//	}
+//
+//	for (int i = 0; i < CIXLBase.size(); i++)
+//	{
+//		if (CIXLBase[i]._s <= bpost)
+//		{
+//			CIXL.push_back(CIXLBase[i]);
+//		}
+//	}
+//
+//	for (int i = 0; i < RMYLBase.size(); i++)
+//	{
+//		if (RMYLBase[i] <= bpost)
+//		{
+//			RMYL.push_back(RMYLBase[i]);
+//		}
+//	}
+//}
+//
+//void TreeNode::getYReachableSetinL2(Y bPost, Y bPost1, vector<X> & CIXL2, vector<Y> RMYL2)
+//{
+//	vector<X> CIXL2Base;
+//	vector<Y> RMYL2Base;
+//
+//	for (int i = 0; i < _IX.size(); i++)
+//	{
+//		if (find(_leftChild->_IX.begin(), _leftChild->_IX.end(), _IX[i]) == _leftChild->_IX.end())
+//		{
+//			CIXL2Base.push_back(_IX[i]);
+//		}
+//	}
+//
+//	for (int i = 0; i < _MYL.size(); i++)
+//	{
+//		if (find(_leftChild->_MY.begin(), _leftChild->_MY.end(), _MYL[i]) == _leftChild->_MY.end())
+//		{
+//			RMYL2Base.push_back(_MYL[i]);
+//		}
+//	}
+//
+//	for (int i = 0; i < CIXL2Base.size(); i++)
+//	{
+//		if (CIXL2Base[i]._s > bPost && CIXL2Base[i]._s <= bPost1)
+//		{
+//			CIXL2.push_back(CIXL2Base[i]);
+//		}
+//	}
+//
+//	for (int i = 0; i < RMYL2Base.size(); i++)
+//	{
+//		if (RMYL2Base[i] > bPost && RMYL2Base[i] <= bPost1)
+//		{
+//			RMYL2.push_back(RMYL2Base[i]);
+//		}
+//	}
+//}
 
 //vector<X> TreeNode::getReachableSetinLeftPart(X x)
 //{

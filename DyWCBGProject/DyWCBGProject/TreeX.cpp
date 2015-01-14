@@ -247,7 +247,7 @@ void TreeNode::performXEEESEE(Msg msgInChild, Msg & rMsg)
 			}
 			else
 			{
-				X bX = getBackXfromMXR(betaPostforZL(rX._s), alphaPostforZR(RMXL[RMXL.size() - 1]._e));
+				X bX = getMineBackXfromMXR(betaPostforZL(rX._s), alphaPostforZR(RMXL[RMXL.size() - 1]._e));
 
 				rMsg._aMX = ix;
 				_MX.push_back(ix);
@@ -288,7 +288,7 @@ void TreeNode::performXEEESEE(Msg msgInChild, Msg & rMsg)
 		{
 			X fX = RMXL[RMXL.size() - 1];
 			Y bPost = betaPostforZL(rX._s);
-			X bX = getBackXfromMXR(bPost, aPost);
+			X bX = getMineBackXfromMXR(bPost, aPost);
 
 			rMsg._aMX = ix;
 			_MX.push_back(ix);
@@ -311,7 +311,7 @@ void TreeNode::performXEEESEE(Msg msgInChild, Msg & rMsg)
 		Y cY = getMaxWeightCY(CIYL, CIYR, CIYL2);
 		if (find(CIYL.begin(), CIYL.end(), cY) != CIYL.end())
 		{
-			X bX = getBackXfromMXR(betaPostforZL(cY), alphaPostforZR(RMXL[RMXL.size() - 1]._e));
+			X bX = getMineBackXfromMXR(betaPostforZL(cY), alphaPostforZR(RMXL[RMXL.size() - 1]._e));
 
 			rMsg._aMX = ix;
 			_MX.push_back(ix);
@@ -350,7 +350,7 @@ void TreeNode::performXEEESEE(Msg msgInChild, Msg & rMsg)
 		else
 		{
 			Y bPost = betaPostforZL(cY);
-			X bX = getBackXfromMXR(bPost, aPost);
+			X bX = getMineBackXfromMXR(bPost, aPost);
 			X fX = RMXL[RMXL.size() - 1];
 
 			rMsg._aMX = ix;
@@ -466,7 +466,7 @@ void TreeNode::performXESEE(Msg msgInChild, Msg & rMsg)
 		if (find(_MXL.begin(), _MXL.end(), rX) != _MXL.end())
 		{
 			Y bPost = betaPostforZL(rX._s);
-			X bX = getBackXfromMXR(bPost, aPost);
+			X bX = getMineBackXfromMXR(bPost, aPost);
 
 			rMsg._aMX = ix;
 			_MX.push_back(ix);
@@ -515,7 +515,7 @@ void TreeNode::performXESEE(Msg msgInChild, Msg & rMsg)
 		else
 		{
 			Y bPost = betaPostforZL(cY);
-			X bX = getBackXfromMXR(bPost, aPost);
+			X bX = getMineBackXfromMXR(bPost, aPost);
 
 			rMsg._aMX = ix;
 			_MX.push_back(ix);

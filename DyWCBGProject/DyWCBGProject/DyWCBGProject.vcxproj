@@ -84,6 +84,7 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="TreeAux.cpp" />
     <ClCompile Include="TreeNodeAux.cpp" />
+    <ClCompile Include="TreeNodeAux2.cpp" />
     <ClCompile Include="TreeX.cpp" />
     <ClCompile Include="TreeY.cpp" />
   </ItemGroup>
