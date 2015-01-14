@@ -1,3 +1,23 @@
+1. X = MX + IX + TX
+2. end constraints for MX IX TX
+3. Y = MY + IY
+4. MX is maximum weight
+5. MY is maximum weight
+6. MX = MXL + MXR
+7. MY = MYL + MYR
+8. Left and Right
+9. Swap in MXL and MXR
+10. P.X = L.X + R.X
+11. P.Y = L.Y + R.Y
+
+
+
+
+
+
+
+
+===============================================
 1. MCM
 2. I and T
 3. I kick T

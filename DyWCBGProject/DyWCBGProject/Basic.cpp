@@ -14,37 +14,71 @@ void generator(char* fileName, int maxY, int updateRange, int weightRange)
 	GetLocalTime(&lpsystime);
 	srand(lpsystime.wMinute * 1000 + lpsystime.wMilliseconds);
 
-	out << maxY << endl;
-	for (int i = 1; i <= maxY; i++)
-	{
-		Y y0;
-		y0._value = i;
-		y0._w = rand() % weightRange;
-		out << y0._value << " " << y0._w << endl;
-	}
+	out << 1 << endl;
+	Y y0;
+	y0._value = 1;
+	y0._w = rand() % weightRange;
+	curExistsY.push_back(y0);
+	out << y0._value << " " << y0._w << endl;
+	/*y0._value = maxY;
+	y0._w = rand() % weightRange;
+	curExistsY.push_back(y0);
+	out << y0._value << " " << y0._w << endl;*/
 
-	for (int i = 1; i <= updateRange; i++)
+	int i = 1;
+	while (i<=updateRange)
 	{
-		int s = rand() % maxY + 1;
-		int e = rand() % maxY + 1;
-		if (s > e)
+		if (rand() % 2 == 0)
 		{
-			int temp = e;
-			e = s;
-			s = temp;
+			//generate X
+			int s = rand() % maxY + 1;
+			int e = rand() % (maxY)+1;
+			if (s > e)
+			{
+				int temp = e;
+				e = s;
+				s = temp;
+			}
+			int w = rand() % weightRange;
+			X x;
+			x._id = i++;
+			x._s._value = s;
+			x._e._value = e;
+			x._w = w;
+			if (find(curExistsY.begin(), curExistsY.end(), x._s) == curExistsY.end())
+			{
+				Y ys;
+				ys._value = x._s._value;
+				ys._w = rand() % weightRange;
+				curExistsY.push_back(ys);
+				out << 3<<" "<<ys._value << " " << ys._w << endl;
+			}
+			if (x._e <= maxY && (find(curExistsY.begin(), curExistsY.end(), x._e) == curExistsY.end()))
+			{
+				Y ye;
+				ye._value = x._e._value;
+				ye._w = rand() % weightRange;
+				curExistsY.push_back(ye);
+				out << 3<<" "<<ye._value << " " << ye._w << endl;
+			}
+			out << 1 << " " << x._id << " " << x._s._value << " " << x._e._value << " " << x._w << endl;
+			curExistsX.push_back(x);
 		}
-		int w = rand() % weightRange;
-		X x;
-		x._id = i;
-		x._s._value = s;
-		x._e._value = e;
-		x._w = w;
-		out << 1 << " " << x._id << " " << x._s._value << " " << x._e._value << " " << x._w << endl;
-	}
-	//out << 1 << " " << 1000 << " " << rand() % (maxY-1) + 2 << " " << 1000 << " " << 1000 << endl;
-	
+		else
+		{
+			//generate Y
+			Y y;
+			y._value = rand() % maxY + 1;
+			y._w = rand() % weightRange;
+			if (find(curExistsY.begin(), curExistsY.end(), y) == curExistsY.end())
+			{
+				curExistsY.push_back(y);
+				out << 3 << " " << y._value << " " << y._w << endl;
+			}
 
-	
+		}
+		
+	}
 	out << '$' << endl;
 
 
@@ -150,7 +184,8 @@ Msg::Msg()
 
 	_aX = _bX = _aMX = _bMX = _aIX = _bIX = _aTX = _bTX = x;
 	_t1 = _t2 = _aY = _bY = _aMY = _bMY = _aIY = _bIY = y;
-	_stableYNumBetweent1t2 = -1;
+	_stableYCount = 0;
+	//_replace = false;
 }
 
 ostream& operator<<(ostream& os, const Y& rhs)

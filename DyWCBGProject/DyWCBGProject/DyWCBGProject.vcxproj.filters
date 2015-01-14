@@ -41,7 +41,7 @@
     <ClCompile Include="TreeX.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="TreeNodeStable.cpp">
+    <ClCompile Include="TreeNodeAux2.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

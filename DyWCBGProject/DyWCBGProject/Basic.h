@@ -73,10 +73,13 @@ public:
 	Y _aIY;
 	Y _bIY;
 
+	//next two domains are for insert X
 	Y _t1;
 	Y _t2;
-	//t1 t2 is the stable reachable Y range of the inserted X before the X is inserted
-	int _stableYNumBetweent1t2;
+	//t1 t2 is the stable reachable Y range of the inserted X in child before the X is inserted
+	int _stableYCount;
+	//bool _replace;
+	//when insert X, tight == true means this x has been inserted into child and returned tight(replace an X)
 
 	Msg();
 

@@ -23,14 +23,6 @@ public:
 	vector<Y> _IY;
 
 
-	//for stable
-	vector<X> _MXS;
-	vector<X> _MXLS;
-	vector<X> _MXRS;
-	vector<Y> _MYS;
-	vector<Y> _MYLS;
-	vector<Y> _MYRS;
-	vector<Y> _IYS;
 
 	TreeNode * _leftChild;
 	TreeNode * _rightChild;
@@ -48,22 +40,42 @@ public:
 	Y betaPreforZL(Y y);
 	Y betaPostforZL(Y y);
 
+	Y betaPreforZ(Y y);
 
-	//Y alphaPostforZLS(Y y);
-	Y alphaPostforZRS(Y y);
-	Y alphaPreforZRS(Y y);
-	Y betaPreforZLS(Y y);
-	Y betaPostforZLS(Y y);
 
-	void updatet1t2inLeafX(Msg & msg);
-	void updatet1t2inInternalNodeX(Msg & msg);
-	
-	void updateStableSetinLeaf(Msg msg);
-	void updateStableSetinInternalNode(Msg msg, bool forceSwap = false);
+	//===================for insertX==========================
+	void performXEEESEE(Msg msgInChild, Msg & rMsg);//for msg from L
+	void performXESEE(Msg msgInChild, Msg & rMsg);//for msg from R
+	void getXReachableSetinR(Y apost, vector<X> & RMXR, vector<Y> & CIYR);
+	void getXReachableSetinL(Y bpre, vector<X> & RMXL, vector<Y> & CIYL);
+	void getXReachableSet2inL(Y bpre1, Y bpre, vector<X> & RMXL2, vector<Y> & CIYL2);//for msg from L
+	void updateStableCount(Msg & msg);
+	//void updatet1t2(Msg & msg);
+	//void getCompensableYL(X x, Y t1, Y t2, int stableCountinChild, vector<Y> & CIYL, vector<Y> & CIYR, vector<Y> & CIYL2);
+	Y getMaxWeightCY(vector<Y> CIYL, vector<Y> CIYR, vector<Y> CIYL2);
+	X getMinWeightRX(vector<X> RMXL, vector<X> RMXR, vector<X> RMXL2);
+	Y getMaxWeightCY(vector<Y> CIYL, vector<Y> CIYR);
+	X getMinWeightRX(vector<X> RMXL, vector<X> RMXR);
+	//=======================================================
+
+	X getMineBackXfromMXR(Y bpost, Y apost);
+
+	//===================for insertY=========================
+	void getThreeTightPoints(Y iy, Y & bPost, Y & bPost1, Y & aPre);
+	void getYReachableSetinInternalNode(Msg msg, vector<X> & CIX, vector<Y> & RMY);
+	void getYReachableSetinLeaf(Y aPre, vector<X> & CIX, vector<Y> & RMY);
+	X getMaxsForwardXFromMXL(Y bpost, Y apre);
+	X getMaxWeightCX(vector<X> CIX);
+	Y getMinWeightRY(vector<Y> RMY);
+	/*void getYReachableSetinR(Y apre, vector<X> & CIXR, vector<Y> & RMYR);
+	void getYReachableSetinL(Y bPost, vector<X> & CIXL, vector<Y> & RMYL);
+	void getYReachableSetinL2(Y bPost, Y bPost1, vector<X> & CIXL2, vector<Y> RMYL2);*/
+	/*X getMaxWeightCX(vector<X> CIXL, vector<X> CIXR, vector<X> CIXL2);
+	Y getMinWeightRY(vector<Y> RMYL, vector<Y> RMYR, vector<Y> RMYL2);*/
+	//==============================================================
 
 	int verifyNodeInvariants();
 	void splitNode(X insertedX);
-	int verifyCIY(vector<Y> CIYLCorrect, vector<Y> CIYRCorrect, vector<Y> CIYL2Correct, vector<Y> CIYL, vector<Y> CIYR, vector<Y> CIYL2);
 
 	Msg insertYintoLeaf(Y y);
 	Msg insertXintoLeaf(X x);
@@ -71,22 +83,30 @@ public:
 	Msg insertXintoNodeL(Msg msg);
 	Msg insertXintoNodeR(Msg msg);
 
-	void getCompensableYL(X x, Y t1, Y t2, int stableCountinChild, vector<Y> & CIYL, vector<Y> & CIYR, vector<Y> & CIYL2);
-	
+	Msg insertYintoNodeL(Msg msg);
+	Msg insertYintoNodeR(Msg msg);
+
+		
 	//lazy
 	vector<Y> getYL();
 	vector<Y> getYR();
 	vector<Y> getIYL();
 	vector<Y> getIYR();
-	//vector<Y> getIYS();
+
 	
-	void getStableSet(vector<X> & MXS, vector<Y> & MYS);
+
+	//no need
+	int verifyCIY(X ix, vector<Y> CIYL, vector<Y> CIYR, vector<Y> CIYL2);
+
+	void getMXMY(vector<X> & MXS, vector<Y> & MYS);
+
+	void getCompensableYLForce(X x, vector<Y> & CIYL, vector<Y> & CIYR, vector<Y> & CIYL2);
 
 	//vector<X> getReachableSetinLeftPart(X x);
 
 	//vector<X> getStableReachableSet(X x);
 
-	void getCompensableYLForce(X x, vector<Y> & CIYL, vector<Y> & CIYR, vector<Y> & CIYL2);
+	
 
 };
 

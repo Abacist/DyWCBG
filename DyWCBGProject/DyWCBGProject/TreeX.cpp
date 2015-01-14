@@ -2,105 +2,6 @@
 
 extern int verifyEachUpdate;
 
-Msg TreeNode::insertXintoLeaf(X x)
-{
-	
-	Msg msg;
-	msg._aX = x;
-	_X.push_back(x);
-
-	updatet1t2inLeafX(msg);
-	
-	if (_Y.empty())
-	{
-		throw new exception();
-		_IX.push_back(x);
-		msg._aIX = x;
-		//return msg;
-	}
-	else
-	{
-		vector<Y> CIY;
-		Y aPost = alphaPostforZR(x._e);
-		for (int i = 0; i < _IY.size(); i++)
-		{
-			if (_IY[i] <= aPost)
-			{
-					CIY.push_back(_IY[i]);
-			}
-		}
-		if (CIY.empty())
-		{
-			//replace an X
-			vector<X> RMX;
-			for (int i = 0; i < _MXR.size(); i++)
-			{
-				if (/*!aPost.empty() && */_MXR[i]._e <= aPost)
-				{
-					RMX.push_back(_MXR[i]);
-				}
-			}
-			RMX.push_back(x);
-
-			sort(RMX.begin(), RMX.end(), cmpXEndInc);
-			X maxEndX = *(RMX.end() - 1);
-			if (maxEndX._e > maxY())//maxY in Y or maxY in MY/MYR? or they are equivalent?
-			{
-				//transfer
-				_MX.push_back(x);
-				_MXR.push_back(x);
-				msg._aMX = x;
-
-				_MX.erase(find(_MX.begin(), _MX.end(), maxEndX));
-				_MXR.erase(find(_MXR.begin(), _MXR.end(), maxEndX));
-				msg._bMX = maxEndX;
-
-				_TX.push_back(maxEndX);
-				msg._aTX = maxEndX;
-
-				//return msg;
-			}
-			else
-			{
-				//infeasible
-				sort(RMX.begin(), RMX.end(), cmpXWeightInc);
-				X rx = RMX[0];
-
-				_MX.push_back(x);
-				_MXR.push_back(x);
-				msg._aMX = x;
-
-				_MX.erase(find(_MX.begin(), _MX.end(), rx));
-				_MXR.erase(find(_MXR.begin(), _MXR.end(), rx));
-				msg._bMX = rx;
-
-				_IX.push_back(rx);
-				msg._aIX = rx;
-
-				//return msg;
-			}	
-		}
-		else
-		{
-			sort(CIY.begin(), CIY.end(), cmpYWeightInc);
-			//Y cY = CIY[CIY.size() - 1];
-			Y cy = *(CIY.end() - 1);
-			_MX.push_back(x);
-			_MXR.push_back(x);
-			msg._aMX = x;
-
-			_MY.push_back(cy);
-			_MYR.push_back(cy);
-			msg._aMY = cy;
-
-			_IY.erase(find(_IY.begin(), _IY.end(), cy));
-			msg._bIY = cy;
-		}
-	}
-	
-	updateStableSetinLeaf(msg);
-	return msg;
-}
 
 
 
@@ -142,1256 +43,492 @@ void Tree::insertXinTree(X x)
 	}
 	if (verifyEachUpdate)
 	{
-		cout << "X id:\t" << x._id << " pass" << endl;
+		cout << "X id:\t" << x._id << "\tpass" << endl;
 	}
-	
+
 }
+
+
+Msg TreeNode::insertXintoLeaf(X x)
+{
+	
+	Msg msg;
+	msg._aX = x;
+	_X.push_back(x);
+
+	msg._t1 = x._s;
+	
+
+	if (x._e > maxY())
+	{
+		msg._t2 = x._e;
+		msg._aTX = x;
+		_TX.push_back(x);
+		//no update with stableCount
+	}
+	else
+	{
+		msg._t2 = alphaPostforZR(x._e);
+		updateStableCount(msg);
+		vector<X> RMXR;
+		vector<Y> CIYR;
+		getXReachableSetinR(msg._t2, RMXR, CIYR);
+		RMXR.push_back(x);
+		if (CIYR.empty())
+		{
+			//msg._replace = true;
+			sort(RMXR.begin(), RMXR.end(), cmpXWeightInc);
+			
+			msg._aMX = x;
+			_MXR.push_back(x);
+			_MX.push_back(x);
+			msg._bMX = RMXR[0];
+			_MX.erase(find(_MX.begin(), _MX.end(), RMXR[0]));
+			_MXR.erase(find(_MXR.begin(), _MXR.end(), RMXR[0]));
+			msg._aIX = RMXR[0];
+			_IX.push_back(RMXR[0]);
+			
+		}
+		else
+		{
+			sort(CIYR.begin(), CIYR.end(), cmpYWeightInc);
+			msg._aMX = x;
+			_MXR.push_back(x);
+			_MX.push_back(x);
+
+			msg._aMY = CIYR[CIYR.size() - 1];
+			_MYR.push_back(CIYR[CIYR.size() - 1]);
+			_MY.push_back(CIYR[CIYR.size() - 1]);
+
+			msg._bIY = CIYR[CIYR.size() - 1];
+			_IY.erase(find(_IY.begin(), _IY.end(), CIYR[CIYR.size() - 1]));
+		}
+	}
+	return msg;
+}
+
+
 
 
 Msg TreeNode::insertXintoNodeL(Msg msg)
 {
-	Y t1inChild = msg._t1, t2inChild = msg._t2;
-	int countInChild = msg._stableYNumBetweent1t2;
-	bool forceSwap = false;
+	/*Y t1InChild = msg._t1, t2InChild = msg._t2;
+	int countInChild = msg._stableYCount;*/
+	//bool replaceInChild = msg._replace;
 
 	Msg rMsg;
 	rMsg._t1 = msg._t1;
 	rMsg._t2 = msg._t2;
-	rMsg._stableYNumBetweent1t2 = msg._stableYNumBetweent1t2;
+	rMsg._stableYCount = msg._stableYCount;
+	//rMsg._replace = msg._replace;
+
 	rMsg._aX = msg._aX;
 	_X.push_back(msg._aX);
-	updatet1t2inInternalNodeX(rMsg);
 
-	if (!msg._bIY.empty())
+	if (msg._aX._e > maxY())//equal to t2>maxY()
 	{
-		//success in child
-		//must success in P
-
-		vector<Y> CIYLCorrect, CIYRCorrect, CIYL2Correct, CIYL, CIYR, CIYL2;
-
-		getCompensableYL(msg._aX, t1inChild, t2inChild, countInChild, CIYL, CIYR, CIYL2);
-		if (verifyEachUpdate)
-		{
-			getCompensableYLForce(msg._aX, CIYLCorrect, CIYRCorrect, CIYL2Correct);
-			int flag = verifyCIY(CIYLCorrect, CIYRCorrect, CIYL2Correct, CIYL, CIYR, CIYL2);
-			if (flag)
-			{
-				throw new exception();
-				int a = 1;
-			}
-		}
-
-
-		if (CIYL.empty() && CIYR.empty() && CIYL2.empty())
-		{
-			throw new exception();
-			//no possible in success case
-		}
-		else
-		{
-			vector<Y> CIY = CIYL;
-			for (int i = 0; i < CIYR.size(); i++) CIY.push_back(CIYR[i]);
-			for (int i = 0; i < CIYL2.size(); i++) CIY.push_back(CIYL2[i]);
-			sort(CIY.begin(), CIY.end(), cmpYWeightInc);
-			Y cY = CIY[CIY.size() - 1];
-			if (find(CIYL.begin(), CIYL.end(), cY) != CIYL.end())
-			{
-				//success
-				int allCount = 0;
-				for (int i = 0; i < _MY.size(); i++)
-				{
-					if (_MY[i] >= t1inChild && _MY[i] <= t2inChild)
-					{
-						allCount++;
-					}
-				}
-				
-				if (t2inChild < _rightChild->minY() && countInChild == allCount)
-				{
-					//only to left
-					rMsg._aMX = msg._aX;
-					_MX.push_back(msg._aX);
-					_MXL.push_back(msg._aX);
-
-					rMsg._aMY = cY;
-					_MY.push_back(cY);
-					_MYL.push_back(cY);
-
-					rMsg._bIY = cY;
-					_IY.erase(find(_IY.begin(), _IY.end(), cY));
-				}
-				else
-				{
-					vector<X> RMXL;
-					Y bPre = betaPreforZL(msg._aX._s);
-					for (int i = 0; i < _MXL.size(); i++)
-					{
-						if (_MXL[i]._s >= bPre)
-						{
-							RMXL.push_back(_MXL[i]);
-						}
-					}
-					RMXL.push_back(msg._aX);
-					sort(RMXL.begin(), RMXL.end(), cmpXEndInc);
-					X maxEnd = RMXL[RMXL.size() - 1];
-					Y aPost = alphaPostforZR(maxEnd._e);
-					vector<X> RMXR;
-					for (int i = 0; i < _MXR.size(); i++)
-					{
-						if (_MXR[i]._e <= aPost)
-						{
-							RMXR.push_back(_MXR[i]);
-						}
-					}
-					Y bPost = betaPostforZL(cY);
-					vector<X> backX;
-					for (int i = 0; i < RMXR.size(); i++)
-					{
-						if (RMXR[i]._s <= bPost)
-						{
-							backX.push_back(RMXR[i]);
-						}
-					}
-					if (backX.empty())
-					{
-						rMsg._aMX = msg._aX;
-						_MX.push_back(msg._aX);
-						_MXL.push_back(msg._aX);
-
-						rMsg._aMY = cY;
-						_MY.push_back(cY);
-						_MYL.push_back(cY);
-
-						rMsg._bIY = cY;
-						_IY.erase(find(_IY.begin(), _IY.end(), cY));
-					}
-					else
-					{
-						sort(backX.begin(), backX.end(), cmpXEndInc);
-						if (cmpXEndInc(backX[0], maxEnd))
-						{
-							//swap
-							rMsg._aMX = msg._aX;
-							_MX.push_back(msg._aX);
-							_MXL.push_back(msg._aX);
-							_MXL.erase(find(_MXL.begin(), _MXL.end(), maxEnd));
-							_MXR.push_back(maxEnd);
-							_MXR.erase(find(_MXR.begin(), _MXR.end(), backX[0]));
-							_MXL.push_back(backX[0]);
-
-							rMsg._aMY = cY;
-							_MY.push_back(cY);
-							_MYL.push_back(cY);
-
-							rMsg._bIY = cY;
-							_IY.erase(find(_IY.begin(), _IY.end(), cY));
-						}
-						else
-						{
-							rMsg._aMX = msg._aX;
-							_MX.push_back(msg._aX);
-							_MXL.push_back(msg._aX);
-
-							rMsg._aMY = cY;
-							_MY.push_back(cY);
-							_MYL.push_back(cY);
-
-							rMsg._bIY = cY;
-							_IY.erase(find(_IY.begin(), _IY.end(), cY));
-						}
-					}
-				}
-				
-			}
-			else
-			{
-				//determine replaceable set in left part first
-				vector<X> RMXL;
-				Y bPre = betaPreforZL(msg._aX._s);
-				for (int i = 0; i < _MXL.size(); i++)
-				{
-					if (_MXL[i]._s >= bPre)
-					{
-						RMXL.push_back(_MXL[i]);
-					}
-				}
-				RMXL.push_back(msg._aX);
-				//replaceable set got
-				
-				sort(RMXL.begin(), RMXL.end(), cmpXEndInc);
-				X maxEnd = RMXL[RMXL.size() - 1];
-
-
-				if (find(CIYR.begin(), CIYR.end(), cY) != CIYR.end())
-				{
-					rMsg._aMX = msg._aX;
-					_MX.push_back(msg._aX);
-					_MXL.push_back(msg._aX);
-					_MXL.erase(find(_MXL.begin(), _MXL.end(), maxEnd));
-					_MXR.push_back(maxEnd);
-
-					rMsg._aMY = cY;
-					_MY.push_back(cY);
-					_MYR.push_back(cY);
-
-					rMsg._bIY = cY;
-					_IY.erase(find(_IY.begin(), _IY.end(), cY));
-				}
-				else
-				{
-					vector<X> RMXR;
-					Y aPost = alphaPostforZR(maxEnd._e);
-					for (int i = 0; i < _MXR.size(); i++)
-					{
-						if (_MXR[i]._e <= aPost)
-						{
-							RMXR.push_back(_MXR[i]);
-						}
-					}
-					Y bPost = betaPostforZL(cY);
-					vector<X> backX;
-					for (int i = 0; i < RMXR.size(); i++)
-					{
-						if (RMXR[i]._s <= bPost)
-						{
-							backX.push_back(RMXR[i]);
-						}
-					}
-
-					sort(backX.begin(), backX.end(), cmpXEndInc);
-
-					rMsg._aMX = msg._aX;
-					_MX.push_back(msg._aX);
-					_MXL.push_back(msg._aX);
-					_MXL.erase(find(_MXL.begin(), _MXL.end(), maxEnd));
-					_MXR.push_back(maxEnd);
-					_MXR.erase(find(_MXR.begin(), _MXR.end(), backX[0]));
-					_MXL.push_back(backX[0]);
-
-					rMsg._aMY = cY;
-					_MY.push_back(cY);
-					_MYL.push_back(cY);
-
-					rMsg._bIY = cY;
-					_IY.erase(find(_IY.begin(), _IY.end(), cY));
-
-					
-					
-					
-					
-				}
-			}
-
-
-
-		}
-
-
+		rMsg._t1 = betaPreforZ(msg._aX._s);
+		rMsg._aTX = msg._aX;
+		_TX.push_back(msg._aX);
 	}
 	else
 	{
-		//fail in L
-
-		if (!msg._aIX.empty())
+		//deal with the aX
+		updateStableCount(rMsg);
+		if (rMsg._t2 >= _rightChild->minY() || rMsg._stableYCount > msg._stableYCount)
 		{
-			//infeasible
-			if (msg._aIX == msg._aX)
-			{
-				//kick it self
-				rMsg._aIX = msg._aX;
-				_IX.push_back(msg._aX);
-
-				rMsg._aMX = msg._aX;
-				rMsg._bMX = msg._aX;
-			}
-			else
-			{
-				if (find(_MXL.begin(), _MXL.end(), msg._aIX) != _MXL.end())
-				{
-					//still in
-					rMsg._aMX = msg._aX;
-					_MX.push_back(msg._aX);
-					_MXL.push_back(msg._aX);
-
-					rMsg._bMX = msg._aIX;
-					_MX.erase(find(_MX.begin(), _MX.end(), msg._aIX));
-					_MXL.erase(find(_MXL.begin(), _MXL.end(), msg._aIX));
-
-					rMsg._aIX = msg._aIX;
-					_IX.push_back(msg._aIX);
-					
-				}
-				else
-				{
-					//determine replaceable set in left part first
-					vector<X> RMXL;
-					Y bPre = betaPreforZL(msg._aX._s);
-					for (int i = 0; i < _MXL.size(); i++)
-					{
-						if (_MXL[i]._s >= bPre)
-						{
-							RMXL.push_back(_MXL[i]);
-						}
-					}
-					RMXL.push_back(msg._aX);
-					//replaceable set got
-					
-					sort(RMXL.begin(), RMXL.end(), cmpXWeightInc);
-					X aIXL = RMXL[0];
-
-					//determine maxEnd
-					X maxEnd;
-					sort(RMXL.begin(), RMXL.end(), cmpXEndInc);
-					maxEnd = RMXL[RMXL.size() - 1];
-
-					if (maxEnd._e >= _rightChild->minY())
-					{
-						//may to right, infeasible or transfer
-						Y aPost = alphaPostforZR(maxEnd._e);
-						vector<X> RMXR;
-						for (int i = 0; i < _MXR.size(); i++)
-						{
-							if (_MXR[i]._e <= aPost)
-							{
-								RMXR.push_back(_MXR[i]);
-							}
-						}
-						vector<X> transferTest = RMXR;
-						transferTest.push_back(maxEnd);
-						sort(transferTest.begin(), transferTest.end(), cmpXEndInc);
-						if (transferTest[transferTest.size() - 1]._e > _rightChild->maxY())
-						{
-							throw new exception();
-							//transfer
-							rMsg._aMX = msg._aX;
-							_MX.push_back(msg._aX);
-							_MXL.push_back(msg._aX);
-							_MXL.erase(find(_MXL.begin(), _MXL.end(), maxEnd));
-
-							rMsg._bMX = transferTest[transferTest.size() - 1];
-							_MXR.push_back(maxEnd);
-							_MXR.erase(find(_MXR.begin(), _MXR.end(), transferTest[transferTest.size() - 1]));
-							_MX.erase(find(_MX.begin(), _MX.end(), transferTest[transferTest.size() - 1]));
-
-							rMsg._aTX = transferTest[transferTest.size() - 1];
-							_TX.push_back(transferTest[transferTest.size() - 1]);
-
-						}
-						else
-						{
-							if (!RMXR.empty())
-							{
-								sort(RMXR.begin(), RMXR.end(), cmpXWeightInc);
-								X aIXR = RMXR[0];
-
-								sort(RMXR.begin(), RMXR.end(), cmpXBeginDec);
-								X minBegin = RMXR[RMXR.size() - 1];
-
-								vector<X> RMXL2;
-								Y bPre = betaPreforZL(minBegin._s);
-
-								for (int i = 0; i < _MXL.size(); i++)
-								{
-									if (_MXL[i]._s >= bPre)
-									{
-										if (find(RMXL.begin(), RMXL.end(), _MXL[i]) == RMXL.end())
-										{
-											RMXL2.push_back(_MXL[i]);
-										}
-									}
-								}
-								X aIXL2;
-								if (!RMXL2.empty())
-								{
-									sort(RMXL2.begin(), RMXL2.end(), cmpXWeightInc);
-									aIXL2 = RMXL2[0];
-								}
-								if (aIXL2.empty() || cmpXWeightInc(aIXL, aIXL2) || cmpXWeightInc(aIXR, aIXL2))
-								{
-									if (cmpXWeightInc(aIXL, aIXR))
-									{
-										//may need swap
-										vector<X> backX;
-										Y bPost = betaPostforZL(aIXL._s);
-										for (int i = 0; i < RMXR.size(); i++)
-										{
-											if (RMXR[i]._s <= bPost)
-											{
-												backX.push_back(RMXR[i]);
-											}
-										}
-										sort(backX.begin(), backX.end(), cmpXEndInc);
-
-										rMsg._aMX = msg._aX;
-										_MX.push_back(msg._aX);
-										_MXL.push_back(msg._aX);
-
-										rMsg._bMX = aIXL;
-										_MX.erase(find(_MX.begin(), _MX.end(), aIXL));
-										_MXL.erase(find(_MXL.begin(), _MXL.end(), aIXL));
-
-										rMsg._aIX = aIXL;
-										_IX.push_back(aIXL);
-
-										//swap
-										if (!backX.empty() && cmpXEndInc(backX[0], maxEnd) && aIXL != msg._aX)
-										{
-											_MXL.erase(find(_MXL.begin(), _MXL.end(), maxEnd));
-											_MXR.push_back(maxEnd);
-											_MXR.erase(find(_MXR.begin(), _MXR.end(), backX[0]));
-											_MXL.push_back(backX[0]);
-											forceSwap = true;
-										}
-									}
-									else
-									{
-										rMsg._aMX = msg._aX;
-										_MX.push_back(msg._aX);
-										_MXL.push_back(msg._aX);
-										_MXL.erase(find(_MXL.begin(), _MXL.end(), maxEnd));
-
-										rMsg._bMX = aIXR;
-										_MX.erase(find(_MX.begin(), _MX.end(), aIXR));
-										_MXR.erase(find(_MXR.begin(), _MXR.end(), aIXR));
-										_MXR.push_back(maxEnd);
-
-										rMsg._aIX = aIXR;
-										_IX.push_back(aIXR);
-									}
-								}
-								else
-								{
-									vector<X> backX;
-									Y bPost = betaPostforZL(aIXL2._s);
-									for (int i = 0; i < RMXR.size(); i++)
-									{
-										if (RMXR[i]._s <= bPost)
-										{
-											backX.push_back(RMXR[i]);
-										}
-									}
-									sort(backX.begin(), backX.end(), cmpXEndInc);
-
-									rMsg._aMX = msg._aX;
-									_MX.push_back(msg._aX);
-									_MXL.push_back(msg._aX);
-									_MXL.erase(find(_MXL.begin(), _MXL.end(), maxEnd));
-									_MXR.push_back(maxEnd);
-									_MXR.erase(find(_MXR.begin(), _MXR.end(), backX[0]));
-									_MXL.push_back(backX[0]);
-
-									rMsg._bMX = aIXL2;
-									_MX.erase(find(_MX.begin(), _MX.end(), aIXL2));
-									_MXL.erase(find(_MXL.begin(), _MXL.end(), aIXL2));
-
-									rMsg._aIX = aIXL2;
-									_IX.push_back(aIXL2);
-
-									forceSwap = true;
-								}
-							}
-							else
-							{
-								throw new exception();
-								rMsg._aMX = msg._aX;
-								_MX.push_back(msg._aX);
-								_MXL.push_back(msg._aX);
-
-								rMsg._bMX = aIXL;
-								_MX.erase(find(_MX.begin(), _MX.end(), aIXL));
-								_MXL.erase(find(_MXL.begin(), _MXL.end(), aIXL));
-
-								rMsg._aIX = aIXL;
-								_IX.push_back(aIXL);
-							}
-						}
-					}
-					else
-					{
-						throw new exception();
-						rMsg._aMX = msg._aX;
-						_MX.push_back(msg._aX);
-						_MXL.push_back(msg._aX);
-
-						rMsg._bMX = aIXL;
-						_MX.erase(find(_MX.begin(), _MX.end(), aIXL));
-						_MXL.erase(find(_MXL.begin(), _MXL.end(), aIXL));
-
-						rMsg._aIX = aIXL;
-						_IX.push_back(aIXL);
-					}
-
-				}
-			}
+			//EE and ES available
+			performXEEESEE(msg, rMsg);
 		}
 		else
 		{
-			//transfer
-			//tbd
-			/*vector<Y> CIYL, CIYR, CIYL2;
-			getCompensableYLForce(msg._aX, CIYL, CIYR, CIYL2);*/
-			vector<Y> CIYLCorrect, CIYRCorrect, CIYL2Correct, CIYL, CIYR, CIYL2;
+			//rMsg._t2 < _rightChild->minY() && _stableCount = countInChild
+
 			
-			getCompensableYL(msg._aX, t1inChild, t2inChild, countInChild, CIYL, CIYR, CIYL2);
-			if (verifyEachUpdate)
+			if (!msg._bIY.empty())
 			{
-				getCompensableYLForce(msg._aX, CIYLCorrect, CIYRCorrect, CIYL2Correct);
-				int flag = verifyCIY(CIYLCorrect, CIYRCorrect, CIYL2Correct, CIYL, CIYR, CIYL2);
-				if (flag)
-				{
-					throw new exception();
-					int a = 1;
-				}
+				//success in L
+				//t1 t2 stablecount keeps	
+				rMsg._aMX = msg._aX;
+				_MX.push_back(msg._aX);
+				_MXL.push_back(msg._aX);
+
+				rMsg._aMY = msg._aMY;
+				_MY.push_back(msg._aMY);
+				_MYL.push_back(msg._aMY);
+
+				rMsg._bIY = msg._bIY;
+				_IY.erase(find(_IY.begin(), _IY.end(), msg._bIY));
 			}
-			
-
-
-			if (CIYL.empty() && CIYR.empty() && CIYL2.empty())
+			else
 			{
-				//determine replaceable set in left part first
-				vector<X> RMXL;
-				Y bPre = betaPreforZL(msg._aX._s);
-				for (int i = 0; i < _MXL.size(); i++)
+				//replace in L
+				if (find(_MXL.begin(), _MXL.end(), msg._bMX) != _MXL.end() || msg._aX == msg._aIX)
 				{
-					if (_MXL[i]._s >= bPre)
-					{
-						RMXL.push_back(_MXL[i]);
-					}
-				}
-				RMXL.push_back(msg._aX);
-
-				sort(RMXL.begin(), RMXL.end(), cmpXWeightInc);
-				X aIXL = RMXL[0];
-
-				//determine maxEnd
-				X maxEnd;
-				sort(RMXL.begin(), RMXL.end(), cmpXEndInc);
-				maxEnd = RMXL[RMXL.size() - 1];
-
-				if (maxEnd._e >= _rightChild->minY())
-				{
-					//may to right, infeasible or transfer
-					Y aPost = alphaPostforZR(maxEnd._e);
-					vector<X> RMXR;
-					for (int i = 0; i < _MXR.size(); i++)
-					{
-						if (_MXR[i]._e <= aPost)
-						{
-							RMXR.push_back(_MXR[i]);
-						}
-					}
-					vector<X> transferTest = RMXR;
-					transferTest.push_back(maxEnd);
-					sort(transferTest.begin(), transferTest.end(), cmpXEndInc);
-					if (transferTest[transferTest.size() - 1]._e > _rightChild->maxY())
-					{
-						//transfer
-						rMsg._aMX = msg._aX;
-						_MX.push_back(msg._aX);
-						_MXL.push_back(msg._aX);
-						_MXL.erase(find(_MXL.begin(), _MXL.end(), maxEnd));
-
-						rMsg._bMX = transferTest[transferTest.size() - 1];
-						_MXR.push_back(maxEnd);
-						_MXR.erase(find(_MXR.begin(), _MXR.end(), transferTest[transferTest.size() - 1]));
-						_MX.erase(find(_MX.begin(), _MX.end(), transferTest[transferTest.size() - 1]));
-
-						rMsg._aTX = transferTest[transferTest.size() - 1];
-						_TX.push_back(transferTest[transferTest.size() - 1]);
-
-					}
-					else
-					{
-						if (!RMXR.empty())
-						{
-							sort(RMXR.begin(), RMXR.end(), cmpXWeightInc);
-							X aIXR = RMXR[0];
-							sort(RMXR.begin(), RMXR.end(), cmpXBeginDec);
-							X minBegin = RMXR[RMXR.size() - 1];
-
-							vector<X> RMXL2;
-							Y bPre = betaPreforZL(minBegin._s);
-
-							for (int i = 0; i < _MXL.size(); i++)
-							{
-								if (_MXL[i]._s >= bPre)
-								{
-									if (find(RMXL.begin(), RMXL.end(), _MXL[i]) == RMXL.end())
-									{
-										RMXL2.push_back(_MXL[i]);
-									}
-								}
-							}
-							X aIXL2;
-							if (!RMXL2.empty())
-							{
-								sort(RMXL2.begin(), RMXL2.end(), cmpXWeightInc);
-								aIXL2 = RMXL2[0];
-							}
-							if (aIXL2.empty() || cmpXWeightInc(aIXL, aIXL2) || cmpXWeightInc(aIXR, aIXL2))
-							{
-								if (cmpXWeightInc(aIXL, aIXR))
-								{
-									//may need swap
-									vector<X> backX;
-									Y bPost = betaPostforZL(aIXL._s);
-									for (int i = 0; i < RMXR.size(); i++)
-									{
-										if (RMXR[i]._s <= bPost)
-										{
-											backX.push_back(RMXR[i]);
-										}
-									}
-									sort(backX.begin(), backX.end(), cmpXEndInc);
-
-									rMsg._aMX = msg._aX;
-									_MX.push_back(msg._aX);
-									_MXL.push_back(msg._aX);
-
-									rMsg._bMX = aIXL;
-									_MX.erase(find(_MX.begin(), _MX.end(), aIXL));
-									_MXL.erase(find(_MXL.begin(), _MXL.end(), aIXL));
-
-									rMsg._aIX = aIXL;
-									_IX.push_back(aIXL);
-
-									//swap
-									if (!backX.empty() && cmpXEndInc(backX[0], maxEnd) && aIXL != msg._aX)
-									{
-										_MXL.erase(find(_MXL.begin(), _MXL.end(), maxEnd));
-										_MXR.push_back(maxEnd);
-										_MXR.erase(find(_MXR.begin(), _MXR.end(), backX[0]));
-										_MXL.push_back(backX[0]);
-										forceSwap = true;
-									}
-								}
-								else
-								{
-									rMsg._aMX = msg._aX;
-									_MX.push_back(msg._aX);
-									_MXL.push_back(msg._aX);
-									_MXL.erase(find(_MXL.begin(), _MXL.end(), maxEnd));
-
-									rMsg._bMX = aIXR;
-									_MX.erase(find(_MX.begin(), _MX.end(), aIXR));
-									_MXR.erase(find(_MXR.begin(), _MXR.end(), aIXR));
-									_MXR.push_back(maxEnd);
-
-									rMsg._aIX = aIXR;
-									_IX.push_back(aIXR);
-								}
-							}
-							else
-							{
-								vector<X> backX;
-								Y bPost = betaPostforZL(aIXL2._s);
-								for (int i = 0; i < RMXR.size(); i++)
-								{
-									if (RMXR[i]._s <= bPost)
-									{
-										backX.push_back(RMXR[i]);
-									}
-								}
-								sort(backX.begin(), backX.end(), cmpXEndInc);
-
-								rMsg._aMX = msg._aX;
-								_MX.push_back(msg._aX);
-								_MXL.push_back(msg._aX);
-								_MXL.erase(find(_MXL.begin(), _MXL.end(), maxEnd));
-								_MXR.push_back(maxEnd);
-								_MXR.erase(find(_MXR.begin(), _MXR.end(), backX[0]));
-								_MXL.push_back(backX[0]);
-
-								rMsg._bMX = aIXL2;
-								_MX.erase(find(_MX.begin(), _MX.end(), aIXL2));
-								_MXL.erase(find(_MXL.begin(), _MXL.end(), aIXL2));
-
-								rMsg._aIX = aIXL2;
-								_IX.push_back(aIXL2);
-
-								forceSwap = true;
-							}
-							
-						}
-						else
-						{
-							rMsg._aMX = msg._aX;
-							_MX.push_back(msg._aX);
-							_MXL.push_back(msg._aX);
-
-							rMsg._bMX = aIXL;
-							_MX.erase(find(_MX.begin(), _MX.end(), aIXL));
-							_MXL.erase(find(_MXL.begin(), _MXL.end(), aIXL));
-
-							rMsg._aIX = aIXL;
-							_IX.push_back(aIXL);
-						}
-					}
-				}
-				else
-				{
+					//t1 t2 stablecount keeps	
+					//but t2 may not be a real t2
 					rMsg._aMX = msg._aX;
 					_MX.push_back(msg._aX);
 					_MXL.push_back(msg._aX);
 
-					rMsg._bMX = aIXL;
-					_MX.erase(find(_MX.begin(), _MX.end(), aIXL));
-					_MXL.erase(find(_MXL.begin(), _MXL.end(), aIXL));
+					rMsg._bMX = msg._bMX;
+					_MX.erase(find(_MX.begin(), _MX.end(), msg._bMX));
+					_MXL.erase(find(_MXL.begin(), _MXL.end(), msg._bMX));
 
-					rMsg._aIX = aIXL;
-					_IX.push_back(aIXL);
-				}
-				
-			}
-			else
-			{
-				vector<Y> CIY = CIYL;
-				for (int i = 0; i < CIYR.size(); i++) CIY.push_back(CIYR[i]);
-				for (int i = 0; i < CIYL2.size(); i++) CIY.push_back(CIYL2[i]);
-				sort(CIY.begin(), CIY.end(), cmpYWeightInc);
-				Y cY = CIY[CIY.size() - 1];
-				if (find(CIYL.begin(), CIYL.end(), cY) != CIYL.end())
-				{
-					//success
-					int allCount = 0;
-					for (int i = 0; i < _MY.size(); i++)
-					{
-						if (_MY[i] >= t1inChild && _MY[i] <= t2inChild)
-						{
-							allCount++;
-						}
-					}
-
-					if (t2inChild < _rightChild->minY() && countInChild == allCount)
-					{
-						//only to left
-						rMsg._aMX = msg._aX;
-						_MX.push_back(msg._aX);
-						_MXL.push_back(msg._aX);
-
-						rMsg._aMY = cY;
-						_MY.push_back(cY);
-						_MYL.push_back(cY);
-
-						rMsg._bIY = cY;
-						_IY.erase(find(_IY.begin(), _IY.end(), cY));
-					}
-					else
-					{
-						vector<X> RMXL;
-						Y bPre = betaPreforZL(msg._aX._s);
-						for (int i = 0; i < _MXL.size(); i++)
-						{
-							if (_MXL[i]._s >= bPre)
-							{
-								RMXL.push_back(_MXL[i]);
-							}
-						}
-						RMXL.push_back(msg._aX);
-						sort(RMXL.begin(), RMXL.end(), cmpXEndInc);
-						X maxEnd = RMXL[RMXL.size() - 1];
-						Y aPost = alphaPostforZR(maxEnd._e);
-						vector<X> RMXR;
-						for (int i = 0; i < _MXR.size(); i++)
-						{
-							if (_MXR[i]._e <= aPost)
-							{
-								RMXR.push_back(_MXR[i]);
-							}
-						}
-						Y bPost = betaPostforZL(cY);
-						vector<X> backX;
-						for (int i = 0; i < RMXR.size(); i++)
-						{
-							if (RMXR[i]._s <= bPost)
-							{
-								backX.push_back(RMXR[i]);
-							}
-						}
-						if (backX.empty())
-						{
-							rMsg._aMX = msg._aX;
-							_MX.push_back(msg._aX);
-							_MXL.push_back(msg._aX);
-
-							rMsg._aMY = cY;
-							_MY.push_back(cY);
-							_MYL.push_back(cY);
-
-							rMsg._bIY = cY;
-							_IY.erase(find(_IY.begin(), _IY.end(), cY));
-						}
-						else
-						{
-							sort(backX.begin(), backX.end(), cmpXEndInc);
-							if (cmpXEndInc(backX[0], maxEnd))
-							{
-								//swap
-								rMsg._aMX = msg._aX;
-								_MX.push_back(msg._aX);
-								_MXL.push_back(msg._aX);
-								_MXL.erase(find(_MXL.begin(), _MXL.end(), maxEnd));
-								_MXR.push_back(maxEnd);
-								_MXR.erase(find(_MXR.begin(), _MXR.end(), backX[0]));
-								_MXL.push_back(backX[0]);
-
-								rMsg._aMY = cY;
-								_MY.push_back(cY);
-								_MYL.push_back(cY);
-
-								rMsg._bIY = cY;
-								_IY.erase(find(_IY.begin(), _IY.end(), cY));
-							}
-							else
-							{
-								rMsg._aMX = msg._aX;
-								_MX.push_back(msg._aX);
-								_MXL.push_back(msg._aX);
-
-								rMsg._aMY = cY;
-								_MY.push_back(cY);
-								_MYL.push_back(cY);
-
-								rMsg._bIY = cY;
-								_IY.erase(find(_IY.begin(), _IY.end(), cY));
-							}
-						}
-					}
-					//vector<X> RMXL = getReachableSetinLeftPart(msg._aX);//tbd
-					//RMXL.push_back(msg._aX);
-					//sort(RMXL.begin(), RMXL.end(), cmpXEndInc);
-					//X maxEnd = RMXL[RMXL.size() - 1];
-					////for phi 8
-					//if (maxEnd._e <= _leftChild->maxY())
-					//{
-					//	rMsg._aMX = msg._aX;
-					//	_MX.push_back(msg._aX);
-					//	_MXL.push_back(msg._aX);
-
-					//	rMsg._aMY = cY;
-					//	_MY.push_back(cY);
-					//	_MYL.push_back(cY);
-
-					//	rMsg._bIY = cY;
-					//	_IY.erase(find(_IY.begin(), _IY.end(), cY));
-					//}
-					//else
-					//{
-					//	Y aPost = alphaPostforZR(maxEnd._e);
-					//	vector<X> RMXR;
-					//	for (int i = 0; i < _MXR.size(); i++)
-					//	{
-					//		if (_MXR[i]._e <= aPost)
-					//		{
-					//			RMXR.push_back(_MXR[i]);
-					//		}
-					//	}
-					//	Y bPost = betaPostforZL(cY);
-					//	vector<X> backX;
-					//	for (int i = 0; i < RMXR.size(); i++)
-					//	{
-					//		if (RMXR[i]._s <= bPost)
-					//		{
-					//			backX.push_back(RMXR[i]);
-					//		}
-					//	}
-					//	if (backX.empty())
-					//	{
-					//		rMsg._aMX = msg._aX;
-					//		_MX.push_back(msg._aX);
-					//		_MXL.push_back(msg._aX);
-
-					//		rMsg._aMY = cY;
-					//		_MY.push_back(cY);
-					//		_MYL.push_back(cY);
-
-					//		rMsg._bIY = cY;
-					//		_IY.erase(find(_IY.begin(), _IY.end(), cY));
-					//	}
-					//	else
-					//	{
-					//		sort(backX.begin(), backX.end(), cmpXEndInc);
-					//		if (cmpXEndInc(backX[0], maxEnd))
-					//		{
-					//			//swap
-					//			rMsg._aMX = msg._aX;
-					//			_MX.push_back(msg._aX);
-					//			_MXL.push_back(msg._aX);
-					//			_MXL.erase(find(_MXL.begin(), _MXL.end(), maxEnd));
-					//			_MXR.push_back(maxEnd);
-					//			_MXR.erase(find(_MXR.begin(), _MXR.end(), backX[0]));
-					//			_MXL.push_back(backX[0]);
-
-					//			rMsg._aMY = cY;
-					//			_MY.push_back(cY);
-					//			_MYL.push_back(cY);
-
-					//			rMsg._bIY = cY;
-					//			_IY.erase(find(_IY.begin(), _IY.end(), cY));
-					//		}
-					//		else
-					//		{
-					//			rMsg._aMX = msg._aX;
-					//			_MX.push_back(msg._aX);
-					//			_MXL.push_back(msg._aX);
-
-					//			rMsg._aMY = cY;
-					//			_MY.push_back(cY);
-					//			_MYL.push_back(cY);
-
-					//			rMsg._bIY = cY;
-					//			_IY.erase(find(_IY.begin(), _IY.end(), cY));
-					//		}
-					//	}
-
-					//}
-
+					rMsg._aIX = msg._aIX;
+					_IX.push_back(msg._aIX);
 				}
 				else
 				{
-					//determine replaceable set in left part first
-					vector<X> RMXL;
-					Y bPre = betaPreforZL(msg._aX._s);
-					for (int i = 0; i < _MXL.size(); i++)
-					{
-						if (_MXL[i]._s >= bPre)
-						{
-							RMXL.push_back(_MXL[i]);
-						}
-					}
-					RMXL.push_back(msg._aX);
-					//replaceable set got
-
-					sort(RMXL.begin(), RMXL.end(), cmpXEndInc);
-					X maxEnd = RMXL[RMXL.size() - 1];
-
-
-					if (find(CIYR.begin(), CIYR.end(), cY) != CIYR.end())
-					{
-						rMsg._aMX = msg._aX;
-						_MX.push_back(msg._aX);
-						_MXL.push_back(msg._aX);
-						_MXL.erase(find(_MXL.begin(), _MXL.end(), maxEnd));
-						_MXR.push_back(maxEnd);
-
-						rMsg._aMY = cY;
-						_MY.push_back(cY);
-						_MYR.push_back(cY);
-
-						rMsg._bIY = cY;
-						_IY.erase(find(_IY.begin(), _IY.end(), cY));
-					}
-					else
-					{
-						vector<X> RMXR;
-						Y aPost = alphaPostforZR(maxEnd._e);
-						for (int i = 0; i < _MXR.size(); i++)
-						{
-							if (_MXR[i]._e <= aPost)
-							{
-								RMXR.push_back(_MXR[i]);
-							}
-						}
-						Y bPost = betaPostforZL(cY);
-						vector<X> backX;
-						for (int i = 0; i < RMXR.size(); i++)
-						{
-							if (RMXR[i]._s <= bPost)
-							{
-								backX.push_back(RMXR[i]);
-							}
-						}
-
-						sort(backX.begin(), backX.end(), cmpXEndInc);
-
-						rMsg._aMX = msg._aX;
-						_MX.push_back(msg._aX);
-						_MXL.push_back(msg._aX);
-						_MXL.erase(find(_MXL.begin(), _MXL.end(), maxEnd));
-						_MXR.push_back(maxEnd);
-						_MXR.erase(find(_MXR.begin(), _MXR.end(), backX[0]));
-						_MXL.push_back(backX[0]);
-
-						rMsg._aMY = cY;
-						_MY.push_back(cY);
-						_MYL.push_back(cY);
-
-						rMsg._bIY = cY;
-						_IY.erase(find(_IY.begin(), _IY.end(), cY));
-
-
-
-
-
-					}
+					//EE and ES available
+					performXEEESEE(msg, rMsg);
 				}
 
-
-
+				
 			}
-
-			
 		}
 	}
 
-	updateStableSetinInternalNode(rMsg, forceSwap);
+
 	return rMsg;
 	
+}
+
+void TreeNode::performXEEESEE(Msg msgInChild, Msg & rMsg)
+{
+	X ix = rMsg._aX;
+	Y bPre = betaPreforZL(ix._s);
+	vector<X> RMXL, RMXR, RMXL2;
+	vector<Y> CIYL, CIYR, CIYL2;
+	//EE
+	getXReachableSetinL(bPre, RMXL, CIYL);
+	RMXL.push_back(ix);
+	//ES
+	sort(RMXL.begin(), RMXL.end(), cmpXEndInc);
+	Y aPost = alphaPostforZR(RMXL[RMXL.size() - 1]._e);
+	getXReachableSetinR(aPost, RMXR, CIYR);
+	//EE2
+	Y bPre1 = bPre;
+	if (!RMXR.empty())
+	{
+		sort(RMXR.begin(), RMXR.end(), cmpXBeginDec);
+		Y bPreNew = betaPreforZL(RMXR[RMXR.size() - 1]._s);
+		if (bPreNew < bPre1)
+		{
+			bPre1 = bPreNew;
+		}
+		getXReachableSet2inL(bPre1, bPre, RMXL2, CIYL2);
+		
+	}
+	
+
+	rMsg._t1 = bPre1;
+	rMsg._t2 = aPost;
+	updateStableCount(rMsg);
+
+	//test code
+	/*if (verifyCIY(ix, CIYL, CIYR, CIYL2) != 0)
+	{
+		throw new exception();
+	}*/
+
+	if (CIYL.empty() && CIYR.empty() && CIYL2.empty())
+	{
+		//replace
+		X rX = getMinWeightRX(RMXL, RMXR, RMXL2);
+		if (find(RMXL.begin(), RMXL.end(), rX) != RMXL.end())
+		{
+			if (rX == ix)
+			{
+				rMsg._aMX = ix;
+				rMsg._bMX = ix;
+				rMsg._aIX = ix;
+				_IX.push_back(ix);
+			}
+			else
+			{
+				X bX = getMineBackXfromMXR(betaPostforZL(rX._s), alphaPostforZR(RMXL[RMXL.size() - 1]._e));
+
+				rMsg._aMX = ix;
+				_MX.push_back(ix);
+				_MXL.push_back(ix);
+				if (!bX.empty() && cmpXEndInc(bX, RMXL[RMXL.size() - 1]))
+				{
+					_MXL.erase(find(_MXL.begin(), _MXL.end(), RMXL[RMXL.size() - 1]));
+					_MXR.erase(find(_MXR.begin(), _MXR.end(), bX));
+					_MXL.push_back(bX);
+					_MXR.push_back(RMXL[RMXL.size() - 1]);
+				}
+
+				rMsg._bMX = rX;
+				_MX.erase(find(_MX.begin(), _MX.end(), rX));
+				_MXL.erase(find(_MXL.begin(), _MXL.end(), rX));
+
+				rMsg._aIX = rX;
+				_IX.push_back(rX);
+			}
+		}
+		else if (find(RMXR.begin(), RMXR.end(), rX) != RMXR.end())
+		{
+			X fX = RMXL[RMXL.size() - 1];
+			rMsg._aMX = ix;
+			_MX.push_back(ix);
+			_MXL.push_back(ix);
+			_MXL.erase(find(_MXL.begin(), _MXL.end(), fX));
+
+			rMsg._bMX = rX;
+			_MXR.push_back(fX);
+			_MXR.erase(find(_MXR.begin(), _MXR.end(), rX));
+			_MX.erase(find(_MX.begin(), _MX.end(), rX));
+
+			rMsg._aIX = rX;
+			_IX.push_back(rX);
+		}
+		else
+		{
+			X fX = RMXL[RMXL.size() - 1];
+			Y bPost = betaPostforZL(rX._s);
+			X bX = getMineBackXfromMXR(bPost, aPost);
+
+			rMsg._aMX = ix;
+			_MX.push_back(ix);
+			_MXL.push_back(ix);
+			_MXL.erase(find(_MXL.begin(), _MXL.end(), fX));
+			_MXR.push_back(fX);
+			_MXR.erase(find(_MXR.begin(), _MXR.end(), bX));
+			_MXL.push_back(bX);
+
+			rMsg._bMX = rX;
+			_MX.erase(find(_MX.begin(), _MX.end(), rX));
+			_MXL.erase(find(_MXL.begin(), _MXL.end(), rX));
+
+			rMsg._aIX = rX;
+			_IX.push_back(rX);
+		}
+	}
+	else
+	{
+		Y cY = getMaxWeightCY(CIYL, CIYR, CIYL2);
+		if (find(CIYL.begin(), CIYL.end(), cY) != CIYL.end())
+		{
+			X bX = getMineBackXfromMXR(betaPostforZL(cY), alphaPostforZR(RMXL[RMXL.size() - 1]._e));
+
+			rMsg._aMX = ix;
+			_MX.push_back(ix);
+			_MXL.push_back(ix);
+			if (!bX.empty() && cmpXEndInc(bX, RMXL[RMXL.size() - 1]))
+			{
+				_MXL.erase(find(_MXL.begin(), _MXL.end(), RMXL[RMXL.size() - 1]));
+				_MXR.erase(find(_MXR.begin(), _MXR.end(), bX));
+				_MXL.push_back(bX);
+				_MXR.push_back(RMXL[RMXL.size() - 1]);
+			}
+
+			rMsg._aMY = cY;
+			_MY.push_back(cY);
+			_MYL.push_back(cY);
+
+			rMsg._bIY = cY;
+			_IY.erase(find(_IY.begin(), _IY.end(), cY));
+		}
+		else if (find(CIYR.begin(), CIYR.end(), cY) != CIYR.end())
+		{
+			X fX = RMXL[RMXL.size() - 1];
+			rMsg._aMX = ix;
+			_MX.push_back(ix);
+			_MXL.push_back(ix);
+			_MXL.erase(find(_MXL.begin(), _MXL.end(), fX));
+			_MXR.push_back(fX);
+			
+			rMsg._aMY = cY;
+			_MY.push_back(cY);
+			_MYR.push_back(cY);
+
+			rMsg._bIY = cY;
+			_IY.erase(find(_IY.begin(), _IY.end(), cY));
+		}
+		else
+		{
+			Y bPost = betaPostforZL(cY);
+			X bX = getMineBackXfromMXR(bPost, aPost);
+			X fX = RMXL[RMXL.size() - 1];
+
+			rMsg._aMX = ix;
+			_MX.push_back(ix);
+			_MXL.push_back(ix);
+			_MXL.erase(find(_MXL.begin(), _MXL.end(), fX));
+			_MXR.push_back(fX);
+			_MXR.erase(find(_MXR.begin(), _MXR.end(), bX));
+			_MXL.push_back(bX);
+
+			rMsg._aMY = cY;
+			_MY.push_back(cY);
+			_MYL.push_back(cY);
+
+			rMsg._bIY = cY;
+			_IY.erase(find(_IY.begin(), _IY.end(), cY));
+
+		}
+	}
 }
 
 
 Msg TreeNode::insertXintoNodeR(Msg msg)
 {
-	Y t1inChild = msg._t1, t2inChild = msg._t2;
-	int countInChild = msg._stableYNumBetweent1t2;
-
 	Msg rMsg;
 	rMsg._t1 = msg._t1;
 	rMsg._t2 = msg._t2;
-	rMsg._stableYNumBetweent1t2 = msg._stableYNumBetweent1t2;
+	rMsg._stableYCount = msg._stableYCount;
 	rMsg._aX = msg._aX;
 	_X.push_back(msg._aX);
-	updatet1t2inInternalNodeX(rMsg);
-	
-	if (!msg._bIY.empty() && find(_IY.begin(), _IY.end(), msg._bIY) != _IY.end())
+
+	if (msg._aX._e > maxY())//equal to t2>maxY()
 	{
-		//success and still in
-		rMsg._aMX = msg._aX;
-		_MX.push_back(msg._aX);
-		_MXR.push_back(msg._aX);
-
-		rMsg._bIY = msg._bIY;
-		_IY.erase(find(_IY.begin(), _IY.end(), msg._bIY));
-
-		rMsg._aMY = msg._aMY;
-		_MY.push_back(msg._aMY);
-		_MYR.push_back(msg._aMY);
+		rMsg._t1 = betaPreforZ(msg._aX._s);
+		rMsg._aTX = msg._aX;
+		_TX.push_back(msg._aX);
 	}
 	else
 	{
-		if (!msg._aIX.empty() &&
-			(find(_MXR.begin(), _MXR.end(), msg._aIX) != _MXR.end() || msg._aIX == msg._aX))
+		//deal with the aX
+		updateStableCount(rMsg);
+		if (rMsg._stableYCount > msg._stableYCount)
 		{
-			//infeasible and still in
-			rMsg._aMX = msg._aX;
-			_MXR.push_back(msg._aX);
-			_MX.push_back(msg._aX);
-
-			rMsg._bMX = msg._aIX;
-			_MX.erase(find(_MX.begin(), _MX.end(), msg._aIX));
-			_MXR.erase(find(_MXR.begin(), _MXR.end(), msg._aIX));
-
-			rMsg._aIX = msg._aIX;
-			_IX.push_back(msg._aIX);
-		}
-		else if (!msg._aTX.empty() &&
-			(find(_MXR.begin(), _MXR.end(), msg._aTX) != _MXR.end() || msg._aTX == msg._aX))
-		{
-			//transfer and still in
-			rMsg._aMX = msg._aX;
-			_MXR.push_back(msg._aX);
-			_MX.push_back(msg._aX);
-
-			rMsg._bMX = msg._aTX;
-			_MX.erase(find(_MX.begin(), _MX.end(), msg._aTX));
-			_MXR.erase(find(_MXR.begin(), _MXR.end(), msg._aTX));
-
-			rMsg._aTX = msg._aTX;
-			_TX.push_back(msg._aTX);
+			//EE and ES available
+			performXESEE(msg, rMsg);
 		}
 		else
 		{
-			Y aPost = alphaPostforZR(msg._aX._e);
-			vector<X> RMXR;
-			vector<Y> CIYR, IYR = getIYR();
-			for (int i = 0; i < _MXR.size(); i++)
+			//rMsg._stableYCount == msg._stableYCount, no new matched X, but may be replace
+			if (!msg._bIY.empty())
 			{
-				if (_MXR[i]._e <= aPost)
-				{
-					RMXR.push_back(_MXR[i]);
-				}
-			}
-			RMXR.push_back(msg._aX);
-			for (int i = 0; i < IYR.size(); i++)
-			{
-				if (IYR[i] <= aPost)
-				{
-					CIYR.push_back(IYR[i]);
-				}
-			}
+				//success in R
+				//t1 t2 stablecount keeps	
+				rMsg._aMX = msg._aX;
+				_MX.push_back(msg._aX);
+				_MXR.push_back(msg._aX);
 
-			sort(RMXR.begin(), RMXR.end(), cmpXBeginDec);
-			X minBegin = RMXR[RMXR.size() - 1];
-			Y bPre = betaPreforZL(minBegin._s);
-			vector<X> RMXL;
-			vector<Y> CIYL, IYL = getIYL();
-			for (int i = 0; i < _MXL.size(); i++)
-			{
-				if (_MXL[i]._s >= bPre)
-				{
-					RMXL.push_back(_MXL[i]);
-				}
-			}
-			for (int i = 0; i < IYL.size(); i++)
-			{
-				if (IYL[i] >= bPre)
-				{
-					CIYL.push_back(IYL[i]);
-				}
-			}
+				rMsg._aMY = msg._aMY;
+				_MY.push_back(msg._aMY);
+				_MYR.push_back(msg._aMY);
 
-			if (CIYL.empty() && CIYR.empty())
-			{
-				//insert fail
-				vector<X> transferTest = RMXR;
-				sort(transferTest.begin(), transferTest.end(), cmpXEndInc);
-				if (transferTest[transferTest.size() - 1]._e > _rightChild->maxY())
-				{
-					//transfer
-					rMsg._aMX = msg._aX;
-					_MX.push_back(msg._aX);
-					_MXR.push_back(msg._aX);
-
-					rMsg._bMX = transferTest[transferTest.size() - 1];
-					_MXR.erase(find(_MXR.begin(), _MXR.end(), transferTest[transferTest.size() - 1]));
-					_MX.erase(find(_MX.begin(), _MX.end(), transferTest[transferTest.size() - 1]));
-
-					rMsg._aTX = transferTest[transferTest.size() - 1];
-					_TX.push_back(transferTest[transferTest.size() - 1]);
-
-				}
-				else
-				{
-					X aIXR, aIXL;
-					sort(RMXR.begin(), RMXR.end(), cmpXWeightInc);
-					aIXR = RMXR[0];
-					if (!RMXL.empty())
-					{
-						sort(RMXL.begin(), RMXL.end(), cmpXWeightInc);
-						aIXL = RMXL[0];
-						if (cmpXWeightInc(aIXL, aIXR))
-						{
-							Y bPost = betaPostforZL(aIXL._s);
-							vector<X> backX;
-							for (int i = 0; i < RMXR.size(); i++)
-							{
-								if (RMXR[i]._s <= bPost)
-								{
-									backX.push_back(RMXR[i]);
-								}
-							}
-							sort(backX.begin(), backX.end(), cmpXEndInc);
-
-							rMsg._aMX = msg._aX;
-							_MX.push_back(msg._aX);
-							_MXR.push_back(msg._aX);
-							_MXR.erase(find(_MXR.begin(), _MXR.end(), backX[0]));
-							_MXL.push_back(backX[0]);
-
-							rMsg._bMX = aIXL;
-							//_MXL.push_back(backX[0]);
-							_MXL.erase(find(_MXL.begin(), _MXL.end(), aIXL));
-							_MX.erase(find(_MX.begin(), _MX.end(), aIXL));
-
-							rMsg._aIX = aIXL;
-							_IX.push_back(aIXL);
-						}
-						else
-						{
-							rMsg._aMX = msg._aX;
-							_MX.push_back(msg._aX);
-							_MXR.push_back(msg._aX);
-
-							rMsg._bMX = aIXR;
-							_MX.erase(find(_MX.begin(), _MX.end(), aIXR));
-							_MXR.erase(find(_MXR.begin(), _MXR.end(), aIXR));
-
-							rMsg._aIX = aIXR;
-							_IX.push_back(aIXR);
-						}
-					}
-					else
-					{
-						rMsg._aMX = msg._aX;
-						_MX.push_back(msg._aX);
-						_MXR.push_back(msg._aX);
-
-						rMsg._bMX = aIXR;
-						_MX.erase(find(_MX.begin(), _MX.end(), aIXR));
-						_MXR.erase(find(_MXR.begin(), _MXR.end(), aIXR));
-
-						rMsg._aIX = aIXR;
-						_IX.push_back(aIXR);
-					}
-
-
-
-
-				}
+				rMsg._bIY = msg._bIY;
+				_IY.erase(find(_IY.begin(), _IY.end(), msg._bIY));
 			}
 			else
 			{
-				//insert success
-				Y cYL, cYR;
-				if (!CIYL.empty())
+				if (find(_MXR.begin(), _MXR.end(), msg._bMX) != _MXR.end() || msg._aX == msg._aIX)
 				{
-					sort(CIYL.begin(), CIYL.end(), cmpYWeightInc);
-					cYL = CIYL[CIYL.size() - 1];
-				}
-				if (!CIYR.empty())
-				{
-					sort(CIYR.begin(), CIYR.end(), cmpYWeightInc);
-					cYR = CIYR[CIYR.size() - 1];
-				}
-				if (cmpYWeightInc(cYL, cYR))
-				{
-					//right is heavier
 					rMsg._aMX = msg._aX;
 					_MX.push_back(msg._aX);
 					_MXR.push_back(msg._aX);
 
-					rMsg._bIY = cYR;
-					_IY.erase(find(_IY.begin(), _IY.end(), cYR));
+					rMsg._bMX = msg._bMX;
+					_MX.erase(find(_MX.begin(), _MX.end(), msg._bMX));
+					_MXR.erase(find(_MXR.begin(), _MXR.end(), msg._bMX));
 
-					rMsg._aMY = cYR;
-					_MY.push_back(cYR);
-					_MYR.push_back(cYR);
+					rMsg._aIX = msg._aIX;
+					_IX.push_back(msg._aIX);
 				}
 				else
 				{
-					//need calculate the backX
-					Y bPost = betaPostforZL(cYL);
-					vector<X> backX;
-					for (int i = 0; i < RMXR.size(); i++)
-					{
-						if (RMXR[i]._s <= bPost)
-						{
-							backX.push_back(RMXR[i]);
-						}
-					}
-					sort(backX.begin(), backX.end(), cmpXEndInc);
-
-					rMsg._aMX = msg._aX;
-					_MX.push_back(msg._aX);
-					_MXR.push_back(msg._aX);
-					_MXR.erase(find(_MXR.begin(), _MXR.end(), backX[0]));
-					_MXL.push_back(backX[0]);
-
-					rMsg._aMY = cYL;
-					_MYL.push_back(cYL);
-					_MY.push_back(cYL);
-
-					rMsg._bIY = cYL;
-					_IY.erase(find(_IY.begin(), _IY.end(), cYL));
-
-
+					performXESEE(msg, rMsg);
 				}
-
 			}
 		}
+	}
 
+	return rMsg;
+}
+
+
+void TreeNode::performXESEE(Msg msgInChild, Msg & rMsg)
+{
+	X ix = rMsg._aX;
+	vector<X> RMXL, RMXR;
+	vector<Y> CIYL, CIYR;
+	Y aPost = alphaPostforZR(ix._e);
+	getXReachableSetinR(aPost, RMXR, CIYR);
+	RMXR.push_back(ix);
+
+	sort(RMXR.begin(), RMXR.end(), cmpXBeginDec);
+	Y bPre = betaPreforZL(RMXR[RMXR.size() - 1]._s);
+	getXReachableSetinL(bPre, RMXL, CIYL);
+
+	rMsg._t1 = bPre;
+	rMsg._t2 = aPost;
+	updateStableCount(rMsg);
+
+	if (CIYL.empty() && CIYR.empty())
+	{
+		//replace
+		X rX = getMinWeightRX(RMXL, RMXR);
+		if (find(_MXL.begin(), _MXL.end(), rX) != _MXL.end())
+		{
+			Y bPost = betaPostforZL(rX._s);
+			X bX = getMineBackXfromMXR(bPost, aPost);
+
+			rMsg._aMX = ix;
+			_MX.push_back(ix);
+			_MXR.push_back(ix);
+			_MXR.erase(find(_MXR.begin(), _MXR.end(), bX));
+			_MXL.push_back(bX);
+
+			rMsg._bMX = rX;
+			_MX.erase(find(_MX.begin(), _MX.end(), rX));
+			_MXL.erase(find(_MXL.begin(), _MXL.end(), rX));
+
+			rMsg._aIX = rX;
+			_IX.push_back(rX);
+		}
+		else
+		{
+			rMsg._aMX = ix;
+			_MX.push_back(ix);
+			_MXR.push_back(ix);
+
+			rMsg._bMX = rX;
+			_MX.erase(find(_MX.begin(), _MX.end(), rX));
+			_MXR.erase(find(_MXR.begin(), _MXR.end(), rX));
+
+			rMsg._aIX = rX;
+			_IX.push_back(rX);
+		}
 
 	}
-	updateStableSetinInternalNode(rMsg);
-	return rMsg;
+	else
+	{
+		Y cY = getMaxWeightCY(CIYL, CIYR);
+		if (find(CIYR.begin(), CIYR.end(), cY) != CIYR.end())
+		{
+			rMsg._aMX = ix;
+			_MX.push_back(ix);
+			_MXR.push_back(ix);
+
+			rMsg._aMY = cY;
+			_MY.push_back(cY);
+			_MYR.push_back(cY);
+
+			rMsg._bIY = cY;
+			_IY.erase(find(_IY.begin(), _IY.end(), cY));
+		}
+		else
+		{
+			Y bPost = betaPostforZL(cY);
+			X bX = getMineBackXfromMXR(bPost, aPost);
+
+			rMsg._aMX = ix;
+			_MX.push_back(ix);
+			_MXR.push_back(ix);
+			_MXR.erase(find(_MXR.begin(), _MXR.end(), bX));
+			_MXL.push_back(bX);
+
+			rMsg._aMY = cY;
+			_MY.push_back(cY);
+			_MYL.push_back(cY);
+
+			rMsg._bIY = cY;
+			_IY.erase(find(_IY.begin(), _IY.end(), cY));
+		}
+	}
 }
