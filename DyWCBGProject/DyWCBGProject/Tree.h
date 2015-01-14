@@ -44,11 +44,11 @@ public:
 
 
 	//===================for insertX==========================
-	void performEEESEE(Msg msgInChild, Msg & rMsg);//for msg from L
-	void performESEE(Msg msgInChild, Msg & rMsg);//for msg from R
-	void getReachableSetinR(Y apost, vector<X> & RMXR, vector<Y> & CIYR);
-	void getReachableSetinL(Y bpre, vector<X> & RMXL, vector<Y> & CIYL);
-	void getReachableSet2inL(Y bpre1, Y bpre, vector<X> & RMXL2, vector<Y> & CIYL2);//for msg from L
+	void performXEEESEE(Msg msgInChild, Msg & rMsg);//for msg from L
+	void performXESEE(Msg msgInChild, Msg & rMsg);//for msg from R
+	void getXReachableSetinR(Y apost, vector<X> & RMXR, vector<Y> & CIYR);
+	void getXReachableSetinL(Y bpre, vector<X> & RMXL, vector<Y> & CIYL);
+	void getXReachableSet2inL(Y bpre1, Y bpre, vector<X> & RMXL2, vector<Y> & CIYL2);//for msg from L
 	void updateStableCount(Msg & msg);
 	//void updatet1t2(Msg & msg);
 	//void getCompensableYL(X x, Y t1, Y t2, int stableCountinChild, vector<Y> & CIYL, vector<Y> & CIYR, vector<Y> & CIYL2);
@@ -58,6 +58,9 @@ public:
 	X getMinWeightRX(vector<X> RMXL, vector<X> RMXR);
 	X getBackXfromMXR(Y bpost, Y apost);
 	//=======================================================
+
+	//===================for insertY=========================
+	void getYReachableSetinR(Y apre, vector<X> & CIXR, vector<Y> & RMYR);
 	
 
 	int verifyNodeInvariants();

@@ -137,6 +137,7 @@ int main()
 		}
 		//pTree->printMY();
 		//pTree->printRMY();
+		//getchar();
 	}
 End:
 	return 0;

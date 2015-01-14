@@ -72,7 +72,7 @@ Msg TreeNode::insertXintoLeaf(X x)
 		updateStableCount(msg);
 		vector<X> RMXR;
 		vector<Y> CIYR;
-		getReachableSetinR(msg._t2, RMXR, CIYR);
+		getXReachableSetinR(msg._t2, RMXR, CIYR);
 		RMXR.push_back(x);
 		if (CIYR.empty())
 		{
@@ -138,7 +138,7 @@ Msg TreeNode::insertXintoNodeL(Msg msg)
 		if (rMsg._t2 >= _rightChild->minY() || rMsg._stableYCount > msg._stableYCount)
 		{
 			//EE and ES available
-			performEEESEE(msg, rMsg);
+			performXEEESEE(msg, rMsg);
 		}
 		else
 		{
@@ -181,7 +181,7 @@ Msg TreeNode::insertXintoNodeL(Msg msg)
 				else
 				{
 					//EE and ES available
-					performEEESEE(msg, rMsg);
+					performXEEESEE(msg, rMsg);
 				}
 
 				
@@ -194,19 +194,19 @@ Msg TreeNode::insertXintoNodeL(Msg msg)
 	
 }
 
-void TreeNode::performEEESEE(Msg msgInChild, Msg & rMsg)
+void TreeNode::performXEEESEE(Msg msgInChild, Msg & rMsg)
 {
 	X ix = rMsg._aX;
 	Y bPre = betaPreforZL(ix._s);
 	vector<X> RMXL, RMXR, RMXL2;
 	vector<Y> CIYL, CIYR, CIYL2;
 	//EE
-	getReachableSetinL(bPre, RMXL, CIYL);
+	getXReachableSetinL(bPre, RMXL, CIYL);
 	RMXL.push_back(ix);
 	//ES
 	sort(RMXL.begin(), RMXL.end(), cmpXEndInc);
 	Y aPost = alphaPostforZR(RMXL[RMXL.size() - 1]._e);
-	getReachableSetinR(aPost, RMXR, CIYR);
+	getXReachableSetinR(aPost, RMXR, CIYR);
 	//EE2
 	Y bPre1 = bPre;
 	if (!RMXR.empty())
@@ -217,7 +217,7 @@ void TreeNode::performEEESEE(Msg msgInChild, Msg & rMsg)
 		{
 			bPre1 = bPreNew;
 		}
-		getReachableSet2inL(bPre1, bPre, RMXL2, CIYL2);
+		getXReachableSet2inL(bPre1, bPre, RMXL2, CIYL2);
 		
 	}
 	
@@ -395,7 +395,7 @@ Msg TreeNode::insertXintoNodeR(Msg msg)
 		if (rMsg._stableYCount > msg._stableYCount)
 		{
 			//EE and ES available
-			performESEE(msg, rMsg);
+			performXESEE(msg, rMsg);
 		}
 		else
 		{
@@ -432,7 +432,7 @@ Msg TreeNode::insertXintoNodeR(Msg msg)
 				}
 				else
 				{
-					performESEE(msg, rMsg);
+					performXESEE(msg, rMsg);
 				}
 			}
 		}
@@ -442,18 +442,18 @@ Msg TreeNode::insertXintoNodeR(Msg msg)
 }
 
 
-void TreeNode::performESEE(Msg msgInChild, Msg & rMsg)
+void TreeNode::performXESEE(Msg msgInChild, Msg & rMsg)
 {
 	X ix = rMsg._aX;
 	vector<X> RMXL, RMXR;
 	vector<Y> CIYL, CIYR;
 	Y aPost = alphaPostforZR(ix._e);
-	getReachableSetinR(aPost, RMXR, CIYR);
+	getXReachableSetinR(aPost, RMXR, CIYR);
 	RMXR.push_back(ix);
 
 	sort(RMXR.begin(), RMXR.end(), cmpXBeginDec);
 	Y bPre = betaPreforZL(RMXR[RMXR.size() - 1]._s);
-	getReachableSetinL(bPre, RMXL, CIYL);
+	getXReachableSetinL(bPre, RMXL, CIYL);
 
 	rMsg._t1 = bPre;
 	rMsg._t2 = aPost;

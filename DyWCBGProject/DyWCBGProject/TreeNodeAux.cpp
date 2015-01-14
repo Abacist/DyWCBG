@@ -397,7 +397,7 @@ Y TreeNode::betaPreforZ(Y y)
 	}
 }
 
-void TreeNode::getReachableSetinR(Y apost, vector<X> & RMXR, vector<Y> & CIYR)
+void TreeNode::getXReachableSetinR(Y apost, vector<X> & RMXR, vector<Y> & CIYR)
 {
 	CIYR.clear(); RMXR.clear();
 	vector<Y> IYR = getIYR();
@@ -417,7 +417,7 @@ void TreeNode::getReachableSetinR(Y apost, vector<X> & RMXR, vector<Y> & CIYR)
 	}
 }
 
-void TreeNode::getReachableSetinL(Y bpre, vector<X> & RMXL, vector<Y> & CIYL)
+void TreeNode::getXReachableSetinL(Y bpre, vector<X> & RMXL, vector<Y> & CIYL)
 {
 	CIYL.clear(); RMXL.clear();
 	vector<Y> IYL = getIYL();
@@ -437,7 +437,7 @@ void TreeNode::getReachableSetinL(Y bpre, vector<X> & RMXL, vector<Y> & CIYL)
 	}
 }
 
-void TreeNode::getReachableSet2inL(Y bpre1, Y bpre, vector<X> & RMXL2, vector<Y> & CIYL2)
+void TreeNode::getXReachableSet2inL(Y bpre1, Y bpre, vector<X> & RMXL2, vector<Y> & CIYL2)
 {
 	CIYL2.clear(); RMXL2.clear();
 	vector<Y> IYL = getIYL();
@@ -525,6 +525,38 @@ X TreeNode::getBackXfromMXR(Y bpost, Y apost)
 		return BackX[0];
 	}
 	
+}
+
+
+void TreeNode::getYReachableSetinR(Y apre, vector<X> & CIXR, vector<Y> & RMYR)
+{
+	CIXR.clear(); 
+	RMYR.clear();
+	vector<X> CIXRBase;
+	vector<Y> RMYRBase;
+	if (_rightChild == NULL)
+	{
+		CIXRBase = _IX;
+		RMYRBase = _MYR;
+	}
+	else
+	{
+
+	}
+	for (int i = 0; i < CIXRBase.size(); i++)
+	{
+		if (CIXRBase[i]._e >= apre)
+		{
+			CIXR.push_back(CIXRBase[i]);
+		}
+	}
+	for (int i = 0; i < RMYRBase.size(); i++)
+	{
+		if (RMYRBase[i] >= apre)
+		{
+			RMYR.push_back(RMYRBase[i]);
+		}
+	}
 }
 
 //vector<X> TreeNode::getReachableSetinLeftPart(X x)
