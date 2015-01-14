@@ -1265,5 +1265,58 @@ int TreeNode::verifyNodeInvariants()
 		}
 	}
 
+
+	{
+		if (_leftChild != NULL)
+		{
+			vector<X> tempX1 = _X;
+			vector<X> tempX2 = _leftChild->_X;
+			for (int i = 0; i < _rightChild->_X.size(); i++) tempX2.push_back(_rightChild->_X[i]);
+			if (tempX1.size() != tempX2.size())
+			{
+				return 10;
+			}
+			else
+			{
+				sort(tempX1.begin(), tempX1.end(), cmpXID);
+				sort(tempX2.begin(), tempX2.end(), cmpXID);
+				for (int i = 0; i < tempX1.size(); i++)
+				{
+					if (tempX1[i] != tempX2[i])
+					{
+						return 10;
+					}
+				}
+			}
+		}
+	}
+
+
+	{
+		if (_leftChild != NULL)
+		{
+			vector<Y> tempY1 = _Y;
+			vector<Y> tempY2 = _leftChild->_Y;
+			for (int i = 0; i < _rightChild->_Y.size(); i++) tempY2.push_back(_rightChild->_Y[i]);
+			if (tempY1.size() != tempY2.size())
+			{
+				return 11;
+			}
+			else
+			{
+				sort(tempY1.begin(), tempY1.end(), cmpYValueInc);
+				sort(tempY2.begin(), tempY2.end(), cmpYValueInc);
+				for (int i = 0; i < tempY1.size(); i++)
+				{
+					if (tempY1[i] != tempY2[i])
+					{
+						return 11;
+					}
+				}
+			}
+		}
+		
+	}
+
 	return 0;
 }

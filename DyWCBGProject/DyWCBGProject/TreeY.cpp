@@ -10,7 +10,7 @@ void Tree::insertYinTree(Y y)
 		return;
 	}
 	TreeNode* curNode = locateLeaf(y);
-	Msg msg = _root->insertYintoLeaf(y);
+	Msg msg = curNode->insertYintoLeaf(y);
 	int flag = 0;
 	if (verifyEachUpdate)
 	{
@@ -251,7 +251,7 @@ Msg TreeNode::insertYintoNodeR(Msg msg)
 	Y iy = msg._aY;
 
 	Y aPre = alphaPreforZR(msg._aY);
-	X fX = getMaxsForwardXFromMXL(betaPostforZL(minY()), aPre);
+	X fX = getMaxsForwardXFromMXL(betaPreforZL(minY()), aPre);
 	Y bPost = betaPostforZL(fX._s);
 
 	vector<X> CIX;

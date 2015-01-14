@@ -67,7 +67,6 @@ public:
 	X getMaxsForwardXFromMXL(Y bpost, Y apre);
 	X getMaxWeightCX(vector<X> CIX);
 	Y getMinWeightRY(vector<Y> RMY);
-
 	/*void getYReachableSetinR(Y apre, vector<X> & CIXR, vector<Y> & RMYR);
 	void getYReachableSetinL(Y bPost, vector<X> & CIXL, vector<Y> & RMYL);
 	void getYReachableSetinL2(Y bPost, Y bPost1, vector<X> & CIXL2, vector<Y> RMYL2);*/

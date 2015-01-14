@@ -7,6 +7,8 @@
 7. MY = MYL + MYR
 8. Left and Right
 9. Swap in MXL and MXR
+10. P.X = L.X + R.X
+11. P.Y = L.Y + R.Y
 
 
 

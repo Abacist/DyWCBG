@@ -52,7 +52,7 @@ void TreeNode::getThreeTightPoints(Y iy, Y & bPost, Y & bPost1, Y & aPre)
 	X bX = getMineBackXfromMXR(bPost, alphaPostforZR(maxY()));
 	if (!bX.empty())
 	{
-		aPre = alphaPostforZR(bX._e);
+		aPre = alphaPreforZR(bX._e);
 		X fX = getMaxsForwardXFromMXL(bPost, aPre);
 		if (!fX.empty())
 		{
@@ -70,6 +70,7 @@ void TreeNode::getThreeTightPoints(Y iy, Y & bPost, Y & bPost1, Y & aPre)
 	}
 	else
 	{
+		bPost1 = bPost;
 		aPre._value = INT_MAX;
 	}
 	
@@ -93,13 +94,13 @@ void TreeNode::getYReachableSetinInternalNode(Msg msg, vector<X> & CIX, vector<Y
 	else
 	{
 		t2 = alphaPreforZR(msg._aY);
-		X fX = getMaxsForwardXFromMXL(betaPostforZL(minY()), t1);
+		X fX = getMaxsForwardXFromMXL(betaPreforZL(minY()), t2);
 		t1 = betaPostforZL(fX._s);
 	}
 	
 	for (int i = 0; i < _IX.size(); i++)
 	{
-		if (find(_leftChild->_IX.begin(), _leftChild->_IX.end(), _IX[i]) == _leftChild->_IX.end() ||
+		if (find(_leftChild->_IX.begin(), _leftChild->_IX.end(), _IX[i]) == _leftChild->_IX.end() &&
 			find(_rightChild->_IX.begin(), _rightChild->_IX.end(), _IX[i]) == _rightChild->_IX.end())
 		{
 			CIXBase.push_back(_IX[i]);
@@ -107,7 +108,7 @@ void TreeNode::getYReachableSetinInternalNode(Msg msg, vector<X> & CIX, vector<Y
 	}
 	for (int i = 0; i < _MY.size(); i++)
 	{
-		if (find(_leftChild->_MY.begin(), _leftChild->_MY.end(), _MY[i]) == _leftChild->_MY.end() ||
+		if (find(_leftChild->_MY.begin(), _leftChild->_MY.end(), _MY[i]) == _leftChild->_MY.end() &&
 			find(_rightChild->_MY.begin(), _rightChild->_MY.end(), _MY[i]) == _rightChild->_MY.end())
 		{
 			RMYBase.push_back(_MY[i]);

@@ -31,8 +31,8 @@ void generator(char* fileName, int maxY, int updateRange, int weightRange)
 		if (rand() % 2 == 0)
 		{
 			//generate X
-			int s = 1;//rand() % maxY + 1;
-			int e = rand() % (maxY*2)+1;
+			int s = rand() % maxY + 1;
+			int e = rand() % (maxY)+1;
 			if (s > e)
 			{
 				int temp = e;
