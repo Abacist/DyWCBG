@@ -22,6 +22,22 @@ public:
 	
 	vector<Y> _IY;
 
+	//======================for Query========================
+	vector<Y> _YG;
+	vector<X> _XG;
+	vector<Y> _IYG;
+	vector<Y> _IYLG;
+	vector<Y> _IYRG;
+	vector<Y> _MYG;
+	vector<Y> _MYLG;
+	vector<Y> _MYRG;
+	//vector<X> _MXG; == XG
+	vector<X> _MXLG;
+	vector<X> _MXRG;
+	vector<X> _TXG;
+	vector<Edge> _MatchingG;
+
+
 
 
 	TreeNode * _leftChild;
@@ -42,10 +58,9 @@ public:
 
 	Y betaPreforZ(Y y);
 
-
 	//===================for insertX==========================
-	void performXEEESEE(Msg msgInChild, Msg & rMsg);//for msg from L
-	void performXESEE(Msg msgInChild, Msg & rMsg);//for msg from R
+	void performXEEESEE(Msg & rMsg);//for msg from L
+	void performXESEE(Msg & rMsg);//for msg from R
 	void getXReachableSetinR(Y apost, vector<X> & RMXR, vector<Y> & CIYR);
 	void getXReachableSetinL(Y bpre, vector<X> & RMXL, vector<Y> & CIYL);
 	void getXReachableSet2inL(Y bpre1, Y bpre, vector<X> & RMXL2, vector<Y> & CIYL2);//for msg from L
@@ -73,6 +88,15 @@ public:
 	/*X getMaxWeightCX(vector<X> CIXL, vector<X> CIXR, vector<X> CIXL2);
 	Y getMinWeightRY(vector<Y> RMYL, vector<Y> RMYR, vector<Y> RMYL2);*/
 	//==============================================================
+
+
+
+
+	//========================for query X=========================
+	Y searchXMateRecur(X x, int delta = 0);
+	Y searchXMateRecurL(X x, int delta = 0);
+	Y searchXMateRecurR(X x, int delta = 0);
+	//==========================================================
 
 	int verifyNodeInvariants();
 	void splitNode(X insertedX);
@@ -120,12 +144,20 @@ public:
 	void insertXinTree(X x);
 	void insertYinTree(Y y);
 
+	Y queryXMate(int id);
+	X queryYMate(int value);
+
+	
+
 	TreeNode* locateLeaf(X x);
 	TreeNode* locateLeaf(Y y);
 
 
 	void verifyInvariantsRecur(int& flag, TreeNode*& errorNode);
 	void verifyInvariantsRecur(int& flag, TreeNode*& errorNode, TreeNode* curRoot);
+
+	void constructGloverInfo();
+	void constructGloverInfo(TreeNode* curRoot, vector<X> MX, vector<Y> MY);
 
 	void printMY();
 	void printMY(TreeNode* curRoot, ofstream & my);

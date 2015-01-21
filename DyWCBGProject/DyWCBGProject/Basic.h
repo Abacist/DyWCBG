@@ -52,6 +52,15 @@ public:
 
 ostream& operator<<(ostream& os, const X& rhs);
 
+
+class Edge
+{
+public:
+	X x;
+	Y y;
+	Edge(X x, Y y);
+};
+
 class Msg
 {
 public:
@@ -95,6 +104,7 @@ bool cmpXID(X x1, X x2);
 
 void formGloverMatching(const vector<X> vX, const vector<Y> vY, vector<X>& vZ);
 void formPlaxtonMWM(const vector<X> vX, const vector<Y> vY, vector<X>& vZ, vector<Y>& vMY);
+void getGloverInfo(vector<X> allX, vector<Y> allY, vector<Edge> & M, vector<Y> & IY);
 
 bool operator<(int s, Y y);
 

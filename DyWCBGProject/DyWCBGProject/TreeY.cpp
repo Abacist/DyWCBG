@@ -143,7 +143,7 @@ Msg TreeNode::insertYintoNodeL(Msg msg)
 			{
 				maxEnd = RMXLForward[RMXLForward.size() - 1];
 			}
-			X bX = getMineBackXfromMXR(bPost, alphaPostforZR(maxY()));
+			X bX = getMineBackXfromMXR(bPost, alphaPostforZR(maxY()));//only one?
 
 			rMsg._aMY = iy;
 			_MY.push_back(iy);

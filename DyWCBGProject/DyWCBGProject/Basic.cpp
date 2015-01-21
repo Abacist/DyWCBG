@@ -177,6 +177,12 @@ X::X()
 	_w = INT_MIN;
 }
 
+Edge::Edge(X x, Y y)
+{
+	this->x = x;
+	this->y = y;
+}
+
 Msg::Msg()
 {
 	X x;

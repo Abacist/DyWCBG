@@ -82,6 +82,7 @@
   <ItemGroup>
     <ClCompile Include="Basic.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="QueryX.cpp" />
     <ClCompile Include="TreeAux.cpp" />
     <ClCompile Include="TreeNodeAux.cpp" />
     <ClCompile Include="TreeNodeAux2.cpp" />

@@ -138,7 +138,7 @@ Msg TreeNode::insertXintoNodeL(Msg msg)
 		if (rMsg._t2 >= _rightChild->minY() || rMsg._stableYCount > msg._stableYCount)
 		{
 			//EE and ES available
-			performXEEESEE(msg, rMsg);
+			performXEEESEE(rMsg);
 		}
 		else
 		{
@@ -181,7 +181,7 @@ Msg TreeNode::insertXintoNodeL(Msg msg)
 				else
 				{
 					//EE and ES available
-					performXEEESEE(msg, rMsg);
+					performXEEESEE(rMsg);
 				}
 
 				
@@ -194,7 +194,7 @@ Msg TreeNode::insertXintoNodeL(Msg msg)
 	
 }
 
-void TreeNode::performXEEESEE(Msg msgInChild, Msg & rMsg)
+void TreeNode::performXEEESEE(Msg & rMsg)
 {
 	X ix = rMsg._aX;
 	Y bPre = betaPreforZL(ix._s);
@@ -252,7 +252,7 @@ void TreeNode::performXEEESEE(Msg msgInChild, Msg & rMsg)
 				rMsg._aMX = ix;
 				_MX.push_back(ix);
 				_MXL.push_back(ix);
-				if (!bX.empty() && cmpXEndInc(bX, RMXL[RMXL.size() - 1]))
+				if (!bX.empty() && cmpXEndInc(bX, RMXL[RMXL.size() - 1]))//== ix?
 				{
 					_MXL.erase(find(_MXL.begin(), _MXL.end(), RMXL[RMXL.size() - 1]));
 					_MXR.erase(find(_MXR.begin(), _MXR.end(), bX));
@@ -395,7 +395,7 @@ Msg TreeNode::insertXintoNodeR(Msg msg)
 		if (rMsg._stableYCount > msg._stableYCount)
 		{
 			//EE and ES available
-			performXESEE(msg, rMsg);
+			performXESEE(rMsg);
 		}
 		else
 		{
@@ -432,7 +432,7 @@ Msg TreeNode::insertXintoNodeR(Msg msg)
 				}
 				else
 				{
-					performXESEE(msg, rMsg);
+					performXESEE(rMsg);
 				}
 			}
 		}
@@ -442,7 +442,7 @@ Msg TreeNode::insertXintoNodeR(Msg msg)
 }
 
 
-void TreeNode::performXESEE(Msg msgInChild, Msg & rMsg)
+void TreeNode::performXESEE(Msg & rMsg)
 {
 	X ix = rMsg._aX;
 	vector<X> RMXL, RMXR;
