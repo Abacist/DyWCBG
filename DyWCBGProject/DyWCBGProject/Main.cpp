@@ -8,10 +8,10 @@
 
 using namespace std;
 
-const int mY =				8;
-const int ur =				15;
+const int mY =				25;
+const int ur =				70;
 int verifyEachUpdate =		1;		//0 not verify, !0 verify
-int gen =					0;
+int gen =					1;
 int breakID =				3;
 
 void generator(char* fileName = "input.txt", int MaxY = mY, int UpdateRange = ur, int WeightRange = 1000);
@@ -162,7 +162,7 @@ int main()
 			}
 			if (y0 == y1)
 			{
-				cout << "Query X: " << pTree->_root->_MX[i]._id << "\tPass!" << endl;
+				cout << "Query X: " << pTree->_root->_MX[i]._id << "\tpass" << endl;
 			}
 			else
 			{
