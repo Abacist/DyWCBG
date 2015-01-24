@@ -11,7 +11,7 @@ using namespace std;
 const int mY =				50;
 const int ur =				150;
 int verifyEachUpdate =		0;		//0 not verify, !0 verify
-int gen =					1;
+int gen =					0;
 int breakID =				5;
 
 void generator(char* fileName = "input.txt", int MaxY = mY, int UpdateRange = ur, int WeightRange = 1000);
@@ -42,7 +42,15 @@ int main()
 			in >> temp;
 			tempVecY.push_back(temp);
 		}
-		Tree* pTree = new Tree(tempVecY);
+		in >> rangeOfY;
+		vector<Y> tempVeccanY;
+		for (int i = 0; i < rangeOfY; i++)
+		{
+			Y temp;
+			in >> temp;
+			tempVeccanY.push_back(temp);
+		}
+		Tree* pTree = new Tree(tempVecY, tempVeccanY);
 
 		char command;
 		while (!in.eof())
@@ -168,7 +176,7 @@ int main()
 		//pTree->printMY();
 		//pTree->printRMY();
 
-		/*vector<Edge> Matching;
+		vector<Edge> Matching;
 		getGloverInfo(pTree->_root->_MX, pTree->_root->_MY, Matching);
 
 		for (int i = 0; i < pTree->_root->_MX.size(); i++)
@@ -193,7 +201,7 @@ int main()
 				throw new exception();
 				int a = 0;
 			}
-		}*/
+		}
 	}
 End:
 	return 0;
