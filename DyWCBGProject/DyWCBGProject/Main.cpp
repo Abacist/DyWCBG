@@ -8,8 +8,8 @@
 
 using namespace std;
 
-const int mY =				25;
-const int ur =				70;
+const int mY =				10;
+const int ur =				10;
 int verifyEachUpdate =		1;		//0 not verify, !0 verify
 int gen =					1;
 int breakID =				3;
@@ -169,6 +169,42 @@ int main()
 				throw new exception();
 			}
 		}
+
+
+
+		//output for extended verify
+		ofstream out("base.txt");
+		out << pTree->_root->_Y.size() << endl;
+		for (int i = 0; i < pTree->_root->_Y.size(); i++)
+		{
+			out << pTree->_root->_Y[i]._value << " " << 0 << endl;
+		}
+		out << pTree->_root->_MY.size() << endl;
+		for (int i = 0; i < pTree->_root->_MY.size(); i++)
+		{
+			out << pTree->_root->_MY[i]._value << " " << 0 << endl;
+		}
+
+		for (int i = 0; i < pTree->_root->_MX.size(); i++)
+		{
+			out << 1 << " " << pTree->_root->_MX[i]._id <<" "<< pTree->_root->_MX[i]._s._value<<" "
+				<< pTree->_root->_MX[i]._e._value<< " " << 0 << endl;
+		}
+		out << "$" << endl;
+		out.close();
+
+		ofstream mat("matchingStandard.txt");
+		for (int i = 0; i < pTree->_root->_MatchingG.size(); i++)
+		{
+			mat << pTree->_root->_MatchingG[i].x._id << "\t" << pTree->_root->_MatchingG[i].y._value << endl;
+		}
+		mat.close();
+
+
+
+
+		getchar();
+
 	}
 End:
 	return 0;
