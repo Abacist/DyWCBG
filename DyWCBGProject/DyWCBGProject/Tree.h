@@ -31,7 +31,7 @@ public:
 	vector<Y> _MYG;
 	vector<Y> _MYLG;
 	vector<Y> _MYRG;
-	vector<X> _MXG; 
+	//vector<X> _MXG; == XG
 	vector<X> _MXLG;
 	vector<X> _MXRG;
 	vector<X> _TXG;
@@ -94,6 +94,8 @@ public:
 
 	//========================for query X=========================
 	Y searchXMateRecur(X x, int delta = 0);
+	Y searchXMateRecurL(X x, int delta = 0);
+	Y searchXMateRecurR(X x, int delta = 0);
 	//==========================================================
 
 	int verifyNodeInvariants();
