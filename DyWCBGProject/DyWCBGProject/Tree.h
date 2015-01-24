@@ -100,6 +100,7 @@ public:
 	TreeNode* _root;
 
 	Tree(vector<Y>);	// init
+	Tree(vector<Y> YBase, vector<Y> vY);
 
 	void insertXinTree(X x);
 	void insertYinTree(Y y);

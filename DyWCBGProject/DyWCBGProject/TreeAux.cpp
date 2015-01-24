@@ -8,6 +8,12 @@ Tree::Tree(vector<Y> vY)
 	_root = new TreeNode(vY);
 }
 
+
+Tree::Tree(vector<Y> YBase, vector<Y> vY)
+{
+	_root = new TreeNode(YBase, vY);
+}
+
 TreeNode* Tree::locateLeaf(X x)
 {
 	TreeNode* node = _root;
