@@ -26,7 +26,7 @@ int main()
 		{
 			generator(); 
 		}
-		ifstream in("input.txt");
+		ifstream in("base.txt");
 		if (!in)
 		{
 			cout << "input file open error" << endl;
@@ -202,6 +202,14 @@ int main()
 				int a = 0;
 			}
 		}
+
+		ofstream mat("newTree.txt");
+		for (int i = 0; i < Matching.size(); i++)
+		{
+			mat << Matching[i].x._id << "\t" << Matching[i].y << endl;
+		}
+		mat.close();
+
 	}
 End:
 	return 0;
