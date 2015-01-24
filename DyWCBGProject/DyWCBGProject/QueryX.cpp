@@ -202,6 +202,7 @@ Y TreeNode::searchXMateRecur(X x, int delta)//delta means how many X need to be 
 		}
 		else
 		{
+			//x.s<=midY && x.e>midY, belongs to L.TXG
 			vector<X> TMGLeft;
 			for (int i = 0; i < _leftChild->_TXG.size(); i++)//all _TXG must be matched in curNode
 			{
@@ -219,7 +220,7 @@ Y TreeNode::searchXMateRecur(X x, int delta)//delta means how many X need to be 
 			else
 			{
 				//match in right
-				return _rightChild->searchXMateRecurR(x, delta);
+				return _rightChild->searchXMateRecur(x, delta);
 			}
 
 		}
@@ -237,56 +238,6 @@ Y TreeNode::searchXMateRecurL(X x, int delta)//delta is the count of x need to b
 			return _parent->_MatchingG[i].y;
 		}
 	}
-	//if (_leftChild == NULL)
-	//{
-	//	//a leaf
-	//	sort(_IYG.begin(), _IYG.end(), cmpYValueDec);
-	//	return _IYG[delta];
-	//}
-	//else
-	//{
-
-	//}
-
-
-
-	//int rightCount = 0;
-	//vector<X> TM;
-	//for (int i = 0; i < _MXLG.size(); i++)
-	//{
-	//	if (_MXLG[i]._e > midY)
-	//	{
-	//		TM.push_back(_MXLG[i]);
-	//	}
-	//}
-	//Y bPost = betaPostforZLG(x._s);
-	//Y bPre = betaPreforZLG(x._s);
-	///*for (int i = 0; i < TM.size(); i++)
-	//{
-	//if (TM[i]._s >= x._s && cmpXEndInc(x, TM[i]))
-	//{
-	//rightCount++;
-	//}
-	//}
-	//for (int i = 0; i < TM.size(); i++)
-	//{
-	//if (TM[i]._s >= x._s && cmpXEndInc(TM[i], x))
-	//{
-	//if (TM[i]._s > bPost)
-	//{
-	//rightCount++;
-	//}
-	//}
-	//}*/
-	//for (int i = 0; i < TM.size(); i++)
-	//{
-	//	if (TM[i]._s > bPost || TM[i]._s > bPre && TM[i]._s >= bPost && cmpXEndInc(x, TM[i]))
-	//	{
-	//		rightCount++;
-	//	}
-	//}
-	//Y y;
-	//return y;
 }
 
 
