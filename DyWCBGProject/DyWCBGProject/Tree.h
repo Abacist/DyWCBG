@@ -6,6 +6,7 @@ class TreeNode
 public:
 	vector<X> _X;
 	vector<Y> _Y;
+	vector<Y> _YBase;
 
 	vector<X> _MX;
 	vector<X> _MXR;
@@ -37,7 +38,8 @@ public:
 	TreeNode * _parent;
 
 
-	TreeNode(vector<Y>);	//init
+	TreeNode(vector<Y> YBase);	//init
+	TreeNode(vector<Y> YBase, vector<Y> canY);
 
 	Y maxY();
 	Y minY();
@@ -72,6 +74,8 @@ public:
 	Msg insertXintoNodeR(Msg msg);
 
 	void getCompensableYL(X x, Y t1, Y t2, int stableCountinChild, vector<Y> & CIYL, vector<Y> & CIYR, vector<Y> & CIYL2);
+
+	Y searchXMateRecur(X x, int delta = 0);
 	
 	//lazy
 	vector<Y> getYL();
@@ -99,6 +103,9 @@ public:
 
 	void insertXinTree(X x);
 	void insertYinTree(Y y);
+
+	Y queryXMate(int id);
+	
 
 	TreeNode* locateLeaf(X x);
 	TreeNode* locateLeaf(Y y);

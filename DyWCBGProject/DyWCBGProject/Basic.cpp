@@ -19,7 +19,7 @@ void generator(char* fileName, int maxY, int updateRange, int weightRange)
 	{
 		Y y0;
 		y0._value = i;
-		y0._w = rand() % weightRange;
+		y0._w = 0;// rand() % weightRange;
 		out << y0._value << " " << y0._w << endl;
 	}
 
@@ -33,7 +33,7 @@ void generator(char* fileName, int maxY, int updateRange, int weightRange)
 			e = s;
 			s = temp;
 		}
-		int w = rand() % weightRange;
+		int w = 0;// rand() % weightRange;
 		X x;
 		x._id = i;
 		x._s._value = s;
@@ -368,4 +368,51 @@ void formPlaxtonMWM(const vector<X> vX, const vector<Y> vY, vector<X>& vZ, vecto
 			break;
 		}
 	}
+}
+
+
+
+
+void getGloverInfo(vector<X> allX, vector<Y> allY, vector<Edge>& M)
+{
+	M.clear();
+	vector<X> XX = allX;
+	vector<Y> YY = allY;
+	M.clear();
+	sort(YY.begin(), YY.end(), cmpYValueInc);
+
+	for (int i = 0; i < YY.size(); i++)
+	{
+		vector<X> selectedX;
+		for (int j = 0; j < XX.size(); j++)
+		{
+			if (XX[j]._s <= YY[i] && XX[j]._e >= YY[i])
+			{
+				selectedX.push_back(XX[j]);
+			}
+		}
+
+		if (selectedX.size() == 0)
+		{
+			continue;
+		}
+		else
+		{
+			X x = selectedX[0];
+			for (int j = 0; j < selectedX.size(); j++)
+			{
+				if (cmpXEndInc(selectedX[j], x))
+				{
+					x = selectedX[j];
+				}
+			}
+			Edge e;
+			e.x = x;
+			e.y = YY[i];
+			M.push_back(e);
+			vector<X>::iterator it = find(XX.begin(), XX.end(), x);
+			XX.erase(it);
+		}
+	}
+	return;
 }

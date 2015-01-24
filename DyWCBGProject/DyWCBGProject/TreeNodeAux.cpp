@@ -3,8 +3,20 @@
 TreeNode::TreeNode(vector<Y> vY)
 {
 	_Y = vY;
+	_YBase = vY;
 	_IY = vY;
 	_IYS = vY;
+	_rightChild = NULL;
+	_leftChild = NULL;
+	_parent = NULL;
+}
+
+TreeNode::TreeNode(vector<Y> YBase, vector<Y> canY)
+{
+	_Y = canY;
+	_YBase = YBase;
+	_IY = canY;
+	_IYS = canY;
 	_rightChild = NULL;
 	_leftChild = NULL;
 	_parent = NULL;
@@ -13,14 +25,14 @@ TreeNode::TreeNode(vector<Y> vY)
 
 Y TreeNode::maxY()
 {
-	sort(_Y.begin(), _Y.end(), cmpYValueDec);
-	return _Y[0];
+	sort(_YBase.begin(), _YBase.end(), cmpYValueDec);
+	return _YBase[0];
 }
 
 Y TreeNode::minY()
 {
-	sort(_Y.begin(), _Y.end(), cmpYValueInc);
-	return _Y[0];
+	sort(_YBase.begin(), _YBase.end(), cmpYValueInc);
+	return _YBase[0];
 }
 
 vector<Y> TreeNode::getYL()
@@ -425,6 +437,8 @@ void TreeNode::splitNode(X x)
 	//split
 	vector<Y> leftVecY, rightVecY;
 	int i = 0;
+	vector<Y> leftVecYBase, rightVecYBase;
+
 
 	// split the values into two, one to left leaf, the other to right leaf
 	while (_Y[i]._value < x._s)
@@ -437,9 +451,23 @@ void TreeNode::splitNode(X x)
 		rightVecY.push_back(_Y[i]);
 		i++;
 	}
+
+
+	i = 0;
+	while (_YBase[i]._value < x._s)
+	{
+		leftVecYBase.push_back(_YBase[i]);
+		i++;
+	}
+	while (i < _YBase.size())
+	{
+		rightVecYBase.push_back(_YBase[i]);
+		i++;
+	}
+
 	// build the structure of the triple first, then insert the new variable
-	TreeNode* leftChild = new TreeNode(leftVecY);
-	TreeNode* rightChild = new TreeNode(rightVecY);
+	TreeNode* leftChild = new TreeNode(leftVecYBase, leftVecY);
+	TreeNode* rightChild = new TreeNode(rightVecYBase, rightVecY);
 
 	//leftChild->_X = _X;	// copy the variables from the parent
 
