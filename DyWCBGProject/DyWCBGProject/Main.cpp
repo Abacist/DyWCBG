@@ -9,7 +9,7 @@
 using namespace std;
 
 const int mY =				6;
-const int ur =				12;
+const int ur =				10;
 int verifyEachUpdate =		0;		//0 not verify, !0 verify
 int gen =					0;
 int breakID =				3;

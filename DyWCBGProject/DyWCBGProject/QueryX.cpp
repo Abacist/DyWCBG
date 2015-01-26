@@ -179,6 +179,8 @@ Y TreeNode::searchXMateRecur(X x, int delta)//delta means how many X need to be 
 		Y midY = _leftChild->maxY();
 		if (x._e <= midY)
 		{
+			int tempL = getCount(x, delta);
+			delta = delta + tempL;
 			return _leftChild->searchXMateRecur(x, delta);
 		}
 		else if (x._s > midY)
@@ -322,56 +324,102 @@ int TreeNode::getCount(X x, int delta)
 			FXL.push_back(_MXLG[i]);
 		}
 	}
-	Y ys = minY();
-	if (x._s < ys)
+	//Y ys = minY();
+	//if (x._s < ys)
+	//{
+	//	for (int i = 0; i < FXL.size(); i++)
+	//	{
+	//		if (cmpXEndInc(x, FXL[i]))
+	//		{
+	//			continue;
+	//		}
+	//		else
+	//		{
+	//			Y bPre = betaPreforZLG(FXL[i]._s);
+	//			if (bPre == ys)
+	//			{
+	//				result++;
+	//			}
+	//		}
+	//	}
+	//}
+	//else
+	//{
+	//	//Y bPreX = betaPreforZLG(x._s);
+	//	//Y bPostX = betaPostforZLG(x._s);
+	//	int left = 0;
+	//	for (int i = 0; i < FXL.size(); i++)
+	//	{
+	//		if (FXL[i]._s < x._s)
+	//		{
+	//			if (cmpXEndInc(FXL[i], x))
+	//			{
+	//				result++;
+	//			}
+	//			else
+	//			{
+	//				left++;
+	//			}
+	//		}
+	//		else if (FXL[i]._s == x._s)
+	//		{
+	//			if (FXL[i]._id < x._s)
+	//			{
+	//				result++;
+	//			}
+	//		}
+	//		/*if (FXL[i]._s < bPreX)
+	//		{
+	//			if (cmpXEndInc(x, FXL[i]))
+	//			{
+	//				leftbPre++;
+	//			}
+	//			else
+	//			{
+	//				result++;
+	//			}
+	//		}
+	//		else
+	//		{
+	//			Y bPreF = betaPreforZLG(FXL[i]._s);
+	//			if (bPreF == bPreX && cmpXEndInc(FXL[i], x))
+	//			{
+	//				result++;
+	//			}
+	//		}*/
+	//	}
+	//	if (delta < left)
+	//	{
+	//		result += (left - delta);
+	//	}
+	//}
+	TreeNode* p = this;
+	while (p->_parent != NULL)
 	{
-		for (int i = 0; i < FXL.size(); i++)
+		p = p->_parent;
+	}
+	Y mY;
+	for (int i = 0; i < p->_MatchingG.size(); i++)
+	{
+		if (p->_MatchingG[i].x == x)
 		{
-			if (cmpXEndInc(x, FXL[i]))
+			mY = p->_MatchingG[i].y;
+		}
+	}
+	for (int i = 0; i < FXL.size(); i++)
+	{
+		for (int j = 0; j < p->_MatchingG.size(); j++)
+		{
+			if (p->_MatchingG[j].x == FXL[i])
 			{
-				continue;
-			}
-			else
-			{
-				Y bPre = betaPreforZLG(FXL[i]._s);
-				if (bPre == ys)
+				if (p->_MatchingG[j].y < mY)
 				{
 					result++;
 				}
 			}
 		}
 	}
-	else
-	{
-		Y bPreX = betaPreforZLG(x._s);
-		int leftbPre = 0;
-		for (int i = 0; i < FXL.size(); i++)
-		{
-			if (FXL[i]._s < bPreX)
-			{
-				if (cmpXEndInc(x, FXL[i]))
-				{
-					leftbPre++;
-				}
-				else
-				{
-					result++;
-				}
-			}
-			else
-			{
-				Y bPreF = betaPreforZLG(FXL[i]._s);
-				if (bPreF == bPreX && cmpXEndInc(FXL[i], x))
-				{
-					result++;
-				}
-			}
-		}
-		if (delta < leftbPre)
-		{
-			result += (leftbPre - delta);
-		}
-	}
+	
 	return result;
 
 }
