@@ -265,7 +265,7 @@ bool cmpYWeightInc(Y y1, Y y2)
 	{
 		return true;
 	}
-	if (y1._w == y2._w && y1._value < y2._value)
+	if (y1._w == y2._w && y1._value > y2._value)
 	{
 		return true;
 	}

@@ -67,6 +67,7 @@ void Tree::constructGloverInfo(TreeNode* curNode, vector<X> MX, vector<Y> MY)
 			tempMX.push_back(MX[i]);
 		}
 	}
+	curNode->_MXG = tempMX;
 	getGloverInfo(tempMX, MY, curNode->_MatchingG, curNode->_IYG);
 	Y midY;
 	if (curNode->_leftChild != NULL)
@@ -162,11 +163,11 @@ Y TreeNode::searchXMateRecur(X x, int delta)//delta means how many X need to be 
 	{
 		//directly to a leaf
 		vector<X> leftMX;
-		for (int i = 0; i < _MX.size(); i++)
+		for (int i = 0; i < _MXG.size(); i++)
 		{
-			if (cmpXEndInc(_MX[i], x))
+			if (cmpXEndInc(_MXG[i], x))
 			{
-				leftMX.push_back(_MX[i]);
+				leftMX.push_back(_MXG[i]);
 			}
 		}
 		int leftAll = leftMX.size() + delta;
@@ -178,105 +179,378 @@ Y TreeNode::searchXMateRecur(X x, int delta)//delta means how many X need to be 
 		Y midY = _leftChild->maxY();
 		if (x._e <= midY)
 		{
-			//in left
 			return _leftChild->searchXMateRecur(x, delta);
 		}
 		else if (x._s > midY)
 		{
-			//in right
-			vector<X> TMGLeft;
-			for (int i = 0; i < _leftChild->_TXG.size(); i++)//all _TXG must be matched in curNode
+			//must match in right
+			vector<X> FXL, FXR;
+			for (int i = 0; i < _MXLG.size(); i++)
 			{
-				if (cmpXEndInc(_leftChild->_TXG[i], x))
+				if (_MXLG[i]._e > midY)
 				{
-					TMGLeft.push_back(_leftChild->_TXG[i]);
+					FXL.push_back(_MXLG[i]);
 				}
 			}
-			delta = delta + (int)TMGLeft.size() - (int)_leftChild->_IYG.size();
+			for (int i = 0; i < _MXRG.size(); i++)
+			{
+				if (_MXRG[i]._s <= midY)
+				{
+					FXR.push_back(_MXRG[i]);
+				}
+			}
+			int tempL = 0;
+			for (int i = 0; i < FXL.size(); i++)
+			{
+				if (cmpXEndInc(x, FXL[i]))
+				{
+					tempL++;
+				}
+			}
+			int tempR = 0;
+			for (int i = 0; i < FXR.size(); i++)
+			{
+				if (cmpXEndInc(FXR[i], x))
+				{
+					tempR++;
+				}
+			}
+			delta = delta - (int)_IYLG.size() - tempL;
 			if (delta < 0)
 			{
-				//throw new exception();
 				delta = 0;
 			}
+			delta = delta + tempR;
 			return _rightChild->searchXMateRecur(x, delta);
 		}
 		else
 		{
-			//x.s<=midY && x.e>midY, belongs to L.TXG
-			vector<X> TMGLeft;
-			for (int i = 0; i < _leftChild->_TXG.size(); i++)//all _TXG must be matched in curNode
+			if (find(_MXRG.begin(), _MXRG.end(), x) != _MXRG.end())
 			{
-				if (cmpXEndInc(_leftChild->_TXG[i], x))
+				vector<X> FXL, FXR;
+				for (int i = 0; i < _MXLG.size(); i++)
 				{
-					TMGLeft.push_back(_leftChild->_TXG[i]);
+					if (_MXLG[i]._e > midY)
+					{
+						FXL.push_back(_MXLG[i]);
+					}
 				}
-			}
-			delta = delta + (int)TMGLeft.size() - (int)_leftChild->_IYG.size();
-			if (delta < 0)
-			{
-				//match in left
-				return _leftChild->searchXMateRecurL(x);//delta = 0
+				for (int i = 0; i < _MXRG.size(); i++)
+				{
+					if (_MXRG[i]._s <= midY)
+					{
+						FXR.push_back(_MXRG[i]);
+					}
+				}
+				int tempL = 0;
+				for (int i = 0; i < FXL.size(); i++)
+				{
+					if (cmpXEndInc(x, FXL[i]))
+					{
+						tempL++;
+					}
+				}
+				int tempR = 0;
+				for (int i = 0; i < FXR.size(); i++)
+				{
+					if (cmpXEndInc(FXR[i], x))
+					{
+						tempR++;
+					}
+				}
+				delta = delta - (int)_IYLG.size() - tempL;
+				if (delta < 0)
+				{
+					delta = 0;
+				}
+				delta = delta + tempR;
+				return _rightChild->searchXMateRecur(x, delta);
 			}
 			else
 			{
-				//match in right
-				return _rightChild->searchXMateRecur(x, delta);
+				vector<X> leftMX;
+				for (int i = 0; i < _MXLG.size(); i++)
+				{
+					if (cmpXEndInc(_MXLG[i], x))
+					{
+						leftMX.push_back(_MXLG[i]);
+					}
+				}
+				int temp = (int)leftMX.size() + delta;
+				if (temp >= _leftChild->_YG.size())
+				{
+					vector<X> FXR;
+					for (int i = 0; i < _MXRG.size(); i++)
+					{
+						if (_MXRG[i]._s <= midY)
+						{
+							FXR.push_back(_MXRG[i]);
+						}
+					}
+					int tempR = 0;
+					for (int i = 0; i < FXR.size(); i++)
+					{
+						if (cmpXEndInc(FXR[i], x))
+						{
+							tempR++;
+						}
+					}
+					return _rightChild->searchXMateRecur(x, temp - (int)_leftChild->_YG.size() + tempR);
+				}
+				else
+				{
+					int tempL = getCount(x, delta);
+					delta = delta + tempL;
+					return _leftChild->searchXMateRecur(x, delta);
+				}
 			}
-
 		}
 	}
 }
 
 
 
-Y TreeNode::searchXMateRecurL(X x, int delta)//delta is the count of x need to be in the right of x
+int TreeNode::getCount(X x, int delta)
 {
-	for (int i = 0; i < _parent->_MatchingG.size(); i++)
+	int result = 0;
+	Y midY = _leftChild->maxY();
+	vector<X> FXL;
+	for (int i = 0; i < _MXLG.size(); i++)
 	{
-		if (_parent->_MatchingG[i].x == x)
+		if (_MXLG[i]._e > midY && _MXLG[i] != x)
 		{
-			return _parent->_MatchingG[i].y;
+			FXL.push_back(_MXLG[i]);
 		}
 	}
-}
-
-
-Y TreeNode::searchXMateRecurR(X x, int delta)//delta is the count of x need to be in the left of x
-{
-	if (_leftChild == NULL)
+	Y ys = minY();
+	if (x._s < ys)
 	{
-		//a leaf
-		vector<X> leftMXG;
-		for (int i = 0; i < _XG.size(); i++)
+		for (int i = 0; i < FXL.size(); i++)
 		{
-			if (cmpXEndInc(_XG[i], x))
+			if (cmpXEndInc(x, FXL[i]))
 			{
-				leftMXG.push_back(_XG[i]);
+				continue;
+			}
+			else
+			{
+				Y bPre = betaPreforZLG(FXL[i]._s);
+				if (bPre == ys)
+				{
+					result++;
+				}
 			}
 		}
-		int leftAll = leftMXG.size() + delta;
-		sort(_YG.begin(), _YG.end(), cmpYValueInc);
-		return _YG[leftAll];
 	}
 	else
 	{
-		vector<X> TMGLeft;
-		for (int i = 0; i < _leftChild->_TXG.size(); i++)//all _TXG must be matched in curNode
+		Y bPreX = betaPreforZLG(x._s);
+		int leftbPre = 0;
+		for (int i = 0; i < FXL.size(); i++)
 		{
-			if (cmpXEndInc(_leftChild->_TXG[i], x))
+			if (FXL[i]._s < bPreX)
 			{
-				TMGLeft.push_back(_leftChild->_TXG[i]);
+				if (cmpXEndInc(x, FXL[i]))
+				{
+					leftbPre++;
+				}
+				else
+				{
+					result++;
+				}
+			}
+			else
+			{
+				Y bPreF = betaPreforZLG(FXL[i]._s);
+				if (bPreF == bPreX && cmpXEndInc(FXL[i], x))
+				{
+					result++;
+				}
 			}
 		}
-		if (delta + (int)TMGLeft.size() - (int)_leftChild->_IYG.size() < 0)
+		if (delta < leftbPre)
 		{
-			delta = delta + TMGLeft.size();
-			return _leftChild->searchXMateRecurR(x, delta);
+			result += (leftbPre - delta);
+		}
+	}
+	return result;
+
+}
+
+
+//bPre must exists in DW case
+Y TreeNode::betaPreforZLG(Y y)
+{
+	vector<X> tempZ;
+	vector<Y> tempY;
+	tempZ = _MXLG;
+	tempY = _MYLG;
+	if (tempY.empty())
+	{
+		return y;
+	}
+	else
+	{
+		sort(tempY.begin(), tempY.end(), cmpYValueDec);
+		sort(tempZ.begin(), tempZ.end(), cmpXBeginDec);
+		Y tY;
+		//will not be empty
+		if (y > tempY[0])
+		{
+			return y;
 		}
 		else
 		{
-			delta = delta + (int)TMGLeft.size() - (int)_leftChild->_IYG.size();
-			return _rightChild->searchXMateRecurR(x, delta);
+			tY = tempZ[tempZ.size() - 1]._s;
+
+			int i = 0;
+			while (i + 1 <= tempY.size())
+			{
+				if (tempY[i] >= y)
+				{
+					i++;
+				}
+				else
+				{
+					break;
+				}
+			}
+			i--;
+			//found the maxmal Y0 such that Y0>=y
+
+
+			for (; i + 2 <= tempY.size(); i++)
+			{
+				if (tempZ[i]._s > tempY[i + 1])
+				{
+					//tight
+					tY = tempZ[i]._s;
+					break;
+				}
+			}
+			//else tY keeps tempZ[tempZ.size() - 1]._s;	
+
+			if (tY > y)
+			{
+				tY = y;
+			}
+			return tY;
+
 		}
 	}
+
 }
+
+//must exists
+Y TreeNode::betaPostforZLG(Y y)
+{
+	vector<X> tempZ;
+	vector<Y> tempY;
+	tempZ = _MXLG;
+	tempY = _MYLG;
+	if (tempY.empty())
+	{
+		/*throw new exception();*/
+		return y;
+	}
+	else
+	{
+		sort(tempY.begin(), tempY.end(), cmpYValueDec);
+		sort(tempZ.begin(), tempZ.end(), cmpXBeginDec);
+		Y tY;
+		if (y >= tempY[0])
+		{
+			return y;
+		}
+		else
+		{
+			tY = tempY[0];
+			if (find(tempY.begin(), tempY.end(), y) == tempY.end())
+			{
+				tempY.push_back(y);
+				sort(tempY.begin(), tempY.end(), cmpYValueDec);
+			}
+			int i = 0;
+			int tightIndex = -1;
+			while (true)
+			{
+				if (tempY[i] == y)
+				{
+					i--;
+					break;
+				}
+				else
+				{
+					if (tempZ[i]._s > tempY[i + 1])
+					{
+						//tight
+						tightIndex = i;
+						//break;
+					}
+					i++;
+				}
+			}
+
+			if (tightIndex != -1)
+			{
+				tY = tempY[tightIndex + 1];
+			}
+			return tY;
+
+		}
+	}
+
+}
+
+
+//Y TreeNode::searchXMateRecurL(X x, int delta)//delta is the count of x need to be in the right of x
+//{
+//	for (int i = 0; i < _parent->_MatchingG.size(); i++)
+//	{
+//		if (_parent->_MatchingG[i].x == x)
+//		{
+//			return _parent->_MatchingG[i].y;
+//		}
+//	}
+//}
+//
+//
+//Y TreeNode::searchXMateRecurR(X x, int delta)//delta is the count of x need to be in the left of x
+//{
+//	if (_leftChild == NULL)
+//	{
+//		//a leaf
+//		vector<X> leftMXG;
+//		for (int i = 0; i < _XG.size(); i++)
+//		{
+//			if (cmpXEndInc(_XG[i], x))
+//			{
+//				leftMXG.push_back(_XG[i]);
+//			}
+//		}
+//		int leftAll = leftMXG.size() + delta;
+//		sort(_YG.begin(), _YG.end(), cmpYValueInc);
+//		return _YG[leftAll];
+//	}
+//	else
+//	{
+//		vector<X> TMGLeft;
+//		for (int i = 0; i < _leftChild->_TXG.size(); i++)//all _TXG must be matched in curNode
+//		{
+//			if (cmpXEndInc(_leftChild->_TXG[i], x))
+//			{
+//				TMGLeft.push_back(_leftChild->_TXG[i]);
+//			}
+//		}
+//		if (delta + (int)TMGLeft.size() - (int)_leftChild->_IYG.size() < 0)
+//		{
+//			delta = delta + TMGLeft.size();
+//			return _leftChild->searchXMateRecurR(x, delta);
+//		}
+//		else
+//		{
+//			delta = delta + (int)TMGLeft.size() - (int)_leftChild->_IYG.size();
+//			return _rightChild->searchXMateRecurR(x, delta);
+//		}
+//	}
+//}
+

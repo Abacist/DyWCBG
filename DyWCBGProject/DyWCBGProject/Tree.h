@@ -4,6 +4,24 @@
 class TreeNode
 {
 public:
+	//======================for Query========================
+	vector<Y> _YG;
+	vector<X> _XG;
+	vector<Y> _IYG;
+	vector<Y> _IYLG;
+	vector<Y> _IYRG;
+	vector<Y> _MYG;
+	vector<Y> _MYLG;
+	vector<Y> _MYRG;
+	vector<X> _MXG;
+	vector<X> _MXLG;
+	vector<X> _MXRG;
+	vector<X> _TXG;
+	vector<Edge> _MatchingG;
+	//============================================
+
+
+
 	vector<X> _X;
 	vector<Y> _Y;
 
@@ -22,20 +40,7 @@ public:
 	
 	vector<Y> _IY;
 
-	//======================for Query========================
-	vector<Y> _YG;
-	vector<X> _XG;
-	vector<Y> _IYG;
-	vector<Y> _IYLG;
-	vector<Y> _IYRG;
-	vector<Y> _MYG;
-	vector<Y> _MYLG;
-	vector<Y> _MYRG;
-	//vector<X> _MXG; == XG
-	vector<X> _MXLG;
-	vector<X> _MXRG;
-	vector<X> _TXG;
-	vector<Edge> _MatchingG;
+	
 
 
 
@@ -55,6 +60,9 @@ public:
 	Y alphaPreforZR(Y y);
 	Y betaPreforZL(Y y);
 	Y betaPostforZL(Y y);
+
+	Y betaPreforZLG(Y y);
+	Y betaPostforZLG(Y y);
 
 	Y betaPreforZ(Y y);
 
@@ -93,9 +101,10 @@ public:
 
 
 	//========================for query X=========================
-	Y searchXMateRecur(X x, int delta = 0);
+	Y searchXMateRecur(X x, int delta = 0);/*
 	Y searchXMateRecurL(X x, int delta = 0);
-	Y searchXMateRecurR(X x, int delta = 0);
+	Y searchXMateRecurR(X x, int delta = 0);*/
+	int getCount(X x, int delta);
 	//==========================================================
 
 	int verifyNodeInvariants();

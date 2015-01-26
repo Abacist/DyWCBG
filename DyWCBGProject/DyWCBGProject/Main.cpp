@@ -8,9 +8,9 @@
 
 using namespace std;
 
-const int mY =				8;
-const int ur =				15;
-int verifyEachUpdate =		1;		//0 not verify, !0 verify
+const int mY =				6;
+const int ur =				12;
+int verifyEachUpdate =		0;		//0 not verify, !0 verify
 int gen =					0;
 int breakID =				3;
 
@@ -142,13 +142,9 @@ int main()
 
 		cout << "constructing glover info..." << endl;
 		pTree->constructGloverInfo();
-
 		for (int i = 0; i < pTree->_root->_MX.size(); i++)
 		{
-			if (pTree->_root->_MX[i]._id == 14)
-			{
-				int a = 0;
-			}
+			
 			Y y1 = pTree->queryXMate(pTree->_root->_MX[i]._id);
 			Y y0;
 			for (int j = 0; j < pTree->_root->_MatchingG.size(); j++)
