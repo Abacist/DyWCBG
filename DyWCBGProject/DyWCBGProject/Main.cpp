@@ -8,10 +8,10 @@
 
 using namespace std;
 
-const int mY =				10;
+const int mY =				6;
 const int ur =				10;
 int verifyEachUpdate =		1;		//0 not verify, !0 verify
-int gen =					1;
+int gen =					0;
 int breakID =				3;
 
 void generator(char* fileName = "input.txt", int MaxY = mY, int UpdateRange = ur, int WeightRange = 1000);
@@ -145,10 +145,6 @@ int main()
 
 		for (int i = 0; i < pTree->_root->_MX.size(); i++)
 		{
-			if (pTree->_root->_MX[i]._id == 14)
-			{
-				int a = 0;
-			}
 			Y y1 = pTree->queryXMate(pTree->_root->_MX[i]._id);
 			Y y0;
 			for (int j = 0; j < pTree->_root->_MatchingG.size(); j++)
@@ -169,11 +165,36 @@ int main()
 				throw new exception();
 			}
 		}
+		cout << "Query X pass" << endl;
+		//getchar();
+
+		for (int i = 0; i < pTree->_root->_MY.size(); i++)
+		{
+			X x1 = pTree->queryYMate(pTree->_root->_MY[i]._value);
+			X x0;
+			for (int j = 0; j < pTree->_root->_MatchingG.size(); j++)
+			{
+				if (pTree->_root->_MatchingG[j].y._value == pTree->_root->_MY[i]._value)
+				{
+					x0 = pTree->_root->_MatchingG[j].x;
+					break;
+				}
+
+			}
+			if (x0 == x1)
+			{
+				cout << "Query Y: " << pTree->_root->_MY[i]._value << "\tpass" << endl;
+			}
+			else
+			{
+				throw new exception();
+			}
+		}
 
 
 
 		//output for extended verify
-		ofstream out("base.txt");
+		/*ofstream out("base.txt");
 		out << pTree->_root->_Y.size() << endl;
 		for (int i = 0; i < pTree->_root->_Y.size(); i++)
 		{
@@ -203,7 +224,7 @@ int main()
 
 
 
-		getchar();
+		getchar();*/
 
 	}
 End:

@@ -54,6 +54,16 @@ void Tree::constructGloverInfo(TreeNode* curNode, vector<X> MX, vector<Y> MY)
 {
 	curNode->_YG = MY;
 	curNode->_XG = MX;
+	curNode->_IYG.clear();
+	curNode->_IYLG.clear();
+	curNode->_IYRG.clear();
+	curNode->_MXG.clear();
+	curNode->_MXLG.clear();
+	curNode->_MXRG.clear();
+	curNode->_MYG.clear();
+	curNode->_MYLG.clear();
+	curNode->_MYRG.clear();
+	curNode->_TXG.clear();
 	vector<X> tempMX, tempTX;
 	Y ye = curNode->maxY();
 	for (int i = 0; i < MX.size(); i++)
