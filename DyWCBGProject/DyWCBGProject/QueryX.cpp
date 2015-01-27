@@ -196,6 +196,7 @@ Y TreeNode::searchXMateRecur(X x, int delta)//delta means how many X need to be 
 				leftMX.push_back(_MXG[i]);
 			}
 		}
+		sort(_YG.begin(), _YG.end(), cmpYValueInc);
 		return _YG[delta + leftMX.size()];
 	}
 	else

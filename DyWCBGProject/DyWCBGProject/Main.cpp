@@ -8,10 +8,10 @@
 
 using namespace std;
 
-const int mY =				6;
-const int ur =				10;
-int verifyEachUpdate =		1;		//0 not verify, !0 verify
-int gen =					0;
+const int mY =				20;
+const int ur =				50;
+int verifyEachUpdate =		0;		//0 not verify, !0 verify
+int gen =					1;
 int breakID =				3;
 
 void generator(char* fileName = "input.txt", int MaxY = mY, int UpdateRange = ur, int WeightRange = 1000);
@@ -140,9 +140,9 @@ int main()
 		//pTree->printRMY();
 		//getchar();
 
-		cout << "constructing glover info..." << endl;
+		//cout << "constructing glover info..." << endl;
+		
 		pTree->constructGloverInfo();
-
 		for (int i = 0; i < pTree->_root->_MX.size(); i++)
 		{
 			Y y1 = pTree->queryXMate(pTree->_root->_MX[i]._id);
@@ -168,8 +168,10 @@ int main()
 		cout << "Query X pass" << endl;
 		//getchar();
 
+		//pTree->constructGloverInfo();
 		for (int i = 0; i < pTree->_root->_MY.size(); i++)
 		{
+			cout << pTree->_root->_MY[i]._value << " will be query" << endl;
 			X x1 = pTree->queryYMate(pTree->_root->_MY[i]._value);
 			X x0;
 			for (int j = 0; j < pTree->_root->_MatchingG.size(); j++)
@@ -181,7 +183,9 @@ int main()
 				}
 
 			}
-			if (x0 == x1)
+			//cout << x0._e._value << endl;
+
+			if (x0._e == x1._e)
 			{
 				cout << "Query Y: " << pTree->_root->_MY[i]._value << "\tpass" << endl;
 			}

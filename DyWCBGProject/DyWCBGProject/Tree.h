@@ -145,6 +145,9 @@ public:
 	Y queryXMate(int id);
 	X queryYMate(int value);
 
+	Y getYMateEnd(Y y);
+	Y getTestXMate(X x);
+
 	
 
 	TreeNode* locateLeaf(X x);
