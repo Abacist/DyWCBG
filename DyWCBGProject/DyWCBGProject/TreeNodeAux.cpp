@@ -770,21 +770,21 @@ void TreeNode::splitNode(X x)
 }
 
 
-void TreeNode::getMXMY(vector<X> & MXS, vector<Y> & MYS)
-{
-	MXS.clear();
-	MYS.clear();
-	vector<X> XS;
-	Y maxy = maxY();
-	for (int i = 0; i < _X.size(); i++)
-	{
-		if (_X[i]._e <= maxy)
-		{
-			XS.push_back(_X[i]);
-		}
-	}
-	formPlaxtonMWM(XS, _Y, MXS, MYS);
-}
+//void TreeNode::getMXMY(vector<X> & MXS, vector<Y> & MYS)
+//{
+//	MXS.clear();
+//	MYS.clear();
+//	vector<X> XS;
+//	Y maxy = maxY();
+//	for (int i = 0; i < _X.size(); i++)
+//	{
+//		if (_X[i]._e <= maxy)
+//		{
+//			XS.push_back(_X[i]);
+//		}
+//	}
+//	formPlaxtonMWM(XS, _Y, MXS, MYS);
+//}
 
 //vector<X> TreeNode::getStableReachableSet(X x)
 //{
@@ -900,120 +900,120 @@ void TreeNode::getMXMY(vector<X> & MXS, vector<Y> & MYS)
 //	}
 //}
 
-void TreeNode::getCompensableYLForce(X x, vector<Y> & CIYL, vector<Y> & CIYR, vector<Y> & CIYL2)
-{
-	CIYL.clear();
-	CIYR.clear();
-	CIYL2.clear();
-	vector<X> tempX;
-	vector<Y> tempY;
-	//CIYL directly
-	tempX = _MXL;
-	tempX.push_back(x);
-	tempY = _MYL;
-	vector<Y> IYL = getIYL();
-	for (int i = 0; i < IYL.size(); i++)
-	{
-		vector<Y> tempY1 = tempY;
-		tempY1.push_back(IYL[i]);
-		vector<X> vZ;
-		formGloverMatching(tempX, tempY1, vZ);
-		if (vZ.size() == tempY1.size())
-		{
-			CIYL.push_back(IYL[i]);
-		}
-	}
-	//CIYR
-	tempX = _MX;
-	tempX.push_back(x);
-	tempY = _MY;
-	vector<Y> IYR = getIYR();
-	for (int i = 0; i < IYR.size(); i++)
-	{
-		vector<Y> tempY1 = tempY;
-		tempY1.push_back(IYR[i]);
-		vector<X> vZ;
-		formGloverMatching(tempX, tempY1, vZ);
-		if (vZ.size() == tempY1.size())
-		{
-			CIYR.push_back(IYR[i]);
-		}
-	}
-	//CIYL1
-	tempX = _MX;
-	tempX.push_back(x);
-	tempY = _MY;
-	vector<Y> IYL2 = getIYL();
-	for (int i = 0; i < IYL2.size(); i++)
-	{
-		vector<Y> tempY1 = tempY;
-		tempY1.push_back(IYL2[i]);
-		vector<X> vZ;
-		formGloverMatching(tempX, tempY1, vZ);
-		if (vZ.size() == tempY1.size())
-		{
-			if (find(CIYL.begin(), CIYL.end(), IYL2[i]) == CIYL.end())
-			{
-				CIYL2.push_back(IYL2[i]);
-			}
-		}
-	}
-}
+//void TreeNode::getCompensableYLForce(X x, vector<Y> & CIYL, vector<Y> & CIYR, vector<Y> & CIYL2)
+//{
+//	CIYL.clear();
+//	CIYR.clear();
+//	CIYL2.clear();
+//	vector<X> tempX;
+//	vector<Y> tempY;
+//	//CIYL directly
+//	tempX = _MXL;
+//	tempX.push_back(x);
+//	tempY = _MYL;
+//	vector<Y> IYL = getIYL();
+//	for (int i = 0; i < IYL.size(); i++)
+//	{
+//		vector<Y> tempY1 = tempY;
+//		tempY1.push_back(IYL[i]);
+//		vector<X> vZ;
+//		formGloverMatching(tempX, tempY1, vZ);
+//		if (vZ.size() == tempY1.size())
+//		{
+//			CIYL.push_back(IYL[i]);
+//		}
+//	}
+//	//CIYR
+//	tempX = _MX;
+//	tempX.push_back(x);
+//	tempY = _MY;
+//	vector<Y> IYR = getIYR();
+//	for (int i = 0; i < IYR.size(); i++)
+//	{
+//		vector<Y> tempY1 = tempY;
+//		tempY1.push_back(IYR[i]);
+//		vector<X> vZ;
+//		formGloverMatching(tempX, tempY1, vZ);
+//		if (vZ.size() == tempY1.size())
+//		{
+//			CIYR.push_back(IYR[i]);
+//		}
+//	}
+//	//CIYL1
+//	tempX = _MX;
+//	tempX.push_back(x);
+//	tempY = _MY;
+//	vector<Y> IYL2 = getIYL();
+//	for (int i = 0; i < IYL2.size(); i++)
+//	{
+//		vector<Y> tempY1 = tempY;
+//		tempY1.push_back(IYL2[i]);
+//		vector<X> vZ;
+//		formGloverMatching(tempX, tempY1, vZ);
+//		if (vZ.size() == tempY1.size())
+//		{
+//			if (find(CIYL.begin(), CIYL.end(), IYL2[i]) == CIYL.end())
+//			{
+//				CIYL2.push_back(IYL2[i]);
+//			}
+//		}
+//	}
+//}
 
-int TreeNode::verifyCIY(X ix, vector<Y> CIYL, vector<Y> CIYR, vector<Y> CIYL2)
-{
-	vector<Y> CIYLCorrect, CIYRCorrect, CIYL2Correct;
-	getCompensableYLForce(ix, CIYLCorrect, CIYRCorrect, CIYL2Correct);
-	if (CIYLCorrect.size() != CIYL.size())
-	{
-		return 1;
-	}
-	else
-	{
-		sort(CIYLCorrect.begin(), CIYLCorrect.end(), cmpYValueInc);
-		sort(CIYL.begin(), CIYL.end(), cmpYValueInc);
-		for (int i = 0; i < CIYL.size(); i++)
-		{
-			if (CIYL[i] != CIYLCorrect[i])
-			{
-				return 1;
-			}
-		}
-	}
-	if (CIYRCorrect.size() != CIYR.size())
-	{
-		return 2;
-	}
-	else
-	{
-		sort(CIYRCorrect.begin(), CIYRCorrect.end(), cmpYValueInc);
-		sort(CIYR.begin(), CIYR.end(), cmpYValueInc);
-		for (int i = 0; i < CIYR.size(); i++)
-		{
-			if (CIYR[i] != CIYRCorrect[i])
-			{
-				return 2;
-			}
-		}
-	}
-	if (CIYL2Correct.size() != CIYL2.size())
-	{
-		return 3;
-	}
-	else
-	{
-		sort(CIYL2Correct.begin(), CIYL2Correct.end(), cmpYValueInc);
-		sort(CIYL2.begin(), CIYL2.end(), cmpYValueInc);
-		for (int i = 0; i < CIYL2.size(); i++)
-		{
-			if (CIYL2[i] != CIYL2Correct[i])
-			{
-				return 3;
-			}
-		}
-	}
-	return 0;
-}
+//int TreeNode::verifyCIY(X ix, vector<Y> CIYL, vector<Y> CIYR, vector<Y> CIYL2)
+//{
+//	vector<Y> CIYLCorrect, CIYRCorrect, CIYL2Correct;
+//	getCompensableYLForce(ix, CIYLCorrect, CIYRCorrect, CIYL2Correct);
+//	if (CIYLCorrect.size() != CIYL.size())
+//	{
+//		return 1;
+//	}
+//	else
+//	{
+//		sort(CIYLCorrect.begin(), CIYLCorrect.end(), cmpYValueInc);
+//		sort(CIYL.begin(), CIYL.end(), cmpYValueInc);
+//		for (int i = 0; i < CIYL.size(); i++)
+//		{
+//			if (CIYL[i] != CIYLCorrect[i])
+//			{
+//				return 1;
+//			}
+//		}
+//	}
+//	if (CIYRCorrect.size() != CIYR.size())
+//	{
+//		return 2;
+//	}
+//	else
+//	{
+//		sort(CIYRCorrect.begin(), CIYRCorrect.end(), cmpYValueInc);
+//		sort(CIYR.begin(), CIYR.end(), cmpYValueInc);
+//		for (int i = 0; i < CIYR.size(); i++)
+//		{
+//			if (CIYR[i] != CIYRCorrect[i])
+//			{
+//				return 2;
+//			}
+//		}
+//	}
+//	if (CIYL2Correct.size() != CIYL2.size())
+//	{
+//		return 3;
+//	}
+//	else
+//	{
+//		sort(CIYL2Correct.begin(), CIYL2Correct.end(), cmpYValueInc);
+//		sort(CIYL2.begin(), CIYL2.end(), cmpYValueInc);
+//		for (int i = 0; i < CIYL2.size(); i++)
+//		{
+//			if (CIYL2[i] != CIYL2Correct[i])
+//			{
+//				return 3;
+//			}
+//		}
+//	}
+//	return 0;
+//}
 
 
 int TreeNode::verifyNodeInvariants()

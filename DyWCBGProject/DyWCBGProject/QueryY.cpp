@@ -110,9 +110,51 @@ X Tree::queryYMate(int value)
 	{
 		
 		y = *it;
-		X x;
-		x._e = getYMateEnd(y);
-		return x;
+		Y end = getYMateEnd(y);
+		vector<X> allX;
+		for (int i = 0; i < _root->_MX.size(); i++)
+		{
+			if (_root->_MX[i]._e == end)
+			{
+				allX.push_back(_root->_MX[i]);
+			}
+		}
+		sort(allX.begin(), allX.end(), cmpXEndInc);
+		int a = 0, b = allX.size() - 1;
+		Y ma, mb;
+		ma = queryXMate(allX[a]._id);
+		mb = queryXMate(allX[b]._id);
+		if (ma == y)
+		{
+			return allX[a];
+		}
+		if (mb == y)
+		{
+			return allX[b];
+		}
+		while (true)
+		{
+			int mid = (a + b) / 2;
+			Y myMid = queryXMate(allX[mid]._id);
+			if (myMid == y)
+			{
+				return allX[mid];
+			}
+			else
+			{
+				if (myMid < y)
+				{
+					a = mid;
+				}
+				else
+				{
+					b = mid;
+				}
+			}
+		}
+		/*X x;
+		x._e = end;
+		return x;*/
 	}
 }
 
@@ -135,7 +177,7 @@ Y Tree::getYMateEnd(Y y)
 	{
 		testX._e._value = ub;
 		Y my = getTestXMate(testX);
-		cout << "X end: " << testX._e._value << "\tMate: " << my._value << endl;
+		//cout << "X end: " << testX._e._value << "\tMate: " << my._value << endl;
 		if (!my.empty() && my <= y)
 		{
 			int diff = ub - lb + 1;

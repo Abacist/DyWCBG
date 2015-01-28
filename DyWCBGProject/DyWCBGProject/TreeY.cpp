@@ -9,6 +9,10 @@ void Tree::insertYinTree(Y y)
 		//already inserted
 		return;
 	}
+	if (y._value == 4)
+	{
+		int a = 1;
+	}
 	TreeNode* curNode = locateLeaf(y);
 	Msg msg = curNode->insertYintoLeaf(y);
 	int flag = 0;

@@ -8,8 +8,8 @@
 
 using namespace std;
 
-const int mY =				20;
-const int ur =				50;
+const int mY =				30;
+const int ur =				100;
 int verifyEachUpdate =		0;		//0 not verify, !0 verify
 int gen =					1;
 int breakID =				3;
@@ -143,6 +143,8 @@ int main()
 		//cout << "constructing glover info..." << endl;
 		
 		pTree->constructGloverInfo();
+		pTree->constructGloverInfo();
+		pTree->constructGloverInfo();
 		for (int i = 0; i < pTree->_root->_MX.size(); i++)
 		{
 			Y y1 = pTree->queryXMate(pTree->_root->_MX[i]._id);
@@ -165,37 +167,37 @@ int main()
 				throw new exception();
 			}
 		}
-		cout << "Query X pass" << endl;
+		//cout << "Query X pass" << endl;
+		////getchar();
+
+		////pTree->constructGloverInfo();
+		//for (int i = 0; i < pTree->_root->_MY.size(); i++)
+		//{
+		//	//cout << pTree->_root->_MY[i]._value << " will be query" << endl;
+		//	X x1 = pTree->queryYMate(pTree->_root->_MY[i]._value);
+		//	X x0;
+		//	for (int j = 0; j < pTree->_root->_MatchingG.size(); j++)
+		//	{
+		//		if (pTree->_root->_MatchingG[j].y._value == pTree->_root->_MY[i]._value)
+		//		{
+		//			x0 = pTree->_root->_MatchingG[j].x;
+		//			break;
+		//		}
+
+		//	}
+		//	//cout << x0._e._value << endl;
+
+		//	if (x0._e == x1._e)
+		//	{
+		//		cout << "Query Y: " << pTree->_root->_MY[i]._value << "\tpass" << endl;
+		//	}
+		//	else
+		//	{
+		//		throw new exception();
+		//	}
+		//}
+
 		//getchar();
-
-		//pTree->constructGloverInfo();
-		for (int i = 0; i < pTree->_root->_MY.size(); i++)
-		{
-			cout << pTree->_root->_MY[i]._value << " will be query" << endl;
-			X x1 = pTree->queryYMate(pTree->_root->_MY[i]._value);
-			X x0;
-			for (int j = 0; j < pTree->_root->_MatchingG.size(); j++)
-			{
-				if (pTree->_root->_MatchingG[j].y._value == pTree->_root->_MY[i]._value)
-				{
-					x0 = pTree->_root->_MatchingG[j].x;
-					break;
-				}
-
-			}
-			//cout << x0._e._value << endl;
-
-			if (x0._e == x1._e)
-			{
-				cout << "Query Y: " << pTree->_root->_MY[i]._value << "\tpass" << endl;
-			}
-			else
-			{
-				throw new exception();
-			}
-		}
-
-
 
 		//output for extended verify
 		/*ofstream out("base.txt");

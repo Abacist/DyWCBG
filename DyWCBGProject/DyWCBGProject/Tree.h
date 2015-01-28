@@ -4,6 +4,22 @@
 class TreeNode
 {
 public:
+	//======================for Query========================
+	vector<Y> _YG;
+	vector<X> _XG;
+	vector<Y> _IYG;
+	vector<Y> _IYLG;
+	vector<Y> _IYRG;
+	vector<Y> _MYG;
+	vector<Y> _MYLG;
+	vector<Y> _MYRG;
+	vector<X> _MXG;
+	vector<X> _MXLG;
+	vector<X> _MXRG;
+	vector<X> _TXG;
+	vector<Edge> _MatchingG;
+
+	//==================for update==========================
 	vector<X> _X;
 	vector<Y> _Y;
 
@@ -22,20 +38,10 @@ public:
 	
 	vector<Y> _IY;
 
-	//======================for Query========================
-	vector<Y> _YG;
-	vector<X> _XG;
-	vector<Y> _IYG;
-	vector<Y> _IYLG;
-	vector<Y> _IYRG;
-	vector<Y> _MYG;
-	vector<Y> _MYLG;
-	vector<Y> _MYRG;
-	vector<X> _MXG; 
-	vector<X> _MXLG;
-	vector<X> _MXRG;
-	vector<X> _TXG;
-	vector<Edge> _MatchingG;
+	vector<Y> _newMY;
+	vector<X> _newIX;
+
+	
 
 
 
@@ -118,11 +124,11 @@ public:
 	
 
 	//no need
-	int verifyCIY(X ix, vector<Y> CIYL, vector<Y> CIYR, vector<Y> CIYL2);
+	/*int verifyCIY(X ix, vector<Y> CIYL, vector<Y> CIYR, vector<Y> CIYL2);
 
 	void getMXMY(vector<X> & MXS, vector<Y> & MYS);
 
-	void getCompensableYLForce(X x, vector<Y> & CIYL, vector<Y> & CIYR, vector<Y> & CIYL2);
+	void getCompensableYLForce(X x, vector<Y> & CIYL, vector<Y> & CIYR, vector<Y> & CIYL2);*/
 
 	//vector<X> getReachableSetinLeftPart(X x);
 
