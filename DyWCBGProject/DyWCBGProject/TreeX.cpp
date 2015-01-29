@@ -189,7 +189,7 @@ Msg TreeNode::insertXintoNodeL(Msg msg)
 		}
 	}
 
-
+	updateNewIXMY(msg, rMsg);
 	return rMsg;
 	
 }
@@ -437,7 +437,7 @@ Msg TreeNode::insertXintoNodeR(Msg msg)
 			}
 		}
 	}
-
+	updateNewIXMY(msg, rMsg);
 	return rMsg;
 }
 
@@ -531,4 +531,78 @@ void TreeNode::performXESEE(Msg & rMsg)
 			_IY.erase(find(_IY.begin(), _IY.end(), cY));
 		}
 	}
+}
+
+
+void TreeNode::updateNewIXMY(Msg oldMsg, Msg curMsg)
+{
+	if (!curMsg._aX.empty())
+	{
+		//insert X
+		if (!oldMsg._aTX.empty() && !curMsg._aTX.empty())
+		{
+			return;
+		}
+		else if (!oldMsg._aTX.empty() && curMsg._aTX.empty())
+		{
+			if (!curMsg._aMY.empty())
+			{
+				_newMY.push_back(curMsg._aMY);
+			}
+			else
+			{
+				_newIX.push_back(curMsg._aIX);
+			}
+		}
+		else if (oldMsg._aTX.empty() && curMsg._aTX.empty())
+		{
+			if (!oldMsg._aMY.empty() && !curMsg._aMY.empty())
+			{
+				_newMY.push_back(curMsg._aMY);
+				_newMY.erase(find(_newMY.begin(), _newMY.end(), oldMsg._aMY));
+			}
+			else if (!oldMsg._aMY.empty() && curMsg._aMY.empty())
+			{
+				_newIX.push_back(curMsg._aIX);
+				_newMY.erase(find(_newMY.begin(), _newMY.end(), oldMsg._aMY));
+			}
+			else if (oldMsg._aMY.empty() && curMsg._aMY.empty())
+			{
+				_newIX.push_back(curMsg._aIX);
+				_newIX.erase(find(_newIX.begin(), _newIX.end(), oldMsg._aIX));
+			}
+			else
+			{
+				throw new exception();
+			}
+		}
+		else
+		{
+			throw new exception();
+		}
+	}
+	else if (!curMsg._aY.empty())
+	{
+		//insert Y
+		if (!oldMsg._bIX.empty() && !curMsg._bIX.empty())
+		{
+			_newIX.push_back(oldMsg._bIX);
+			_newIX.erase(find(_newIX.begin(), _newIX.end(), curMsg._bIX));
+		}
+		else if (oldMsg._bIX.empty() && !curMsg._bIX.empty())
+		{
+			_newMY.push_back(oldMsg._bMY);
+			_newIX.erase(find(_newIX.begin(), _newIX.end(), curMsg._bIX));
+		}
+		else if (oldMsg._bIX.empty() && curMsg._bIX.empty())
+		{
+			_newMY.push_back(oldMsg._bMY);
+			_newMY.erase(find(_newMY.begin(), _newMY.end(), curMsg._bMY));
+		}
+		else
+		{
+			throw new exception();
+		}
+	}
+
 }

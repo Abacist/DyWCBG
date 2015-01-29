@@ -1318,5 +1318,53 @@ int TreeNode::verifyNodeInvariants()
 		
 	}
 
+	{
+		if (_leftChild != NULL)
+		{
+			vector<X> childIX = _leftChild->_IX;
+			for (int i = 0; i < _rightChild->_IX.size(); i++) childIX.push_back(_rightChild->_IX[i]);
+			for (int i = 0; i < _newIX.size(); i++) childIX.push_back(_newIX[i]);
+			vector<X> pIX = _IX;
+			if (childIX.size() != pIX.size())
+			{
+				return 12;
+			}
+			else
+			{
+				sort(childIX.begin(), childIX.end(), cmpXID);
+				sort(pIX.begin(), pIX.end(), cmpXID);
+				for (int i = 0; i < pIX.size(); i++)
+				{
+					if (childIX[i] != pIX[i])
+					{
+						return 12;
+					}
+				}
+			}
+
+			vector<Y> childMY = _leftChild->_MY;
+			for (int i = 0; i < _rightChild->_MY.size(); i++) childMY.push_back(_rightChild->_MY[i]);
+			for (int i = 0; i < _newMY.size(); i++) childMY.push_back(_newMY[i]);
+			vector<Y> pMY = _MY;
+			if (childMY.size() != pMY.size())
+			{
+				return 13;
+			}
+			else
+			{
+				sort(childMY.begin(), childMY.end(), cmpYValueInc);
+				sort(pMY.begin(), pMY.end(), cmpYValueInc);
+				for (int i = 0; i < pMY.size(); i++)
+				{
+					if (childMY[i] != pMY[i])
+					{
+						return 13;
+					}
+				}
+			}
+		}
+		
+	}
+
 	return 0;
 }

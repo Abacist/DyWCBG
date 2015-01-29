@@ -9,10 +9,6 @@ void Tree::insertYinTree(Y y)
 		//already inserted
 		return;
 	}
-	if (y._value == 4)
-	{
-		int a = 1;
-	}
 	TreeNode* curNode = locateLeaf(y);
 	Msg msg = curNode->insertYintoLeaf(y);
 	int flag = 0;
@@ -279,6 +275,7 @@ Msg TreeNode::insertYintoNodeL(Msg msg)
 			_IX.erase(find(_IX.begin(), _IX.end(), cX));
 		}
 	}
+	updateNewIXMY(msg, rMsg);
 	return rMsg;
 }
 
@@ -403,6 +400,6 @@ Msg TreeNode::insertYintoNodeR(Msg msg)
 
 	}
 
-
+	updateNewIXMY(msg, rMsg);
 	return rMsg;
 }

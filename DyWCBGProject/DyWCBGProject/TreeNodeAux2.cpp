@@ -98,7 +98,21 @@ void TreeNode::getYReachableSetinInternalNode(Msg msg, vector<X> & CIX, vector<Y
 		t1 = betaPostforZL(fX._s);
 	}
 	
-	for (int i = 0; i < _IX.size(); i++)
+	vector<X> CIXBaseTest = _newIX;
+	if (!msg._bIX.empty())
+	{
+		CIXBaseTest.push_back(msg._bIX);
+	}
+	vector<Y> RMYBaseTest = _newMY;
+	if (!msg._aIY.empty() && msg._aIY != msg._aY)
+	{
+		RMYBaseTest.push_back(msg._aIY);
+	}
+
+	RMYBase = RMYBaseTest;
+	CIXBase = CIXBaseTest;
+
+	/*for (int i = 0; i < _IX.size(); i++)
 	{
 		if (find(_leftChild->_IX.begin(), _leftChild->_IX.end(), _IX[i]) == _leftChild->_IX.end() &&
 			find(_rightChild->_IX.begin(), _rightChild->_IX.end(), _IX[i]) == _rightChild->_IX.end())
@@ -114,6 +128,41 @@ void TreeNode::getYReachableSetinInternalNode(Msg msg, vector<X> & CIX, vector<Y
 			RMYBase.push_back(_MY[i]);
 		}
 	}
+
+
+	if (RMYBase.size() != RMYBaseTest.size())
+	{
+		throw new exception();
+	}
+	else
+	{
+		sort(RMYBase.begin(), RMYBase.end(), cmpYValueInc);
+		sort(RMYBaseTest.begin(), RMYBaseTest.end(), cmpYValueInc);
+		for (int i = 0; i < RMYBase.size(); i++)
+		{
+			if (RMYBase[i] != RMYBaseTest[i])
+			{
+				throw new exception();
+			}
+		}
+	}
+
+	if (CIXBase.size() != CIXBaseTest.size())
+	{
+		throw new exception();
+	}
+	else
+	{
+		sort(CIXBase.begin(), CIXBase.end(), cmpXID);
+		sort(CIXBaseTest.begin(), CIXBaseTest.end(), cmpXID);
+		for (int i = 0; i < CIXBaseTest.size(); i++)
+		{
+			if (CIXBase[i] != CIXBaseTest[i])
+			{
+				throw new exception();
+			}
+		}
+	}*/
 
 	for (int i = 0; i < CIXBase.size(); i++)
 	{

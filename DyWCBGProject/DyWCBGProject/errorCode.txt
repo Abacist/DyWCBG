@@ -9,6 +9,8 @@
 9. Swap in MXL and MXR
 10. P.X = L.X + R.X
 11. P.Y = L.Y + R.Y
+12. newIX
+12. newMY
 
 
 

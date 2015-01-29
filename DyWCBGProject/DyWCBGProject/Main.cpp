@@ -8,11 +8,11 @@
 
 using namespace std;
 
-const int mY =				30;
+const int mY =				50;
 const int ur =				100;
 int verifyEachUpdate =		0;		//0 not verify, !0 verify
 int gen =					1;
-int breakID =				3;
+int breakID =				2;
 
 void generator(char* fileName = "input.txt", int MaxY = mY, int UpdateRange = ur, int WeightRange = 1000);
 
@@ -143,8 +143,6 @@ int main()
 		//cout << "constructing glover info..." << endl;
 		
 		pTree->constructGloverInfo();
-		pTree->constructGloverInfo();
-		pTree->constructGloverInfo();
 		for (int i = 0; i < pTree->_root->_MX.size(); i++)
 		{
 			Y y1 = pTree->queryXMate(pTree->_root->_MX[i]._id);
@@ -167,6 +165,10 @@ int main()
 				throw new exception();
 			}
 		}
+
+
+
+
 		//cout << "Query X pass" << endl;
 		////getchar();
 

@@ -80,6 +80,7 @@ public:
 	//=======================================================
 
 	X getMineBackXfromMXR(Y bpost, Y apost);
+	void updateNewIXMY(Msg oldMsg, Msg curMsg);
 
 	//===================for insertY=========================
 	void getThreeTightPoints(Y iy, Y & bPost, Y & bPost1, Y & aPre);
