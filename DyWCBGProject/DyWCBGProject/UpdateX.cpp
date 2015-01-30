@@ -36,12 +36,23 @@ void Tree::insertXinTree(X x)
 			if (flag)
 			{
 				throw new exception();
+				int a = 0;
 			}
 		}
 		child = curNode;
 		curNode = curNode->_parent;
 	}
 	updateQueryInfo(msg);
+	if (verifyEachUpdate)
+	{
+		TreeNode* errorNode;
+		verifyGloverInfo(flag, errorNode);
+		if (flag)
+		{
+			throw new exception();
+			int a = 0;
+		}
+	}
 	if (verifyEachUpdate)
 	{
 		cout << "X id:\t" << x._id << "\tpass" << endl;

@@ -14,16 +14,29 @@ void generator(char* fileName, int maxY, int updateRange, int weightRange)
 	GetLocalTime(&lpsystime);
 	srand(lpsystime.wMinute * 1000 + lpsystime.wMilliseconds);
 
-	out << 1 << endl;
+	/*out << 1 << endl;
 	Y y0;
 	y0._value = 1;
 	y0._w = rand() % weightRange;
 	curExistsY.push_back(y0);
-	out << y0._value << " " << y0._w << endl;
+	out << y0._value << " " << y0._w << endl;*/
+
+	out << maxY << endl;
+	for (int i = 1; i <= maxY; i++)
+	{
+		Y y0;
+		y0._value = i;
+		y0._w = rand() % weightRange;
+		curExistsY.push_back(y0);
+		out << y0._value << " " << y0._w << endl;
+	}
+
+
 	/*y0._value = maxY;
 	y0._w = rand() % weightRange;
 	curExistsY.push_back(y0);
 	out << y0._value << " " << y0._w << endl;*/
+
 
 	int i = 1;
 	while (i<=updateRange)
@@ -422,7 +435,7 @@ bool setEqual(vector<X> x1, vector<X> x2)
 	else
 	{
 
-		sort(x1.begin(), x1.begin(), cmpXID);
+		sort(x1.begin(), x1.end(), cmpXID);
 		sort(x2.begin(), x2.end(), cmpXID);
 		for (int i = 0; i < x1.size(); i++)
 		{
@@ -444,7 +457,7 @@ bool setEqual(vector<Y> x1, vector<Y> x2)
 	else
 	{
 
-		sort(x1.begin(), x1.begin(), cmpYValueInc);
+		sort(x1.begin(), x1.end(), cmpYValueInc);
 		sort(x2.begin(), x2.end(), cmpYValueInc);
 		for (int i = 0; i < x1.size(); i++)
 		{

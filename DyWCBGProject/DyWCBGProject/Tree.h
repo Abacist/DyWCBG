@@ -145,7 +145,7 @@ public:
 
 	//auxilary
 	X getMaxEndXinMXRG(X x);
-	Y getMaxYinMYRG(Y y);
+	Y getMaxYinMYRG(Y y = *(new Y()));
 	vector<Y> getNewMYRG();
 	//==============================================================
 

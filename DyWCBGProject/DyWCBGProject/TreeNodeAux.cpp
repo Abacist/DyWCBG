@@ -855,6 +855,20 @@ void TreeNode::splitNode(X x)
 			throw new exception();
 			int a = 1;
 		}
+
+		
+		//flag1 = verifyGSets();
+		//flag2 = _leftChild->verifyGSets();
+		//if (flag2 == 0 && flag1 == 0)
+		//{
+		//	//cout << i << " pass!" << endl;
+		//}
+		//else
+		//{
+		//	throw new exception();
+		//	int a = 1;
+		//}
+
 		
 	}
 

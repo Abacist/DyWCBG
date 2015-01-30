@@ -1,5 +1,7 @@
 #include"Tree.h"
 
+extern int verifyEachUpdate;
+
 Y TreeNode::betaPostforZRG(Y y)
 {
 	vector<X> tempZ;
@@ -158,7 +160,23 @@ void Tree::insertXinTreeG(X x)
 
 void Tree::deleteXfromTreeG(X x)
 {
-
+	TreeNode* curNode = locateLeaf(x);
+	Msg msg = curNode->deleteXfromLeafG(x);
+	TreeNode* child = curNode;
+	curNode = curNode->_parent;
+	while (curNode != NULL)
+	{
+		if (child == curNode->_leftChild)
+		{
+			msg = curNode->deleteXfromNodeLG(msg);
+		}
+		else
+		{
+			msg = curNode->deleteXfromNodeRG(msg);
+		}
+		child = curNode;
+		curNode = curNode->_parent;
+	}
 }
 
 
@@ -186,7 +204,7 @@ void Tree::insertYinTreeG(Y y)
 
 void Tree::deleteYfromTreeG(Y y)
 {
-
+	
 }
 
 
@@ -266,7 +284,11 @@ int TreeNode::verifyGSets()
 	{
 		return 1;
 	}
-	if (!setEqual(_MXLG, _MXRGTest))
+	if (!setEqual(_MXLG, _MXLGTest))
+	{
+		return 1;
+	}
+	if (!setEqual(_MXRG, _MXRGTest))
 	{
 		return 1;
 	}

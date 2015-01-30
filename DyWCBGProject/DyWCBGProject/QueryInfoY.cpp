@@ -1,9 +1,13 @@
 #include"Tree.h"
 
+
 Y TreeNode::getMaxYinMYRG(Y y)
 {
 	vector<Y> tempY = _MYRG;
-	tempY.push_back(y);
+	if (!y.empty())
+	{
+		tempY.push_back(y);
+	}
 	sort(tempY.begin(), tempY.end(), cmpYValueInc);
 	return tempY[tempY.size() - 1];
 }

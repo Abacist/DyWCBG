@@ -205,6 +205,260 @@ Msg TreeNode::insertXintoNodeRG(Msg msg)
 }
 
 
+Msg TreeNode::deleteXfromLeafG(X x)
+{
+	Msg rMsg;
+	rMsg._bX = x;
+	_XG.erase(find(_XG.begin(), _XG.end(), x));
+
+	if (find(_TXG.begin(), _TXG.end(), x) != _TXG.end())
+	{
+		rMsg._bTX = x;
+		_TXG.erase(find(_TXG.begin(), _TXG.end(), x));
+	}
+	else
+	{
+		if (!_TXG.empty())
+		{
+			sort(_TXG.begin(), _TXG.end(), cmpXEndInc);
+			X cX = _TXG[0];
+
+			rMsg._bMX = x;
+			_MXG.erase(find(_MXG.begin(), _MXG.end(), x));
+			_MXRG.erase(find(_MXRG.begin(), _MXRG.end(), x));
+
+			rMsg._aMX = cX;
+			_MXG.push_back(cX);
+			_MXRG.push_back(cX);
+
+			rMsg._bTX = cX;
+			_TXG.erase(find(_TXG.begin(), _TXG.end(), cX));
+		}
+		else
+		{
+			Y maxY = getMaxYinMYRG();
+
+			rMsg._bMX = x;
+			_MXG.erase(find(_MXG.begin(), _MXG.end(), x));
+			_MXRG.erase(find(_MXRG.begin(), _MXRG.end(), x));
+
+			rMsg._bMY = maxY;
+			_MYG.erase(find(_MYG.begin(), _MYG.end(), maxY));
+			_MYRG.erase(find(_MYRG.begin(), _MYRG.end(), maxY));
+
+			rMsg._aIY = maxY;
+			_IYG.push_back(maxY);
+		}
+	}
+	return rMsg;
+}
+
+
+Msg TreeNode::deleteXfromNodeLG(Msg msg)
+{
+	Msg rMsg;
+	rMsg._bX = msg._bX;
+	_XG.erase(find(_XG.begin(), _XG.end(), msg._bX));
+	if (find(_TXG.begin(), _TXG.end(), msg._bX) != _TXG.end())
+	{
+		rMsg._bTX = msg._bX;
+		_TXG.erase(find(_TXG.begin(), _TXG.end(), msg._bX));
+	}
+	else
+	{
+		if (find(_MXLG.begin(), _MXLG.end(), msg._bX) != _MXLG.end())
+		{
+			//match in left
+			if (msg._bMY.empty() == false)
+			{
+				rMsg._bMX = msg._bX;
+				_MXG.erase(find(_MXG.begin(), _MXG.end(), msg._bX));
+				_MXLG.erase(find(_MXLG.begin(), _MXLG.end(), msg._bX));
+
+				rMsg._bMY = msg._bMY;
+				_MYG.erase(find(_MYG.begin(), _MYG.end(), msg._bMY));
+				_MYLG.erase(find(_MYLG.begin(), _MYLG.end(), msg._bMY));
+
+				rMsg._aIY = msg._bMY;
+				_IYG.push_back(msg._bMY);
+			}
+			else
+			{
+				if (find(_MXRG.begin(), _MXRG.end(), msg._bTX) != _MXRG.end())
+				{
+					sort(_MYRG.begin(), _MYRG.end(), cmpYValueInc);
+					Y bPost = betaPostforZRG(_MYRG[0]);
+					vector<X> CTXG;
+					for (int i = 0; i < _TXG.size(); i++)
+					{
+						if (_TXG[i]._s <= bPost)
+						{
+							CTXG.push_back(_TXG[i]);
+						}
+					}
+					if (CTXG.empty())
+					{
+						vector<Y> newMYRG = getNewMYRG();
+						sort(newMYRG.begin(), newMYRG.end(), cmpYValueDec);
+
+						rMsg._bMX = msg._bX;
+						_MXG.erase(find(_MXG.begin(), _MXG.end(), msg._bX));
+						_MXLG.erase(find(_MXLG.begin(), _MXLG.end(), msg._bX));
+						_MXLG.push_back(msg._bTX);
+						_MXRG.erase(find(_MXRG.begin(), _MXRG.end(), msg._bTX));
+
+						rMsg._bMY = newMYRG[0];
+						_MYG.erase(find(_MYG.begin(), _MYG.end(), newMYRG[0]));
+						_MYRG.erase(find(_MYRG.begin(), _MYRG.end(), newMYRG[0]));
+
+						rMsg._aIY = newMYRG[0];
+						_IYG.push_back(newMYRG[0]);
+
+					}
+					else
+					{
+						sort(CTXG.begin(), CTXG.end(), cmpXEndInc);
+
+						rMsg._bMX = msg._bX;
+						_MXG.erase(find(_MXG.begin(), _MXG.end(), msg._bX));
+						_MXLG.erase(find(_MXLG.begin(), _MXLG.end(), msg._bX));
+						_MXLG.push_back(msg._bTX);
+						_MXRG.erase(find(_MXRG.begin(), _MXRG.end(), msg._bTX));
+
+						rMsg._aMX = CTXG[0];
+						_MXG.push_back(CTXG[0]);
+						_MXRG.push_back(CTXG[0]);
+
+						rMsg._bTX = CTXG[0];
+						_TXG.erase(find(_TXG.begin(), _TXG.end(), CTXG[0]));
+					}
+				}
+				else
+				{
+					rMsg._bMX = msg._bX;
+					_MXG.erase(find(_MXG.begin(), _MXG.end(), msg._bX));
+					_MXLG.erase(find(_MXLG.begin(), _MXLG.end(), msg._bX));
+
+					rMsg._aMX = msg._bTX;
+					_MXG.push_back(msg._bTX);
+					_MXLG.push_back(msg._bTX);
+
+					rMsg._bTX = msg._bTX;
+					_TXG.erase(find(_TXG.begin(), _TXG.end(), msg._bTX));
+				}
+			}
+		}
+		else
+		{
+			//match in right
+			sort(_MYRG.begin(), _MYRG.end(), cmpYValueInc);
+			Y bPost = betaPostforZRG(_MYRG[0]);
+			vector<X> CTXG;
+			for (int i = 0; i < _TXG.size(); i++)
+			{
+				if (_TXG[i]._s <= bPost)
+				{
+					CTXG.push_back(_TXG[i]);
+				}
+			}
+			if (CTXG.empty())
+			{
+				vector<Y> newMYRG = getNewMYRG();
+				sort(newMYRG.begin(), newMYRG.end(), cmpYValueDec);
+
+				rMsg._bMX = msg._bX;
+				_MXG.erase(find(_MXG.begin(), _MXG.end(), msg._bX));
+				_MXRG.erase(find(_MXRG.begin(), _MXRG.end(), msg._bX));
+
+				rMsg._bMY = newMYRG[0];
+				_MYG.erase(find(_MYG.begin(), _MYG.end(), newMYRG[0]));
+				_MYRG.erase(find(_MYRG.begin(), _MYRG.end(), newMYRG[0]));
+
+				rMsg._aIY = newMYRG[0];
+				_IYG.push_back(newMYRG[0]);
+			}
+			else
+			{
+				sort(CTXG.begin(), CTXG.end(), cmpXEndInc);
+
+				rMsg._bMX = msg._bX;
+				_MXG.erase(find(_MXG.begin(), _MXG.end(), msg._bX));
+				_MXRG.erase(find(_MXRG.begin(), _MXRG.end(), msg._bX));
+
+				rMsg._aMX = CTXG[0];
+				_MXG.push_back(CTXG[0]);
+				_MXRG.push_back(CTXG[0]);
+
+				rMsg._bTX = CTXG[0];
+				_TXG.erase(find(_TXG.begin(), _TXG.end(), CTXG[0]));
+
+			}
+		}
+	}
+
+	return rMsg;
+}
+
+Msg TreeNode::deleteXfromNodeRG(Msg msg)
+{
+	Msg rMsg;
+	rMsg._bX = msg._bX;
+	_XG.erase(find(_XG.begin(), _XG.end(), msg._bX));
+
+	if (find(_TXG.begin(), _TXG.end(), msg._bX) != _TXG.end())
+	{
+		rMsg._bTX = msg._bX;
+		_TXG.erase(find(_TXG.begin(), _TXG.end(), msg._bX));
+	}
+	else
+	{
+		Y bPost = betaPostforZRG(msg._bX._s);
+		vector<X> CTXG;
+		for (int i = 0; i < _TXG.size(); i++)
+		{
+			if (_TXG[i]._s <= bPost)
+			{
+				CTXG.push_back(_TXG[i]);
+			}
+		}
+
+		if (CTXG.empty() == false)
+		{
+			sort(CTXG.begin(), CTXG.end(), cmpXEndInc);
+
+			rMsg._bMX = msg._bX;
+			_MXG.erase(find(_MXG.begin(), _MXG.end(), msg._bX));
+			_MXRG.erase(find(_MXRG.begin(), _MXRG.end(), msg._bX));
+
+			rMsg._aMX = CTXG[0];
+			_MXG.push_back(CTXG[0]);
+			_MXRG.push_back(CTXG[0]);
+
+			rMsg._bTX = CTXG[0];
+			_TXG.erase(find(_TXG.begin(), _TXG.end(), CTXG[0]));
+		}
+		else
+		{
+			vector<Y> newMYRG = getNewMYRG();
+			newMYRG.push_back(msg._aY);
+			sort(newMYRG.begin(), newMYRG.end(), cmpYValueDec);
+
+			rMsg._bMX = msg._bX;
+			_MXG.erase(find(_MXG.begin(), _MXG.end(), msg._bX));
+			_MXRG.erase(find(_MXRG.begin(), _MXRG.end(), msg._bX));
+
+			rMsg._bMY = newMYRG[0];
+			_MYG.erase(find(_MYG.begin(), _MYG.end(), newMYRG[0]));
+			_MYRG.erase(find(_MYRG.begin(), _MYRG.end(), newMYRG[0]));
+
+			rMsg._aIY = newMYRG[0];
+			_IYG.push_back(newMYRG[0]);
+		}
+	}
+
+	return rMsg;
+}
+
 
 
 
