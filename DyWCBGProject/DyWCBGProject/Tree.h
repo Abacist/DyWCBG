@@ -8,8 +8,8 @@ public:
 	vector<Y> _YG;
 	vector<X> _XG;
 	vector<Y> _IYG;
-	vector<Y> _IYLG;
-	vector<Y> _IYRG;
+	//vector<Y> _IYLG;
+	//vector<Y> _IYRG;
 	vector<Y> _MYG;
 	vector<Y> _MYLG;
 	vector<Y> _MYRG;
@@ -17,7 +17,24 @@ public:
 	vector<X> _MXLG;
 	vector<X> _MXRG;
 	vector<X> _TXG;
+	//====================================================
+
+
+	//====================for Query Test=========================
+	vector<Y> _YGTest;
+	vector<X> _XGTest;
+	vector<Y> _IYGTest;
+	//vector<Y> _IYLG;
+	//vector<Y> _IYRG;
+	vector<Y> _MYGTest;
+	vector<Y> _MYLGTest;
+	vector<Y> _MYRGTest;
+	vector<X> _MXGTest;
+	vector<X> _MXLGTest;
+	vector<X> _MXRGTest;
+	vector<X> _TXGTest;
 	vector<Edge> _MatchingG;
+	//============================================================
 
 	//==================for update==========================
 	vector<X> _X;
@@ -40,7 +57,7 @@ public:
 
 	vector<Y> _newMY;
 	vector<X> _newIX;
-
+	//==========================================================
 	
 
 
@@ -52,6 +69,7 @@ public:
 
 
 	TreeNode(vector<Y>);	//init
+	TreeNode(vector<Y>, vector<Y>);
 
 	Y maxY();
 	Y minY();
@@ -63,6 +81,8 @@ public:
 	Y betaPostforZL(Y y);
 
 	Y betaPreforZ(Y y);
+
+	Y betaPostforZRG(Y y);
 
 	//===================for insertX==========================
 	void performXEEESEE(Msg & rMsg);//for msg from L
@@ -103,9 +123,37 @@ public:
 	Y searchXMateRecur(X x, int delta = 0);
 	//==========================================================
 
+
+
+	//========================for query info=========================
+
+	Msg insertXintoLeafG(X x);
+	Msg insertXintoNodeLG(Msg msg);
+	Msg insertXintoNodeRG(Msg msg);
+
+	Msg deleteXfromLeafG(X x);
+	Msg deleteXfromNodeLG(Msg msg);
+	Msg deleteXfromNodeRG(Msg msg);
+
+	Msg insertYintoLeafG(Y y);
+	Msg insertYintoNodeLG(Msg msg);
+	Msg insertYintoNodeRG(Msg msg);
+
+	Msg deleteYfromLeafG(Y y);
+	Msg deleteYfromNodeLG(Msg msg);
+	Msg deleteYfromNodeRG(Msg msg);
+
+	//auxilary
+	X getMaxEndXinMXRG(X x);
+	Y getMaxYinMYRG(Y y);
+	vector<Y> getNewMYRG();
+	//==============================================================
+
 	int verifyNodeInvariants();
 	void splitNode(X insertedX);
+	int verifyGSets();
 
+	//=========================for update=================================
 	Msg insertYintoLeaf(Y y);
 	Msg insertXintoLeaf(X x);
 
@@ -114,7 +162,7 @@ public:
 
 	Msg insertYintoNodeL(Msg msg);
 	Msg insertYintoNodeR(Msg msg);
-
+	//=======================================================================
 		
 	//lazy
 	vector<Y> getYL();
@@ -122,20 +170,10 @@ public:
 	vector<Y> getIYL();
 	vector<Y> getIYR();
 
-	
-
-	//no need
-	/*int verifyCIY(X ix, vector<Y> CIYL, vector<Y> CIYR, vector<Y> CIYL2);
-
-	void getMXMY(vector<X> & MXS, vector<Y> & MYS);
-
-	void getCompensableYLForce(X x, vector<Y> & CIYL, vector<Y> & CIYR, vector<Y> & CIYL2);*/
-
-	//vector<X> getReachableSetinLeftPart(X x);
-
-	//vector<X> getStableReachableSet(X x);
-
-	
+	vector<Y> getYLG();
+	vector<Y> getYRG();
+	vector<Y> getIYLG();
+	vector<Y> getIYRG();
 
 };
 
@@ -146,8 +184,19 @@ public:
 
 	Tree(vector<Y>);	// init
 
+	//=============================for update===============================
 	void insertXinTree(X x);
 	void insertYinTree(Y y);
+	//======================================================================
+
+
+	//=============================for query=================================
+	void updateQueryInfo(Msg msg);
+	void insertXinTreeG(X x);
+	void deleteXfromTreeG(X x);
+	void insertYinTreeG(Y y);
+	void deleteYfromTreeG(Y y);
+	//=====================================================================
 
 	Y queryXMate(int id);
 	X queryYMate(int value);
@@ -163,6 +212,9 @@ public:
 
 	void verifyInvariantsRecur(int& flag, TreeNode*& errorNode);
 	void verifyInvariantsRecur(int& flag, TreeNode*& errorNode, TreeNode* curRoot);
+
+	void verifyGloverInfo(int& flag, TreeNode*& errorNode);
+	void verifyGloverInfo(int& flag, TreeNode*& errorNode, TreeNode* curRoot);
 
 	void constructGloverInfo();
 	void constructGloverInfo(TreeNode* curRoot, vector<X> MX, vector<Y> MY);

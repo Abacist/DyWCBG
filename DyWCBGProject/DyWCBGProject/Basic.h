@@ -102,6 +102,10 @@ bool cmpXBeginDec(X, X);
 bool cmpXWeightInc(X x1, X x2);
 bool cmpXID(X x1, X x2);
 
+
+bool setEqual(vector<X>, vector<X>);
+bool setEqual(vector<Y>, vector<Y>);
+
 void formGloverMatching(const vector<X> vX, const vector<Y> vY, vector<X>& vZ);
 void formPlaxtonMWM(const vector<X> vX, const vector<Y> vY, vector<X>& vZ, vector<Y>& vMY);
 void getGloverInfo(vector<X> allX, vector<Y> allY, vector<Edge> & M, vector<Y> & IY);

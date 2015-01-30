@@ -35,12 +35,6 @@
     <ClCompile Include="TreeAux.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="TreeY.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="TreeX.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="TreeNodeAux2.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -48,6 +42,21 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="QueryY.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="QueryInfoX.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="QueryInfoY.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="UpdateX.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="UpdateY.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="TreeNodeAuxQuery.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

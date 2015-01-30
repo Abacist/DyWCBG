@@ -43,6 +43,7 @@ void Tree::insertYinTree(Y y)
 		child = curNode;
 		curNode = curNode->_parent;
 	}
+	updateQueryInfo(msg);
 	if (verifyEachUpdate)
 	{
 		cout << "Y id:\t" << y._value << "\tpass" << endl;

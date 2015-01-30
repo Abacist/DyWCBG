@@ -82,13 +82,16 @@
   <ItemGroup>
     <ClCompile Include="Basic.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="QueryInfoX.cpp" />
+    <ClCompile Include="QueryInfoY.cpp" />
     <ClCompile Include="QueryX.cpp" />
     <ClCompile Include="QueryY.cpp" />
     <ClCompile Include="TreeAux.cpp" />
     <ClCompile Include="TreeNodeAux.cpp" />
     <ClCompile Include="TreeNodeAux2.cpp" />
-    <ClCompile Include="TreeX.cpp" />
-    <ClCompile Include="TreeY.cpp" />
+    <ClCompile Include="TreeNodeAuxQuery.cpp" />
+    <ClCompile Include="UpdateX.cpp" />
+    <ClCompile Include="UpdateY.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -9,6 +9,17 @@ TreeNode::TreeNode(vector<Y> vY)
 	_parent = NULL;
 }
 
+TreeNode::TreeNode(vector<Y> vY, vector<Y> vYG)
+{
+	_Y = vY;
+	_IY = vY;
+	_YG = vYG;
+	_IYG = vYG;
+	_rightChild = NULL;
+	_leftChild = NULL;
+	_parent = NULL;
+}
+
 
 Y TreeNode::maxY()
 {
@@ -85,6 +96,72 @@ vector<Y> TreeNode::getIYR()
 		}
 	}
 	return IYR;
+}
+
+
+vector<Y> TreeNode::getYLG()
+{
+	vector<Y> YLG;
+	if (_leftChild != NULL)
+	{
+		Y midY = _rightChild->minY();
+		for (int i = 0; i < _YG.size(); i++)
+		{
+			if (_YG[i] < midY)
+			{
+				YLG.push_back(_YG[i]);
+			}
+		}
+	}
+	return YLG;
+}
+vector<Y> TreeNode::getYRG()
+{
+	vector<Y> YRG;
+	if (_leftChild != NULL)
+	{
+		Y midY = _rightChild->minY();
+		for (int i = 0; i < _YG.size(); i++)
+		{
+			if (_YG[i] >= midY)
+			{
+				YRG.push_back(_YG[i]);
+			}
+		}
+	}
+	else
+	{
+		YRG = _YG;
+	}
+	return YRG;
+}
+
+vector<Y> TreeNode::getIYLG()
+{
+	vector<Y> IYLG;
+	vector<Y> YLG = getYLG();
+	for (int i = 0; i < YLG.size(); i++)
+	{
+		if (find(_IYG.begin(), _IYG.end(), YLG[i]) != _IYG.end())
+		{
+			IYLG.push_back(YLG[i]);
+		}
+	}
+	return IYLG;
+}
+
+vector<Y> TreeNode::getIYRG()
+{
+	vector<Y> IYRG;
+	vector<Y> YRG = getYRG();
+	for (int i = 0; i < YRG.size(); i++)
+	{
+		if (find(_IYG.begin(), _IYG.end(), YRG[i]) != _IYG.end())
+		{
+			IYRG.push_back(YRG[i]);
+		}
+	}
+	return IYRG;
 }
 
 
@@ -707,23 +784,34 @@ Y TreeNode::getMinWeightRY(vector<Y> RMY)
 void TreeNode::splitNode(X x)
 {
 	//split
-	vector<Y> leftVecY, rightVecY;
-	int i = 0;
+	vector<Y> leftVecY, rightVecY, leftG, rightG;
+	
+	for (int i = 0; i < _Y.size(); i++)
+	{
+		if (_Y[i] < x._s)
+		{
+			leftVecY.push_back(_Y[i]);
+		}
+		else
+		{
+			rightVecY.push_back(_Y[i]);
+		}
+	}
 
-	// split the values into two, one to left leaf, the other to right leaf
-	while (_Y[i]._value < x._s)
+	for (int i = 0; i < _YG.size(); i++)
 	{
-		leftVecY.push_back(_Y[i]);
-		i++;
+		if (_YG[i] < x._s)
+		{
+			leftG.push_back(_YG[i]);
+		}
+		else
+		{
+			rightG.push_back(_YG[i]);
+		}
 	}
-	while (i < _Y.size())
-	{
-		rightVecY.push_back(_Y[i]);
-		i++;
-	}
-	// build the structure of the triple first, then insert the new variable
-	TreeNode* leftChild = new TreeNode(leftVecY);
-	TreeNode* rightChild = new TreeNode(rightVecY);
+
+	TreeNode* leftChild = new TreeNode(leftVecY, leftG);
+	TreeNode* rightChild = new TreeNode(rightVecY, rightG);
 
 	//leftChild->_X = _X;	// copy the variables from the parent
 
@@ -734,6 +822,8 @@ void TreeNode::splitNode(X x)
 	//update sets
 
 	vector<X> allX = _X;
+	vector<X> allXG = _XG;
+
 	_X.clear();
 	_MX.clear();
 	_MXL.clear();
@@ -767,6 +857,25 @@ void TreeNode::splitNode(X x)
 		}
 		
 	}
+
+	_XG.clear();
+	_MXG.clear();
+	_MXLG.clear();
+	_MXRG.clear();
+	_TXG.clear();
+	_MYG.clear();
+	_MYLG.clear();
+	_MYRG.clear();
+	_IYG.clear();
+	_IYG = _YG;
+
+	for (int i = 0; i < allXG.size(); i++)
+	{
+
+		Msg msg = _leftChild->insertXintoLeafG(allXG[i]);
+		insertXintoNodeLG(msg);
+	}
+
 }
 
 

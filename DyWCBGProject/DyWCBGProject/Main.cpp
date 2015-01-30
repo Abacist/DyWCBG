@@ -8,11 +8,11 @@
 
 using namespace std;
 
-const int mY =				50;
-const int ur =				100;
-int verifyEachUpdate =		0;		//0 not verify, !0 verify
+const int mY =				10;
+const int ur =				3;
+int verifyEachUpdate =		1;		//0 not verify, !0 verify
 int gen =					1;
-int breakID =				2;
+int breakID =				3;
 
 void generator(char* fileName = "input.txt", int MaxY = mY, int UpdateRange = ur, int WeightRange = 1000);
 
@@ -128,12 +128,23 @@ int main()
 		pTree->verifyInvariantsRecur(flag, errorNode);
 		if (flag == 0)
 		{
+			//cout << "============================Case " << cases++ << " passed!" << endl;
+		}
+		else
+		{
+			cout << endl << endl << endl << endl << "Update not satify, please check! Error code: " << flag << endl;
+			throw new exception();
+		}
+
+		pTree->verifyGloverInfo(flag, errorNode);
+		if (flag == 0)
+		{
 			cout << "============================Case " << cases++ << " passed!" << endl;
 		}
 		else
 		{
-			cout << endl << endl << endl << endl << "Not satify, please check! Error code: " << flag << endl;
-			goto End;
+			cout << endl << endl << endl << endl << "Glover info not satify, please check!" << endl;
+			throw new exception();
 		}
 
 		//pTree->printMY();
@@ -142,7 +153,7 @@ int main()
 
 		//cout << "constructing glover info..." << endl;
 		
-		pTree->constructGloverInfo();
+		/*pTree->constructGloverInfo();
 		for (int i = 0; i < pTree->_root->_MX.size(); i++)
 		{
 			Y y1 = pTree->queryXMate(pTree->_root->_MX[i]._id);
@@ -164,7 +175,7 @@ int main()
 			{
 				throw new exception();
 			}
-		}
+		}*/
 
 
 
@@ -235,7 +246,6 @@ int main()
 		getchar();*/
 
 	}
-End:
 	return 0;
 }
 

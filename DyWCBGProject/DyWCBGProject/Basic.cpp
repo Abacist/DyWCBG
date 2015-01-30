@@ -265,7 +265,7 @@ bool cmpYWeightInc(Y y1, Y y2)
 	{
 		return true;
 	}
-	if (y1._w == y2._w && y1._value < y2._value)
+	if (y1._w == y2._w && y1._value > y2._value)
 	{
 		return true;
 	}
@@ -408,5 +408,51 @@ void formPlaxtonMWM(const vector<X> vX, const vector<Y> vY, vector<X>& vZ, vecto
 		{
 			break;
 		}
+	}
+}
+
+
+
+bool setEqual(vector<X> x1, vector<X> x2)
+{
+	if (x1.size() != x2.size())
+	{
+		return false;
+	}
+	else
+	{
+
+		sort(x1.begin(), x1.begin(), cmpXID);
+		sort(x2.begin(), x2.end(), cmpXID);
+		for (int i = 0; i < x1.size(); i++)
+		{
+			if (x1[i] != x2[i])
+			{
+				return false;
+			}
+		}
+		return true;
+	}
+}
+
+bool setEqual(vector<Y> x1, vector<Y> x2)
+{
+	if (x1.size() != x2.size())
+	{
+		return false;
+	}
+	else
+	{
+
+		sort(x1.begin(), x1.begin(), cmpYValueInc);
+		sort(x2.begin(), x2.end(), cmpYValueInc);
+		for (int i = 0; i < x1.size(); i++)
+		{
+			if (x1[i] != x2[i])
+			{
+				return false;
+			}
+		}
+		return true;
 	}
 }

@@ -41,6 +41,7 @@ void Tree::insertXinTree(X x)
 		child = curNode;
 		curNode = curNode->_parent;
 	}
+	updateQueryInfo(msg);
 	if (verifyEachUpdate)
 	{
 		cout << "X id:\t" << x._id << "\tpass" << endl;

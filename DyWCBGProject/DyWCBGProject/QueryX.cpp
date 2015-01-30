@@ -52,18 +52,18 @@ void Tree::constructGloverInfo()
 
 void Tree::constructGloverInfo(TreeNode* curNode, vector<X> MX, vector<Y> MY)
 {
-	curNode->_YG = MY;
-	curNode->_XG = MX;
-	curNode->_IYG.clear();
-	curNode->_IYLG.clear();
-	curNode->_IYRG.clear();
-	curNode->_MXG.clear();
-	curNode->_MXLG.clear();
-	curNode->_MXRG.clear();
-	curNode->_MYG.clear();
-	curNode->_MYLG.clear();
-	curNode->_MYRG.clear();
-	curNode->_TXG.clear();
+	curNode->_YGTest = MY;
+	curNode->_XGTest = MX;
+	curNode->_IYGTest.clear();
+//	curNode->_IYLG.clear();
+//	curNode->_IYRG.clear();
+	curNode->_MXGTest.clear();
+	curNode->_MXLGTest.clear();
+	curNode->_MXRGTest.clear();
+	curNode->_MYGTest.clear();
+	curNode->_MYLGTest.clear();
+	curNode->_MYRGTest.clear();
+	curNode->_TXGTest.clear();
 	vector<X> tempMX, tempTX;
 	Y ye = curNode->maxY();
 	for (int i = 0; i < MX.size(); i++)
@@ -83,18 +83,18 @@ void Tree::constructGloverInfo(TreeNode* curNode, vector<X> MX, vector<Y> MY)
 		vector<X> test = tempMX;
 		test.push_back(tempTX[i]);
 		vector<X> vZ;
-		formGloverMatching(test, curNode->_YG, vZ);
+		formGloverMatching(test, curNode->_YGTest, vZ);
 		if (vZ.size() == test.size())
 		{
 			tempMX.push_back(tempTX[i]);
 		}
 		else
 		{
-			curNode->_TXG.push_back(tempTX[i]);
+			curNode->_TXGTest.push_back(tempTX[i]);
 		}
 	}
-	curNode->_MXG = tempMX;
-	getGloverInfo(curNode->_MXG, curNode->_YG, curNode->_MatchingG, curNode->_IYG);
+	curNode->_MXGTest = tempMX;
+	getGloverInfo(curNode->_MXGTest, curNode->_YGTest, curNode->_MatchingG, curNode->_IYGTest);
 
 	Y midY;
 	if (curNode->_leftChild != NULL)
@@ -103,19 +103,19 @@ void Tree::constructGloverInfo(TreeNode* curNode, vector<X> MX, vector<Y> MY)
 	}
 	for (int i = 0; i < curNode->_MatchingG.size(); i++)
 	{
-		curNode->_MYG.push_back(curNode->_MatchingG[i].y);
+		curNode->_MYGTest.push_back(curNode->_MatchingG[i].y);
 		if (curNode->_MatchingG[i].y <= midY)
 		{
-			curNode->_MXLG.push_back(curNode->_MatchingG[i].x);
-			curNode->_MYLG.push_back(curNode->_MatchingG[i].y);
+			curNode->_MXLGTest.push_back(curNode->_MatchingG[i].x);
+			curNode->_MYLGTest.push_back(curNode->_MatchingG[i].y);
 		}
 		else
 		{
-			curNode->_MXRG.push_back(curNode->_MatchingG[i].x);
-			curNode->_MYRG.push_back(curNode->_MatchingG[i].y);
+			curNode->_MXRGTest.push_back(curNode->_MatchingG[i].x);
+			curNode->_MYRGTest.push_back(curNode->_MatchingG[i].y);
 		}
 	}
-	for (int i = 0; i < curNode->_IYG.size(); i++)
+	/*for (int i = 0; i < curNode->_IYG.size(); i++)
 	{
 		if (curNode->_IYG[i] <= midY)
 		{
@@ -125,7 +125,7 @@ void Tree::constructGloverInfo(TreeNode* curNode, vector<X> MX, vector<Y> MY)
 		{
 			curNode->_IYRG.push_back(curNode->_IYG[i]);
 		}
-	}
+	}*/
 	if (curNode->_leftChild == NULL)
 	{
 		return;
