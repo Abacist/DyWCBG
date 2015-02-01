@@ -3,7 +3,10 @@
 X TreeNode::getMaxEndXinMXRG(X x)
 {
 	vector<X> tempX = _MXRG;
-	tempX.push_back(x);
+	if (!x.empty())
+	{
+		tempX.push_back(x);
+	}
 	sort(tempX.begin(), tempX.end(), cmpXEndInc);
 	return tempX[tempX.size() - 1];
 }

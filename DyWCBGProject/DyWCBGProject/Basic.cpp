@@ -14,14 +14,14 @@ void generator(char* fileName, int maxY, int updateRange, int weightRange)
 	GetLocalTime(&lpsystime);
 	srand(lpsystime.wMinute * 1000 + lpsystime.wMilliseconds);
 
-	/*out << 1 << endl;
+	out << 1 << endl;
 	Y y0;
 	y0._value = 1;
 	y0._w = rand() % weightRange;
 	curExistsY.push_back(y0);
-	out << y0._value << " " << y0._w << endl;*/
+	out << y0._value << " " << y0._w << endl;
 
-	out << maxY << endl;
+	/*out << maxY << endl;
 	for (int i = 1; i <= maxY; i++)
 	{
 		Y y0;
@@ -29,7 +29,7 @@ void generator(char* fileName, int maxY, int updateRange, int weightRange)
 		y0._w = rand() % weightRange;
 		curExistsY.push_back(y0);
 		out << y0._value << " " << y0._w << endl;
-	}
+	}*/
 
 
 	/*y0._value = maxY;

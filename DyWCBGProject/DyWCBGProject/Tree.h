@@ -144,7 +144,7 @@ public:
 	Msg deleteYfromNodeRG(Msg msg);
 
 	//auxilary
-	X getMaxEndXinMXRG(X x);
+	X getMaxEndXinMXRG(X x = *(new X()));
 	Y getMaxYinMYRG(Y y = *(new Y()));
 	vector<Y> getNewMYRG();
 	//==============================================================

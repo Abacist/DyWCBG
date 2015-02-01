@@ -204,7 +204,23 @@ void Tree::insertYinTreeG(Y y)
 
 void Tree::deleteYfromTreeG(Y y)
 {
-	
+	TreeNode* curNode = locateLeaf(y);
+	Msg msg = curNode->deleteYfromLeafG(y);
+	TreeNode* child = curNode;
+	curNode = curNode->_parent;
+	while (curNode != NULL)
+	{
+		if (child == curNode->_leftChild)
+		{
+			msg = curNode->deleteYfromNodeLG(msg);
+		}
+		else
+		{
+			msg = curNode->deleteYfromNodeRG(msg);
+		}
+		child = curNode;
+		curNode = curNode->_parent;
+	}
 }
 
 
