@@ -330,9 +330,9 @@ Msg TreeNode::deleteYfromNodeRG(Msg msg)
 		{
 			if (find(_MXRG.begin(), _MXRG.end(), msg._aTX) != _MXRG.end())
 			{
-				rMsg._bMY = msg._bMY;
-				_MYG.erase(find(_MYG.begin(), _MYG.end(), msg._bMY));
-				_MYRG.erase(find(_MYRG.begin(), _MYRG.end(), msg._bMY));
+				rMsg._bMY = msg._bY;
+				_MYG.erase(find(_MYG.begin(), _MYG.end(), msg._bY));
+				_MYRG.erase(find(_MYRG.begin(), _MYRG.end(), msg._bY));
 
 				rMsg._bMX = msg._aTX;
 				_MXRG.erase(find(_MXRG.begin(), _MXRG.end(), msg._aTX));
@@ -345,9 +345,9 @@ Msg TreeNode::deleteYfromNodeRG(Msg msg)
 			{
 				X maxEnd = getMaxEndXinMXRG();
 
-				rMsg._bMY = msg._bMY;
-				_MYG.erase(find(_MYG.begin(), _MYG.end(), msg._bMY));
-				_MYRG.erase(find(_MYRG.begin(), _MYRG.end(), msg._bMY));
+				rMsg._bMY = msg._bY;
+				_MYG.erase(find(_MYG.begin(), _MYG.end(), msg._bY));
+				_MYRG.erase(find(_MYRG.begin(), _MYRG.end(), msg._bY));
 
 				rMsg._bMX = maxEnd;
 				_MXRG.erase(find(_MXRG.begin(), _MXRG.end(), maxEnd));
@@ -375,13 +375,13 @@ Msg TreeNode::deleteYfromNodeRG(Msg msg)
 			}
 			else
 			{
-				if (_MXRG.size() == getYRG().size())
+				if (IYRG.empty())
 				{
 					X maxEnd = getMaxEndXinMXRG(msg._aX);
 
-					rMsg._bMY = msg._bMY;
-					_MYG.erase(find(_MYG.begin(), _MYG.end(), msg._bMY));
-					_MYRG.erase(find(_MYRG.begin(), _MYRG.end(), msg._bMY));
+					rMsg._bMY = msg._bY;
+					_MYG.erase(find(_MYG.begin(), _MYG.end(), msg._bY));
+					_MYRG.erase(find(_MYRG.begin(), _MYRG.end(), msg._bY));
 
 					rMsg._bMX = maxEnd;
 					_MXRG.erase(find(_MXRG.begin(), _MXRG.end(), maxEnd));
@@ -396,9 +396,9 @@ Msg TreeNode::deleteYfromNodeRG(Msg msg)
 					sort(IYRG.begin(), IYRG.end(), cmpYValueInc);
 					Y cY = IYRG[0];
 
-					rMsg._bMY = msg._bMY;
-					_MYG.erase(find(_MYG.begin(), _MYG.end(), msg._bMY));
-					_MYRG.erase(find(_MYRG.begin(), _MYRG.end(), msg._bMY));
+					rMsg._bMY = msg._bY;
+					_MYG.erase(find(_MYG.begin(), _MYG.end(), msg._bY));
+					_MYRG.erase(find(_MYRG.begin(), _MYRG.end(), msg._bY));
 
 					rMsg._aMY = cY;
 					_MYG.push_back(cY);
