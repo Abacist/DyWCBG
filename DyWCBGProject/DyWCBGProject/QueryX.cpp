@@ -184,6 +184,124 @@ Y Tree::queryXMate(int id)
 }
 
 
+//Y TreeNode::searchXMateRecur(X x, int delta)//delta means how many X need to be matched in the left of x in curNode
+//{
+//	if (_leftChild == NULL)
+//	{
+//		vector<X> leftMX;
+//		for (int i = 0; i < _MXG.size(); i++)
+//		{
+//			if (cmpXEndInc(_MXG[i], x))
+//			{
+//				leftMX.push_back(_MXG[i]);
+//			}
+//		}
+//		sort(_YG.begin(), _YG.end(), cmpYValueInc);
+//		return _YG[delta + leftMX.size()];
+//	}
+//	else
+//	{
+//		Y midY = _leftChild->maxY();
+//		if (x._e <= midY)
+//		{
+//			//match in P's left
+//			return _leftChild->searchXMateRecur(x, delta);
+//		}
+//		else if (x._s > midY)
+//		{
+//			vector<X> leftTM;
+//			for (int i = 0; i < _leftChild->_TXG.size(); i++)//all matched in P's right part
+//			{
+//				if (cmpXEndInc(_leftChild->_TXG[i], x))
+//				{
+//					leftTM.push_back(_leftChild->_TXG[i]);
+//				}
+//			}
+//			vector<X> TMin;
+//			for (int i = 0; i < _leftChild->_MXG.size(); i++)
+//			{
+//				if (cmpXEndInc(x, _leftChild->_MXG[i]))
+//				{
+//					TMin.push_back(_leftChild->_MXG[i]);
+//				}
+//			}
+//			delta = delta - (int)TMin.size() - (int)_leftChild->_IYG.size();
+//			if (delta < 0)
+//			{
+//				delta = 0;
+//			}
+//			delta = delta + (int)leftTM.size();
+//			if (delta < 0)
+//			{
+//				//delta = 0;
+//				throw new exception();
+//			}
+//			return _rightChild->searchXMateRecur(x, delta);
+//		}
+//		else
+//		{
+//			//x.s<=midY and x.e>midY
+//			if (find(_MXRG.begin(), _MXRG.end(), x) != _MXRG.end())
+//			{
+//				//still match in right
+//				vector<X> leftTM;
+//				for (int i = 0; i < _leftChild->_TXG.size(); i++)
+//				{
+//					if (cmpXEndInc(_leftChild->_TXG[i], x))
+//					{
+//						leftTM.push_back(_leftChild->_TXG[i]);
+//					}
+//				}
+//				vector<X> TMin;
+//				for (int i = 0; i < _leftChild->_MXG.size(); i++)
+//				{
+//					if (cmpXEndInc(x, _leftChild->_MXG[i]))
+//					{
+//						TMin.push_back(_leftChild->_MXG[i]);
+//					}
+//				}
+//				delta = delta - (int)TMin.size() - (int)_leftChild->_IYG.size();
+//				if (delta < 0)
+//				{
+//					delta = 0;
+//				}
+//				delta = delta + (int)leftTM.size();
+//				return _rightChild->searchXMateRecur(x, delta);
+//			}
+//			else
+//			{
+//				vector<X> leftMX;
+//				for (int i = 0; i < _MXLG.size(); i++)
+//				{
+//					if (cmpXEndInc(_MXLG[i], x))
+//					{
+//						leftMX.push_back(_MXLG[i]);
+//					}
+//				}
+//				int temp = delta + leftMX.size();
+//				if (temp >= _leftChild->_YG.size())
+//				{
+//					//match in right
+//					vector<X> leftTM;
+//					for (int i = 0; i < _leftChild->_TXG.size(); i++)
+//					{
+//						if (cmpXEndInc(_leftChild->_TXG[i], x))
+//						{  
+//							leftTM.push_back(_leftChild->_TXG[i]);
+//						}
+//					}
+//					return _rightChild->searchXMateRecur(x, temp - (int)_leftChild->_YG.size() + (int)leftTM.size());
+//				}
+//				else
+//				{
+//					//match in left
+//					return _leftChild->searchXMateRecur(x, delta);
+//				}
+//			}
+//		}
+//	}
+//}
+
 Y TreeNode::searchXMateRecur(X x, int delta)//delta means how many X need to be matched in the left of x in curNode
 {
 	if (_leftChild == NULL)
@@ -201,102 +319,38 @@ Y TreeNode::searchXMateRecur(X x, int delta)//delta means how many X need to be 
 	}
 	else
 	{
-		Y midY = _leftChild->maxY();
-		if (x._e <= midY)
+		vector<X> leftMX;
+		for (int i = 0; i < _MXLG.size(); i++)
 		{
-			//match in P's left
-			return _leftChild->searchXMateRecur(x, delta);
+			if (cmpXEndInc(_MXLG[i], x))
+			{
+				leftMX.push_back(_MXLG[i]);
+			}
 		}
-		else if (x._s > midY)
+		vector<X> leftTM;
+		for (int i = 0; i < _leftChild->_TXG.size(); i++)
 		{
-			vector<X> leftTM;
-			for (int i = 0; i < _leftChild->_TXG.size(); i++)//all matched in P's right part
+			if (cmpXEndInc(_leftChild->_TXG[i], x))
 			{
-				if (cmpXEndInc(_leftChild->_TXG[i], x))
-				{
-					leftTM.push_back(_leftChild->_TXG[i]);
-				}
+				leftTM.push_back(_leftChild->_TXG[i]);
 			}
-			vector<X> TMin;
-			for (int i = 0; i < _leftChild->_MXG.size(); i++)
-			{
-				if (cmpXEndInc(x, _leftChild->_MXG[i]))
-				{
-					TMin.push_back(_leftChild->_MXG[i]);
-				}
-			}
-			delta = delta - (int)TMin.size() - (int)_leftChild->_IYG.size();
-			if (delta < 0)
-			{
-				delta = 0;
-			}
-			delta = delta + (int)leftTM.size();
-			if (delta < 0)
-			{
-				//delta = 0;
-				throw new exception();
-			}
-			return _rightChild->searchXMateRecur(x, delta);
+		}
+		int temp = delta + (int)leftMX.size();
+		if (temp >= _leftChild->_YG.size())
+		{
+			//match in right
+			return _rightChild->searchXMateRecur(x, delta + (int)leftMX.size() + (int)leftTM.size() - (int)_leftChild->_YG.size());
 		}
 		else
 		{
-			//x.s<=midY and x.e>midY
+			//match in left
 			if (find(_MXRG.begin(), _MXRG.end(), x) != _MXRG.end())
 			{
-				//still match in right
-				vector<X> leftTM;
-				for (int i = 0; i < _leftChild->_TXG.size(); i++)
-				{
-					if (cmpXEndInc(_leftChild->_TXG[i], x))
-					{
-						leftTM.push_back(_leftChild->_TXG[i]);
-					}
-				}
-				vector<X> TMin;
-				for (int i = 0; i < _leftChild->_MXG.size(); i++)
-				{
-					if (cmpXEndInc(x, _leftChild->_MXG[i]))
-					{
-						TMin.push_back(_leftChild->_MXG[i]);
-					}
-				}
-				delta = delta - (int)TMin.size() - (int)_leftChild->_IYG.size();
-				if (delta < 0)
-				{
-					delta = 0;
-				}
-				delta = delta + (int)leftTM.size();
-				return _rightChild->searchXMateRecur(x, delta);
+				return _rightChild->searchXMateRecur(x, (int)leftTM.size());
 			}
 			else
 			{
-				vector<X> leftMX;
-				for (int i = 0; i < _MXLG.size(); i++)
-				{
-					if (cmpXEndInc(_MXLG[i], x))
-					{
-						leftMX.push_back(_MXLG[i]);
-					}
-				}
-				int temp = delta + leftMX.size();
-				if (temp >= _leftChild->_YG.size())
-				{
-					//match in right
-					vector<X> leftTM;
-					for (int i = 0; i < _leftChild->_TXG.size(); i++)
-					{
-						if (cmpXEndInc(_leftChild->_TXG[i], x))
-						{  
-							leftTM.push_back(_leftChild->_TXG[i]);
-						}
-					}
-					return _rightChild->searchXMateRecur(x, temp - (int)_leftChild->_YG.size() + (int)leftTM.size());
-				}
-				else
-				{
-					//match in left
-					return _leftChild->searchXMateRecur(x, delta);
-				}
+				return _leftChild->searchXMateRecur(x, delta);
 			}
 		}
 	}

@@ -18,7 +18,7 @@ Msg TreeNode::insertXintoLeafG(X x)
 	rMsg._aX = x;
 	_XG.push_back(x);
 
-	if (_MXG.size() == _YG.size())
+	if (/*_MXG.size() == _YG.size()*/ _IYG.empty())
 	{
 		X maxEnd = getMaxEndXinMXRG(x);
 		rMsg._aMX = x;

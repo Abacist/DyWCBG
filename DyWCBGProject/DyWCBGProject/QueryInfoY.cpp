@@ -259,9 +259,9 @@ Msg TreeNode::deleteYfromNodeLG(Msg msg)
 	{
 		if (!msg._aMY.empty())
 		{
-			rMsg._bMY = msg._bMY;
-			_MYG.erase(find(_MYG.begin(), _MYG.end(), msg._bMY));
-			_MYLG.erase(find(_MYLG.begin(), _MYLG.end(), msg._bMY));
+			rMsg._bMY = msg._bY;
+			_MYG.erase(find(_MYG.begin(), _MYG.end(), msg._bY));
+			_MYLG.erase(find(_MYLG.begin(), _MYLG.end(), msg._bY));
 
 			rMsg._aMY = msg._aMY;
 			_MYG.push_back(msg._aMY);
@@ -277,8 +277,8 @@ Msg TreeNode::deleteYfromNodeLG(Msg msg)
 				X maxEnd = getMaxEndXinMXRG(msg._aTX);
 
 				rMsg._bMY = msg._bMY;
-				_MYG.erase(find(_MYG.begin(), _MYG.end(), msg._bMY));
-				_MYLG.erase(find(_MYLG.begin(), _MYLG.end(), msg._bMY));
+				_MYG.erase(find(_MYG.begin(), _MYG.end(), msg._bY));
+				_MYLG.erase(find(_MYLG.begin(), _MYLG.end(), msg._bY));
 				_MXLG.erase(find(_MXLG.begin(), _MXLG.end(), msg._aTX));
 
 				rMsg._bMX = maxEnd;
@@ -295,9 +295,9 @@ Msg TreeNode::deleteYfromNodeLG(Msg msg)
 				sort(IYRG.begin(), IYRG.end(), cmpYValueInc);
 				Y cY = IYRG[0];
 
-				rMsg._bMY = msg._bMY;
-				_MYG.erase(find(_MYG.begin(), _MYG.end(), msg._bMY));
-				_MYLG.erase(find(_MYLG.begin(), _MYLG.end(), msg._bMY));
+				rMsg._bMY = msg._bY;
+				_MYG.erase(find(_MYG.begin(), _MYG.end(), msg._bY));
+				_MYLG.erase(find(_MYLG.begin(), _MYLG.end(), msg._bY));
 				_MXLG.erase(find(_MXLG.begin(), _MXLG.end(), msg._aTX));
 				_MXRG.push_back(msg._aTX);
 
@@ -362,9 +362,9 @@ Msg TreeNode::deleteYfromNodeRG(Msg msg)
 			vector<Y> IYRG = getIYRG();
 			if (find(IYRG.begin(), IYRG.end(), msg._aMY) != IYRG.end())
 			{
-				rMsg._bMY = msg._bMY;
-				_MYG.erase(find(_MYG.begin(), _MYG.end(), msg._bMY));
-				_MYRG.erase(find(_MYRG.begin(), _MYRG.end(), msg._bMY));
+				rMsg._bMY = msg._bY;
+				_MYG.erase(find(_MYG.begin(), _MYG.end(), msg._bY));
+				_MYRG.erase(find(_MYRG.begin(), _MYRG.end(), msg._bY));
 
 				rMsg._aMY = msg._aMY;
 				_MYG.push_back(msg._aMY);
