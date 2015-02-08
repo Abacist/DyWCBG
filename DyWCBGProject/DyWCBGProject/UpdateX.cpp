@@ -147,6 +147,38 @@ Msg TreeNode::insertXintoNodeL(Msg msg)
 	{
 		//deal with the aX
 		updateStableCount(rMsg);
+
+
+		/*int countP = 0, countR = 0;
+		for (int i = 0; i < _rightChild->_IY.size(); i++)
+		{
+			if (_rightChild->_IY[i] >= msg._t1 && _rightChild->_IY[i] <= msg._t2)
+			{
+				countR++;
+			}
+		}
+		for (int i = 0; i < _IY.size(); i++)
+		{
+			if (_IY[i] >= msg._t1 && _IY[i] <= msg._t2)
+			{
+				countP++;
+			}
+		}
+		int delta = countP - countR - 1;
+
+		if (find(_MXR.begin(), _MXR.end(), msg._bMX) != _MXR.end() || msg._aX == msg._aIX
+			|| msg._bMX.empty() && delta == 0)
+		{
+
+		}
+		else
+		{
+			performXEEESEE(rMsg);
+		}*/
+
+
+
+
 		if (rMsg._t2 >= _rightChild->minY() || rMsg._stableYCount > msg._stableYCount)
 		{
 			//EE and ES available
@@ -404,14 +436,28 @@ Msg TreeNode::insertXintoNodeR(Msg msg)
 	{
 		//deal with the aX
 		updateStableCount(rMsg);
-		if (rMsg._stableYCount > msg._stableYCount)
+		
+
+		int countP = 0, countR = 0;
+		for (int i = 0; i < _rightChild->_IY.size(); i++)
 		{
-			//EE and ES available
-			performXESEE(rMsg);
+			if (_rightChild->_IY[i] >= msg._t1 && _rightChild->_IY[i] <= msg._t2)
+			{
+				countR++;
+			}
 		}
-		else
+		for (int i = 0; i < _IY.size(); i++)
 		{
-			//rMsg._stableYCount == msg._stableYCount, no new matched X, but may be replace
+			if (_IY[i] >= msg._t1 && _IY[i] <= msg._t2)
+			{
+				countP++;
+			}
+		}
+		int delta = countP - countR - 1;
+
+		if (find(_MXR.begin(), _MXR.end(), msg._bMX) != _MXR.end() || msg._aX == msg._aIX
+			|| msg._bMX.empty() && delta == 0)
+		{
 			if (!msg._bIY.empty())
 			{
 				//success in R
@@ -444,10 +490,61 @@ Msg TreeNode::insertXintoNodeR(Msg msg)
 				}
 				else
 				{
-					performXESEE(rMsg);
+					throw new exception();
 				}
 			}
 		}
+		else
+		{
+			performXESEE(rMsg);
+		}
+
+
+
+		//if (rMsg._stableYCount > msg._stableYCount)
+		//{
+		//	//EE and ES available
+		//	performXESEE(rMsg);
+		//}
+		//else
+		//{
+		//	//rMsg._stableYCount == msg._stableYCount, no new matched X, but may be replace
+		//	if (!msg._bIY.empty())
+		//	{
+		//		//success in R
+		//		//t1 t2 stablecount keeps	
+		//		rMsg._aMX = msg._aX;
+		//		_MX.push_back(msg._aX);
+		//		_MXR.push_back(msg._aX);
+
+		//		rMsg._aMY = msg._aMY;
+		//		_MY.push_back(msg._aMY);
+		//		_MYR.push_back(msg._aMY);
+
+		//		rMsg._bIY = msg._bIY;
+		//		_IY.erase(find(_IY.begin(), _IY.end(), msg._bIY));
+		//	}
+		//	else
+		//	{
+		//		if (find(_MXR.begin(), _MXR.end(), msg._bMX) != _MXR.end() || msg._aX == msg._aIX)
+		//		{
+		//			rMsg._aMX = msg._aX;
+		//			_MX.push_back(msg._aX);
+		//			_MXR.push_back(msg._aX);
+
+		//			rMsg._bMX = msg._bMX;
+		//			_MX.erase(find(_MX.begin(), _MX.end(), msg._bMX));
+		//			_MXR.erase(find(_MXR.begin(), _MXR.end(), msg._bMX));
+
+		//			rMsg._aIX = msg._aIX;
+		//			_IX.push_back(msg._aIX);
+		//		}
+		//		else
+		//		{
+		//			performXESEE(rMsg);
+		//		}
+		//	}
+		//}
 	}
 	updateNewIXMY(msg, rMsg);
 	return rMsg;
