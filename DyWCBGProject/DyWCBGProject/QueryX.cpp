@@ -320,11 +320,11 @@ Y TreeNode::searchXMateRecur(X x, int delta)//delta means how many X need to be 
 	else
 	{
 		vector<X> leftMX;
-		for (int i = 0; i < _MXLG.size(); i++)
+		for (int i = 0; i <_leftChild->_MXG.size(); i++)
 		{
-			if (cmpXEndInc(_MXLG[i], x))
+			if (cmpXEndInc(_leftChild->_MXG[i], x))
 			{
-				leftMX.push_back(_MXLG[i]);
+				leftMX.push_back(_leftChild->_MXG[i]);
 			}
 		}
 		vector<X> leftTM;
@@ -344,7 +344,9 @@ Y TreeNode::searchXMateRecur(X x, int delta)//delta means how many X need to be 
 		else
 		{
 			//match in left
-			if (find(_MXRG.begin(), _MXRG.end(), x) != _MXRG.end())
+			//if (find(_MXRG.begin(), _MXRG.end(), x) != _MXRG.end())
+			if (x._s>_leftChild->maxY() || find(_leftChild->_TXG.begin(), _leftChild->_TXG.end(), x) != _leftChild->_TXG.end())
+			//if (x._s >= minY() && find(_leftChild->_MXG.begin(), _leftChild->_MXG.end(), x) == _leftChild->_MXG.end())
 			{
 				return _rightChild->searchXMateRecur(x, (int)leftTM.size());
 			}
